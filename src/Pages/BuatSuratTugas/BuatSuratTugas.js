@@ -12,6 +12,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 const BuatSuratTugas = () => {
   const [menimbang, setMenimbang] = useState([{ label: "a", value: "" }]);
+  const [dasar, setDasar] = useState([{ label: "a", value: "" }]);
 
   const handleAddField = () => {
     // add the field label alphabetically
@@ -19,6 +20,14 @@ const BuatSuratTugas = () => {
     const newLabel = String.fromCharCode(lastLabel.charCodeAt(0) + 1);
     const newField = { label: newLabel, value: "" };
     setMenimbang([...menimbang, newField]);
+  };
+
+  const handleAddFieldDasar = () => {
+    // add the field label alphabetically
+    const lastLabel = dasar[dasar.length - 1].label;
+    const newLabel = String.fromCharCode(lastLabel.charCodeAt(0) + 1);
+    const newField = { label: newLabel, value: "" };
+    setDasar([...dasar, newField]);
   };
 
   const handleDeleteField = (label) => {
@@ -29,6 +38,16 @@ const BuatSuratTugas = () => {
       item.label = String.fromCharCode(97 + index);
     });
     setMenimbang(newMenimbang);
+  };
+
+  const handleDeleteFieldDasar = (label) => {
+    // remove the field
+    const newDasar = dasar.filter((item) => item.label !== label);
+    // update label
+    newDasar.forEach((item, index) => {
+      item.label = String.fromCharCode(97 + index);
+    });
+    setDasar(newDasar);
   };
   return (
     <Fragment>
@@ -121,6 +140,54 @@ const BuatSuratTugas = () => {
                 type="button"
                 className="btn btn-outline-light waves-effect"
                 onClick={handleAddField}
+              >
+                Tambah baris baru <i className="mdi mdi-playlist-plus" />
+              </button>
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardBody>
+              <CardTitle>Dasar</CardTitle>
+              <CardBody className="py-0">
+                {dasar.map((item, index) => (
+                  <Row key={index} className="my-2">
+                    <label
+                      htmlFor="example-text-input"
+                      className="col-md-1 col-form-label d-flex align-items-center justify-content-center"
+                    >
+                      {item.label}
+                    </label>
+                    <div className="col-md-10">
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        value={item.value}
+                        onChange={(e) => {
+                          const newDasar = [...dasar];
+                          newDasar[index].value = e.target.value;
+                          setDasar(newDasar);
+                        }}
+                      />
+                    </div>
+                    <div className="col-md-1 d-flex align-items-center justify-content-center">
+                      <button
+                        type="button"
+                        className="btn btn-danger waves-effect waves-light"
+                        onClick={() => handleDeleteFieldDasar(item.label)}
+                      >
+                        <i className="mdi mdi-delete-outline"></i>
+                      </button>
+                    </div>
+                  </Row>
+                ))}
+              </CardBody>
+            </CardBody>
+            <CardFooter className="bg-transparent">
+              <button
+                type="button"
+                className="btn btn-outline-light waves-effect"
+                onClick={handleAddFieldDasar}
               >
                 Tambah baris baru <i className="mdi mdi-playlist-plus" />
               </button>
