@@ -10,12 +10,13 @@ import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
 import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
+import BuatSuratTugas from "../Pages/BuatSuratTugas";
 
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
+  { path: "/buat-surat", component: <BuatSuratTugas /> },
 
-  
   // Profile
   { path: "/userprofile", component: <UserProfile /> },
 
@@ -29,7 +30,6 @@ const authProtectedRoutes = [
 ];
 
 const publicRoutes = [
-
   // Authentication Page
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
