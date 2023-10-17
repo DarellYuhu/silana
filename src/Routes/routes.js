@@ -15,22 +15,22 @@ import BuatSuratTugas from "../Pages/BuatSuratTugas";
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
-  { path: "/buat-surat", component: <BuatSuratTugas /> },
 
   // Profile
   { path: "/userprofile", component: <UserProfile /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
-  {
-    path: "/",
-    exact: true,
-    component: <Navigate to="/dashboard" />,
-  },
 ];
 
 const publicRoutes = [
   // Authentication Page
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/buat-surat" />,
+  },
+  { path: "/buat-surat", component: <BuatSuratTugas /> },
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },

@@ -31,7 +31,6 @@ const getLayout = (layoutType) => {
 };
 
 const Index = () => {
-
   const { layoutType } = useSelector((state) => ({
     layoutType: state.Layout.layoutType,
   }));
@@ -41,32 +40,40 @@ const Index = () => {
   return (
     <Routes>
       <Route>
-        {publicRoutes.map((route, idx) => (
+        {publicRoutes.map((route, idx) => {
+          console.log(route.path);
+          return (
+            <Route
+              path={route.path}
+              element={
+                route.path === "/buat-surat" ? (
+                  // <AuthProtected>
+                  <Layout>{route.component}</Layout>
+                ) : (
+                  // </AuthProtected>
+                  <NonAuthLayout>{route.component}</NonAuthLayout>
+                )
+              }
+              key={idx}
+              exact={true}
+            />
+          );
+        })}
+      </Route>
+
+      <Route>
+        {authProtectedRoutes.map((route, idx) => (
           <Route
             path={route.path}
             element={
-              <NonAuthLayout>
-                  {route.component}
-              </NonAuthLayout>
-          }
+              <AuthProtected>
+                <Layout>{route.component}</Layout>
+              </AuthProtected>
+            }
             key={idx}
             exact={true}
           />
         ))}
-      </Route>
-
-      <Route>
-          {authProtectedRoutes.map((route, idx) => (
-            <Route
-              path={route.path}
-              element={
-                <AuthProtected>
-                    <Layout>{route.component}</Layout>
-                </AuthProtected>}
-              key={idx}
-              exact={true}
-            />
-          ))}
       </Route>
     </Routes>
   );
