@@ -11,13 +11,23 @@ import Logout from "../Pages/Authentication/Logout";
 import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
 import BuatSuratTugas from "../Pages/BuatSuratTugas";
+import AktifitasSurat from "../Pages/AktifitasSurat";
+import SuratTugas from "../Pages/SuratTugas/SuratTugas";
 
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/surat-tugas" />,
+  },
+  { path: "/surat-tugas", component: <SuratTugas /> },
+  { path: "/buat-surat", component: <BuatSuratTugas /> },
 
   // Profile
   { path: "/userprofile", component: <UserProfile /> },
+  { path: "/aktifitas-surat", component: <AktifitasSurat /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
@@ -25,12 +35,6 @@ const authProtectedRoutes = [
 
 const publicRoutes = [
   // Authentication Page
-  {
-    path: "/",
-    exact: true,
-    component: <Navigate to="/buat-surat" />,
-  },
-  { path: "/buat-surat", component: <BuatSuratTugas /> },
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
