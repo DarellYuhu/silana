@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 const Sidebar = (props) => {
   const ref = useRef();
-  const activateParentDropdown = useCallback(item => {
+  const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
     const parent = item.parentElement;
     const parent2El = parent.childNodes[1];
@@ -44,7 +44,7 @@ const Sidebar = (props) => {
     scrollElement(item);
     return false;
   }, []);
-  const removeActivation = items => {
+  const removeActivation = (items) => {
     for (var i = 0; i < items.length; ++i) {
       var item = items[i];
       const parent = items[i].parentElement;
@@ -97,10 +97,7 @@ const Sidebar = (props) => {
     if (matchingMenuItem) {
       activateParentDropdown(matchingMenuItem);
     }
-  }, [
-    props.router.location.pathname,
-    activateParentDropdown,
-  ]);
+  }, [props.router.location.pathname, activateParentDropdown]);
   useEffect(() => {
     ref.current.recalculate();
   }, []);
@@ -135,7 +132,7 @@ const Sidebar = (props) => {
                       <Link
                         to={item.url ? item.url : "/#"}
                         className={
-                          (item.issubMenubadge || item.isHasArrow)
+                          item.issubMenubadge || item.isHasArrow
                             ? " "
                             : "has-arrow"
                         }
@@ -172,9 +169,7 @@ const Sidebar = (props) => {
                                 <ul className="sub-menu">
                                   {item.subMenu.map((item, key) => (
                                     <li key={key}>
-                                      <Link to="#">
-                                        {props.t(item.title)}
-                                      </Link>
+                                      <Link to="#">{props.t(item.title)}</Link>
                                     </li>
                                   ))}
                                 </ul>

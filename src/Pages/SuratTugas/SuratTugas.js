@@ -195,6 +195,7 @@ const SuratTugas = () => {
 };
 
 const TableItem = ({ item, index, page, rowsPerPage }) => {
+  const navigate = useNavigate();
   return (
     <tr>
       <td className="no">{index + 1 + rowsPerPage * page}</td>
@@ -218,6 +219,7 @@ const TableItem = ({ item, index, page, rowsPerPage }) => {
               className="btn btn-sm btn-outline-info edit-item-btn"
               data-bs-toggle="modal"
               data-bs-target="#showModal"
+              onClick={() => navigate("/surat-tugas/1")}
             >
               <i className="mdi mdi-pencil-outline fs-5"></i>
             </button>
