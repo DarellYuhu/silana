@@ -16,7 +16,7 @@ const SidebarData = [
   //   isHasArrow: true,
   // },
   {
-    label: "Surat Jalan",
+    label: "Perjalanan Dinas",
     icon: "mdi mdi-note-text-outline",
     subItem: [
       { sublabel: "Surat Tugas", link: "/surat-tugas" },

@@ -12,7 +12,8 @@ import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
 import BuatSuratTugas from "../Pages/BuatSuratTugas";
 import AktifitasSurat from "../Pages/AktifitasSurat";
-import SuratTugas from "../Pages/SuratTugas/SuratTugas";
+import SuratTugas from "../Pages/SuratTugas";
+import SuratPerjalananDinas from "../Pages/SuratPerjalananDinas";
 
 const authProtectedRoutes = [
   //dashboard
@@ -24,6 +25,7 @@ const authProtectedRoutes = [
   },
   { path: "/surat-tugas", component: <SuratTugas /> },
   { path: "/buat-surat", component: <BuatSuratTugas /> },
+  { path: "/surat-perjalanan-dinas", component: <SuratPerjalananDinas /> },
 
   // Profile
   { path: "/userprofile", component: <UserProfile /> },

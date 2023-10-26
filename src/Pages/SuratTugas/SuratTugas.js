@@ -1,6 +1,6 @@
 import { TablePagination } from "@mui/material";
 import { Fragment, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   ButtonDropdown,
   Card,
@@ -24,6 +24,7 @@ const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -44,8 +45,9 @@ const SuratTugas = () => {
             <button
               type="button"
               className="btn btn-info btn-lg waves-effect waves-light"
+              onClick={() => navigate("/buat-surat")}
             >
-              Large Button
+              Buat Surat
             </button>
           </Col>
         </Row>
@@ -103,7 +105,7 @@ const SuratTugas = () => {
                             No.
                           </th>
                           <th className="sort" data-sort="email">
-                            Author
+                            Ketua Tim
                           </th>
                           <th className="sort" data-sort="phone">
                             Nomor Surat
@@ -137,6 +139,7 @@ const SuratTugas = () => {
                               index={index}
                               key={index}
                               page={page}
+                              rowsPerPage={rowsPerPage}
                             />
                           ))}
                       </tbody>
@@ -191,10 +194,10 @@ const SuratTugas = () => {
   );
 };
 
-const TableItem = ({ item, index, page }) => {
+const TableItem = ({ item, index, page, rowsPerPage }) => {
   return (
     <tr>
-      <td className="no">{index + 1 + 10 * page}</td>
+      <td className="no">{index + 1 + rowsPerPage * page}</td>
       <td className="author">{item.author}</td>
       <td className="noSurat">{item.noSurat}</td>
       <td className="tanggal">{item.tanggal}</td>
