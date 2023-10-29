@@ -18,6 +18,7 @@ import Nominatif from "../Pages/Nominatif";
 import Perincian from "../Pages/Perincian";
 import Kwitansi from "../Pages/Kwitansi";
 import EditSuratTugas from "../Pages/EditSuratTugas";
+import EditSuratPerjalananDinas from "../Pages/EditSuratPerjalananDinas";
 
 const authProtectedRoutes = [
   //dashboard
@@ -31,6 +32,10 @@ const authProtectedRoutes = [
   { path: "/surat-tugas/:id", component: <EditSuratTugas /> },
   { path: "/buat-surat", component: <BuatSuratTugas /> },
   { path: "/surat-perjalanan-dinas", component: <SuratPerjalananDinas /> },
+  {
+    path: "/surat-perjalanan-dinas/:id",
+    component: <EditSuratPerjalananDinas />,
+  },
   { path: "/nominatif", component: <Nominatif /> },
   { path: "/perincian", component: <Perincian /> },
   { path: "/kwitansi", component: <Kwitansi /> },

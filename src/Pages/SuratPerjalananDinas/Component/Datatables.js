@@ -1,4 +1,5 @@
 import DataTable from "react-data-table-component";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownItem,
   DropdownMenu,
@@ -52,7 +53,7 @@ const columns = [
   {
     name: <span className="font-weight-bold fs-13">Action</span>,
     sortable: false,
-    cell: () => {
+    cell: (_, index) => {
       return (
         <UncontrolledDropdown className="dropdown d-inline-block">
           <DropdownToggle
@@ -80,15 +81,25 @@ const columns = [
               className="dropdown-divider"
               style={{ height: "2px", backgroundColor: "darkgrey" }}
             ></div>
-            <DropdownItem className="edit-item-btn">
-              <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
-              Edit
-            </DropdownItem>
+            <EditButton path={index} />
           </DropdownMenu>
         </UncontrolledDropdown>
       );
     },
   },
 ];
+
+const EditButton = ({ path }) => {
+  const navigate = useNavigate();
+  return (
+    <DropdownItem
+      onClick={() => navigate(`/surat-perjalanan-dinas/${path}`)}
+      className="edit-item-btn"
+    >
+      <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
+      Edit
+    </DropdownItem>
+  );
+};
 
 export default Datatables;
