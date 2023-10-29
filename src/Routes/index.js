@@ -41,7 +41,6 @@ const Index = () => {
     <Routes>
       <Route>
         {publicRoutes.map((route, idx) => {
-          console.log(route.path);
           return (
             <Route
               path={route.path}

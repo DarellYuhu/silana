@@ -17,8 +17,10 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Select from "react-select";
 import "flatpickr/dist/themes/material_blue.css";
 import Flatpickr from "react-flatpickr";
+import AnggaranModal from "./Components/AnggaranModal";
 
 const EditSuratTugas = () => {
+  const [open, setOpen] = useState(false);
   const [surat, setSurat] = useState({
     beban: "",
     mataAnggaran: "",
@@ -105,16 +107,18 @@ const EditSuratTugas = () => {
                 <CardBody className="p-0 px-1">
                   <CardTitle>Mata Anggaran</CardTitle>
                   <CardBody className="p-0">
-                    <div className="mb-3">
-                      <Select
-                        // value={selectedGroup}
-                        // onChange={() => {
-                        //   handleSelectGroup();
-                        // }}
-                        options={anggaranOption}
-                        classNamePrefix="select2-selection"
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      className="colorpicker-default"
+                      // value={color}
+                      // onClick={() => {
+                      //   setsimple_color(!simple_color);
+                      // }}
+                      // readOnly
+                      placeholder="3331.UBA.002.256.A.524111"
+                      // disabled
+                      onClick={() => setOpen(!open)}
+                    />
                   </CardBody>
                 </CardBody>
               </Col>
@@ -415,6 +419,7 @@ const EditSuratTugas = () => {
             </CardBody>
           </Card>
         </Container>
+        <AnggaranModal open={open} setOpen={setOpen} />
       </div>
     </Fragment>
   );
