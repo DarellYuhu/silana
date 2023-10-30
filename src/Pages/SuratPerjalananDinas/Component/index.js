@@ -1,3 +1,4 @@
 import Datatables from "./Datatables";
+import PrintDepanModal from "./PrintDepanModal";
 
-export { Datatables };
+export { Datatables, PrintDepanModal };

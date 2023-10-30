@@ -11,6 +11,7 @@ import {
   DropdownToggle,
   Row,
 } from "reactstrap";
+import { PrintModal } from "./Component";
 
 const data = [...Array(17).keys()].map((item) => ({
   author: "Mary Cousar",
@@ -24,6 +25,7 @@ const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -33,6 +35,10 @@ const SuratTugas = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handlePrintNoSurat = () => {
+    setOpen(!open);
   };
   return (
     <Fragment>
@@ -140,6 +146,7 @@ const SuratTugas = () => {
                               key={index}
                               page={page}
                               rowsPerPage={rowsPerPage}
+                              handlePrintNoSurat={handlePrintNoSurat}
                             />
                           ))}
                       </tbody>
@@ -189,12 +196,19 @@ const SuratTugas = () => {
             </Card>
           </Col>
         </Row>
+        <PrintModal open={open} setOpen={setOpen} />
       </div>
     </Fragment>
   );
 };
 
-const TableItem = ({ item, index, page, rowsPerPage }) => {
+const TableItem = ({
+  item,
+  index,
+  page,
+  rowsPerPage,
+  handlePrintNoSurat = () => {},
+}) => {
   const navigate = useNavigate();
   return (
     <tr>
@@ -249,6 +263,7 @@ const TableItem = ({ item, index, page, rowsPerPage }) => {
           className="btn btn-sm btn-outline-warning mail-item-btn"
           data-bs-toggle="modal"
           data-bs-target="#showModal"
+          onClick={handlePrintNoSurat}
         >
           <i className="mdi mdi-email-check-outline fs-5"></i>
         </button>

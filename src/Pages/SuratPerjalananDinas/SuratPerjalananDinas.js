@@ -1,6 +1,6 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import { Datatables } from "./Component";
+import { Datatables, PrintDepanModal } from "./Component";
 
 const data = [...Array(17).keys()].map((item) => ({
   ketuaTim: "Mary Cousar",
@@ -11,6 +11,7 @@ const data = [...Array(17).keys()].map((item) => ({
 }));
 
 const SuratPerjalananDinas = () => {
+  const [open, setOpen] = useState(false);
   return (
     <Fragment>
       <div className="page-content">
@@ -52,7 +53,10 @@ const SuratPerjalananDinas = () => {
                       <Col lg={12}>
                         <Card>
                           <CardBody>
-                            <Datatables item={data} />
+                            <Datatables
+                              item={data}
+                              handleEditClick={() => setOpen(!open)}
+                            />
                           </CardBody>
                         </Card>
                       </Col>
@@ -78,6 +82,7 @@ const SuratPerjalananDinas = () => {
             </Col>
           </Row>
         </Container>
+        <PrintDepanModal open={open} setOpen={setOpen} />
       </div>
     </Fragment>
   );
