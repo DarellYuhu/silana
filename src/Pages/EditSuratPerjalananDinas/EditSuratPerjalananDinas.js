@@ -11,9 +11,39 @@ import Creatable from "react-select/creatable";
 import Select from "react-select";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Flatpickr from "react-flatpickr";
+import DISTRICT from "@regions-of-indonesia/data/district";
+import PROVINCE from "@regions-of-indonesia/data/province";
 
 const EditSuratPerjalananDinas = () => {
   const datePickerRef = useRef(null);
+
+  console.log(DISTRICT);
+  console.log(PROVINCE);
+
+  const filteredDistricts = [
+    {
+      options: Object.keys(DISTRICT)
+        .filter((key) => key.startsWith("71"))
+        .map((key) => ({
+          value: key,
+          label: DISTRICT[key],
+        })),
+    },
+  ];
+
+  // const filteredDistricts = [];
+
+  // Iterate over the data and filter regions with 71 data
+  // for (const key in data) {
+  //   if (data.hasOwnProperty(key)) {
+  //     if (key.startsWith("71.")) {
+  //       filteredDistricts.push(data[key]);
+  //     }
+  //   }
+  // }
+
+  console.log(filteredDistricts);
+
   return (
     <Fragment>
       <div className="page-content">
@@ -60,7 +90,7 @@ const EditSuratPerjalananDinas = () => {
                     // onChange={() => {
                     //   handleSelectGroup();
                     // }}
-                    // options={warnaOption}
+                    options={filteredDistricts}
                     classNamePrefix="select2-selection"
                   />
                 </div>

@@ -2765,6 +2765,11 @@
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.2.1.tgz#9403f51c17cae37edf870c6bc0c81c1ece5ccef8"
   integrity sha512-1dgmkh+3so0+LlBWRhGA33ua4MYr7tUOj+a9Si28vUi0IUFNbff1T3sgpeDJI/LaC75bBYnQ0A3wXjn0OrRNBA==
 
+"@regions-of-indonesia/data@^5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@regions-of-indonesia/data/-/data-5.2.2.tgz#04c2defdbc6e4c8315cbca1a08aa4ececcae1d88"
+  integrity sha512-9DIaZ9v8lexwR5kblz+KydOuN7MBk1J9GhyEnQ+WgAt4HDC7Ck8bSxUELFSuatnd2YlkIWt59JFvv5y7Nkxang==
+
 "@remix-run/router@1.3.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.3.3.tgz#d6d531d69c0fa3a44fda7dc00b20d49b44549164"
@@ -4823,11 +4828,6 @@ cosmiconfig@^7.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
-
-country-region-data@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/country-region-data/-/country-region-data-3.0.0.tgz#9251cff57c22e450cbe96a7e50a3a23362d4304a"
-  integrity sha512-jpZwc6coXayi3aAv2HHTC9vhwRJB2zdur+coBlIZo1IVMonzylRR4Asf5j7evtUzdZPODdHrJ8CzEFK6MGUAgg==
 
 cross-fetch@^3.0.4:
   version "3.1.5"
