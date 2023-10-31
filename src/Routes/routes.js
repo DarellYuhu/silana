@@ -19,6 +19,9 @@ import Perincian from "../Pages/Perincian";
 import Kwitansi from "../Pages/Kwitansi";
 import EditSuratTugas from "../Pages/EditSuratTugas";
 import EditSuratPerjalananDinas from "../Pages/EditSuratPerjalananDinas";
+import EditNominatif from "../Pages/EditNominatif";
+import EditPerincian from "../Pages/EditPerincian";
+import EditKwitansi from "../Pages/EditKwitansi";
 
 const authProtectedRoutes = [
   //dashboard
@@ -37,8 +40,11 @@ const authProtectedRoutes = [
     component: <EditSuratPerjalananDinas />,
   },
   { path: "/nominatif", component: <Nominatif /> },
+  { path: "/nominatif/:id", component: <EditNominatif /> },
   { path: "/perincian", component: <Perincian /> },
+  { path: "/perincian/:id", component: <EditPerincian /> },
   { path: "/kwitansi", component: <Kwitansi /> },
+  { path: "/kwitansi/:id", component: <EditKwitansi /> },
 
   // Profile
   { path: "/userprofile", component: <UserProfile /> },

@@ -7,6 +7,7 @@ import {
   InputGroup,
   Label,
 } from "reactstrap";
+import Creatable from "react-select/creatable";
 import Select from "react-select";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Flatpickr from "react-flatpickr";
@@ -54,7 +55,7 @@ const EditSuratPerjalananDinas = () => {
                 </div>
                 <div className="mb-3">
                   <Label>Tempat Tujuan</Label>
-                  <Select
+                  <Creatable
                     // value={selectedGroup}
                     // onChange={() => {
                     //   handleSelectGroup();
@@ -109,9 +110,9 @@ const EditSuratPerjalananDinas = () => {
               </div>
               <button
                 type="button"
-                className="btn btn-primary btn-rounded btn-lg waves-effect waves-light"
+                className="btn btn-info btn-rounded btn-lg waves-effect waves-light"
               >
-                Cetak Surat
+                SELESAI
               </button>
             </CardBody>
           </Card>

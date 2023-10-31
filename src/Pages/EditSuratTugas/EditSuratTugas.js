@@ -177,7 +177,7 @@ const EditSuratTugas = () => {
               <Col md={12} className="d-grid gap-3">
                 <CardBody className="p-0 px-1">
                   <FormGroup className="mb-4">
-                    <Label>Tanggal Surat</Label>
+                    <Label>Waktu / Tanggal (Perjalanan Dinas)</Label>
                     <InputGroup>
                       <Flatpickr
                         ref={dateRangePickerRef}
