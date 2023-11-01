@@ -9,7 +9,7 @@ import Login from "../Pages/Authentication/Login";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
 import Register from "../Pages/Authentication/Register";
-import UserProfile from "../Pages/Authentication/user-profile";
+import UserProfile from "../Pages/UserProfile";
 import BuatSuratTugas from "../Pages/BuatSuratTugas";
 import AktifitasSurat from "../Pages/AktifitasSurat";
 import SuratTugas from "../Pages/SuratTugas";
@@ -47,7 +47,8 @@ const authProtectedRoutes = [
   { path: "/kwitansi/:id", component: <EditKwitansi /> },
 
   // Profile
-  { path: "/userprofile", component: <UserProfile /> },
+  // { path: "/userprofile", component: <UserProfile /> },
+  { path: "/user-profile", component: <UserProfile /> },
   { path: "/aktifitas-surat", component: <AktifitasSurat /> },
 
   // this route should be at the end of all other routes
