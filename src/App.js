@@ -2,9 +2,9 @@ import React from "react";
 import Routes from "./Routes/index";
 
 // Import Scss
-import './assets/scss/theme.scss';
+import "./assets/scss/theme.scss";
 
-// Fake Backend 
+// Fake Backend
 import fakeBackend from "./helpers/AuthType/fakeBackend";
 
 // Activating fake backend
@@ -28,7 +28,6 @@ fakeBackend();
 // init firebase backend
 // initFirebaseBackend(firebaseConfig)
 
-
 function App() {
   return (
     <React.Fragment>
@@ -36,5 +35,7 @@ function App() {
     </React.Fragment>
   );
 }
+
+// huhi
 
 export default App;
