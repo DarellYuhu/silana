@@ -13,6 +13,8 @@ const Datatables = ({ item }) => {
       columns={columns}
       data={item}
       pagination
+      fixedHeader
+      fixedHeaderScrollHeight="500px"
       customStyles={{
         cells: {
           style: {
@@ -29,26 +31,35 @@ const columns = [
     name: <span className="font-weight-bold fs-13">No.</span>,
     selector: (row, index) => index + 1,
     sortable: true,
+    width: "50px",
   },
   {
     name: <span className="font-weight-bold fs-13">Ketua Tim</span>,
     selector: (row) => row.ketuaTim,
     sortable: true,
+    width: "200px",
   },
   {
     name: <span className="font-weight-bold fs-13">Nomor Surat</span>,
     selector: (row) => row.noSurat,
     sortable: true,
+    width: "150px",
   },
   {
     name: <span className="font-weight-bold fs-13">Tanggal</span>,
     selector: (row) => row.tanggal,
     sortable: true,
+    width: "260px",
   },
   {
     name: <span className="font-weight-bold fs-13">Tugas</span>,
     selector: (row) => row.tugas,
     sortable: true,
+    width: "300px",
+    wrap: true,
+    style: {
+      padding: "10px 0px",
+    },
   },
   {
     name: <span className="font-weight-bold fs-13">Action</span>,

@@ -12,16 +12,19 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
       name: <span className="font-weight-bold fs-13">No.</span>,
       selector: (row, index) => index + 1,
       sortable: true,
+      width: "50px",
     },
     {
       name: <span className="font-weight-bold fs-13">Nama</span>,
       selector: (row) => row.nama,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">NIP</span>,
       selector: (row) => row.nip,
       sortable: true,
+      width: "150px",
     },
     {
       name: <span className="font-weight-bold fs-13">Golongan</span>,
@@ -36,6 +39,7 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
     {
       name: <span className="font-weight-bold fs-13">Action</span>,
       sortable: false,
+      width: "80px",
       cell: (_, index) => {
         return (
           <UncontrolledDropdown className="dropdown d-inline-block">
