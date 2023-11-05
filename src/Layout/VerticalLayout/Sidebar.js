@@ -89,7 +89,10 @@ const Sidebar = (props) => {
     const items = ul.getElementsByTagName("a");
     removeActivation(items);
     for (let i = 0; i < items.length; ++i) {
-      if (fullPath === items[i].pathname) {
+      if (
+        fullPath === items[i].pathname ||
+        fullPath.split("/")[1] === items[i].pathname.split("/")[1]
+      ) {
         matchingMenuItem = items[i];
         break;
       }
