@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Input, Modal, Row } from "reactstrap";
+import { Modal } from "reactstrap";
 
 const data = [
   {

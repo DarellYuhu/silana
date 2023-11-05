@@ -5,17 +5,10 @@ import {
   CardTitle,
   Col,
   Container,
-  FormGroup,
   Input,
-  InputGroup,
-  Label,
   CardHeader,
-  CardFooter,
-  Row,
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import Select from "react-select";
-import Flatpickr from "react-flatpickr";
 
 const UserProfile = () => {
   return (

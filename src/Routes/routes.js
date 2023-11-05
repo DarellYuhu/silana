@@ -22,6 +22,7 @@ import EditSuratPerjalananDinas from "../Pages/EditSuratPerjalananDinas";
 import EditNominatif from "../Pages/EditNominatif";
 import EditPerincian from "../Pages/EditPerincian";
 import EditKwitansi from "../Pages/EditKwitansi";
+import DataKaryawan from "../Pages/DataKaryawan";
 
 const authProtectedRoutes = [
   //dashboard
@@ -50,6 +51,7 @@ const authProtectedRoutes = [
   // { path: "/userprofile", component: <UserProfile /> },
   { path: "/user-profile", component: <UserProfile /> },
   { path: "/aktifitas-surat", component: <AktifitasSurat /> },
+  { path: "/data-karyawan", component: <DataKaryawan /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
