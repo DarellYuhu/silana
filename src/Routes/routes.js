@@ -24,6 +24,7 @@ import EditPerincian from "../Pages/EditPerincian";
 import EditKwitansi from "../Pages/EditKwitansi";
 import DataKaryawan from "../Pages/DataKaryawan";
 import Anggaran from "../Pages/Anggaran";
+import PrintSuratTugas from "../Pages/PrintSuratTugas";
 
 const authProtectedRoutes = [
   //dashboard
@@ -35,7 +36,7 @@ const authProtectedRoutes = [
   },
   { path: "/surat-tugas", component: <SuratTugas /> },
   { path: "/surat-tugas/:id", component: <EditSuratTugas /> },
-  { path: "/buat-surat", component: <BuatSuratTugas /> },
+  { path: "/surat-tugas/buat-surat", component: <BuatSuratTugas /> },
   { path: "/surat-perjalanan-dinas", component: <SuratPerjalananDinas /> },
   {
     path: "/surat-perjalanan-dinas/:id",
@@ -65,6 +66,7 @@ const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/register", component: <Register /> },
+  { path: "/surat-tugas/:id/print", component: <PrintSuratTugas /> },
 ];
 
 export { authProtectedRoutes, publicRoutes };

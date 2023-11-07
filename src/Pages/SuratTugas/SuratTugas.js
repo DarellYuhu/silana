@@ -51,7 +51,7 @@ const SuratTugas = () => {
             <button
               type="button"
               className="btn btn-info btn-lg waves-effect waves-light"
-              onClick={() => navigate("/buat-surat")}
+              onClick={() => navigate("/surat-tugas/buat-surat")}
             >
               Buat Surat
             </button>
@@ -251,6 +251,7 @@ const TableItem = ({
       </td>
       <td>
         <button
+          onClick={() => navigate(`/surat-tugas/${index}/print`)}
           className="btn btn-sm btn-outline-primary print-item-btn"
           data-bs-toggle="modal"
           data-bs-target="#showModal"

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
   Card,
   CardBody,
@@ -7,11 +7,19 @@ import {
   CardTitle,
   Col,
   Container,
+  Input,
+  Label,
   Row,
+  FormGroup,
+  InputGroup,
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Select from "react-select";
+import Flatpickr from "react-flatpickr";
+import { AnggaranModal } from "./Component";
 
 const BuatSuratTugas = () => {
+  const [open, setOpen] = useState(false);
   const [surat, setSurat] = useState({
     beban: "",
     mataAnggaran: "",
@@ -36,6 +44,8 @@ const BuatSuratTugas = () => {
     bendaharaPengeluaranPembantu: "",
     pemastian: false,
   });
+  const dateRangePickerRef = useRef(null);
+  const datePickerRef = useRef(null);
 
   // const handleAddField = () => {
   //   // add the field label alphabetically
@@ -77,45 +87,157 @@ const BuatSuratTugas = () => {
     <Fragment>
       <div className="page-content">
         <Container fluid={true}>
-          <Breadcrumbs title="Silana" breadcrumbItem="Buat Surat" />
+          <Breadcrumbs title="Surat Tugas" breadcrumbItem="Buat Surat" />
           <Card>
             <CardBody>
-              <Row md={3}>
+              <CardBody className="p-0 px-1">
+                <div className="mb-3">
+                  <Label>Warna Bar</Label>
+                  <Select
+                    // value={selectedGroup}
+                    // onChange={() => {
+                    //   handleSelectGroup();
+                    // }}
+                    // options={warnaOption}
+                    classNamePrefix="select2-selection"
+                  />
+                </div>
+              </CardBody>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody>
+              <Col md={12} className="d-grid gap-3">
                 <CardBody className="p-0 px-1">
                   <CardTitle>Beban</CardTitle>
                   <CardBody className="p-0">
-                    <input
-                      className="form-control"
+                    <Input
                       type="text"
-                      placeholder="Beban"
+                      className="colorpicker-default"
+                      // value={color}
+                      // onClick={() => {
+                      //   setsimple_color(!simple_color);
+                      // }}
+                      // readOnly
+                      placeholder="ex..DIPA Perwakilan BKKBN Provinsi Sulawesi Utara"
+                    />
+                  </CardBody>
+                </CardBody>
+                <CardBody className="p-0 px-1">
+                  <CardTitle>Tahun Anggaran</CardTitle>
+                  <CardBody className="p-0">
+                    <Input
+                      type="text"
+                      className="colorpicker-default"
+                      // value={color}
+                      // onClick={() => {
+                      //   setsimple_color(!simple_color);
+                      // }}
+                      // readOnly
+                      placeholder="ex..2023"
                     />
                   </CardBody>
                 </CardBody>
                 <CardBody className="p-0 px-1">
                   <CardTitle>Mata Anggaran</CardTitle>
                   <CardBody className="p-0">
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Mata Anggaran</em>
-                      </option>
-                      <option>3331.UBA.002.256.A.524111</option>
-                      <option>3331.UBA.002.256.A.524111</option>
-                      <option>3331.UBA.002.256.A.524111</option>
-                    </select>
+                    <Input
+                      type="text"
+                      className="colorpicker-default"
+                      // value={color}
+                      // onClick={() => {
+                      //   setsimple_color(!simple_color);
+                      // }}
+                      // readOnly
+                      placeholder="3331.UBA.002.256.A.524111"
+                      // disabled
+                      onClick={() => setOpen(!open)}
+                    />
                   </CardBody>
+                </CardBody>
+              </Col>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody>
+              <Col md={12} className="d-grid gap-3">
+                <CardBody className="p-0 px-1">
+                  <Label>Kendaraan</Label>
+                  <Select
+                    // value={selectedGroup}
+                    // onChange={() => {
+                    //   handleSelectGroup();
+                    // }}
+                    // options={kendaraanOption}
+                    classNamePrefix="select2-selection"
+                  />
                 </CardBody>
                 <CardBody className="p-0 px-1">
-                  <CardTitle>Kendaraan</CardTitle>
-                  <CardBody className="p-0">
-                    <select className="form-control">
-                      <option value={""}>Pilih Kendaraan</option>
-                      <option>Mobil</option>
-                      <option>Kapal</option>
-                      <option>Pesawat</option>
-                    </select>
-                  </CardBody>
+                  <FormGroup className="mb-4">
+                    <Label>Tanggal Surat</Label>
+                    <InputGroup>
+                      <Flatpickr
+                        ref={datePickerRef}
+                        defaultValue="today"
+                        className="form-control d-block"
+                        placeholder="dd M, yyyy"
+                        options={{
+                          altInput: true,
+                          altFormat: "F j, Y",
+                          dateFormat: "Y-m-d",
+                        }}
+                      />
+                      <div className="input-group-append">
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary docs-datepicker-trigger"
+                          onClick={() =>
+                            datePickerRef.current.flatpickr.toggle()
+                          }
+                        >
+                          <i className="fa fa-calendar" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </InputGroup>
+                  </FormGroup>
                 </CardBody>
-              </Row>
+              </Col>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody>
+              <Col md={12} className="d-grid gap-3">
+                <CardBody className="p-0 px-1">
+                  <FormGroup className="mb-4">
+                    <Label>Waktu / Tanggal (Perjalanan Dinas)</Label>
+                    <InputGroup>
+                      <Flatpickr
+                        ref={dateRangePickerRef}
+                        className="form-control d-block"
+                        placeholder="dd M, yyyy"
+                        options={{
+                          mode: "range",
+                          dateFormat: "Y-m-d",
+                        }}
+                      />
+                      <div className="input-group-append">
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary docs-datepicker-trigger"
+                          onClick={() =>
+                            dateRangePickerRef.current.flatpickr.toggle()
+                          }
+                        >
+                          <i className="fa fa-calendar" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </InputGroup>
+                  </FormGroup>
+                </CardBody>
+              </Col>
             </CardBody>
           </Card>
 
@@ -233,15 +355,15 @@ const BuatSuratTugas = () => {
                     >
                       {item.label}
                     </label>
-                    <div className="col-md-10">
-                      <select className="form-control">
-                        <option value={""}>
-                          <em>Pilih Anggota</em>
-                        </option>
-                        <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                        <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                        <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                      </select>
+                    <div className="mb-3 col-md-10">
+                      <Select
+                        // value={selectedGroup}
+                        // onChange={() => {
+                        //   handleSelectGroup();
+                        // }}
+                        // options={anggaranOption}
+                        classNamePrefix="select2-selection"
+                      />
                     </div>
                     <div className="col-md-1 d-flex align-items-center justify-content-center">
                       <button
@@ -268,236 +390,43 @@ const BuatSuratTugas = () => {
           </Card>
 
           <Card>
+            <CardHeader className="bg-transparent">
+              <h5 className="my-0">Pemberi Tugas</h5>
+            </CardHeader>
+
+            {/* <CardTitle>Kepada</CardTitle> */}
             <CardBody>
-              <div className="d-grid gap-3">
-                <Col>
-                  <CardTitle>Untuk</CardTitle>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    // value={item.value}
-                    // onChange={(e) => {
-                    //   const newDasar = [...dasar];
-                    //   newDasar[index].value = e.target.value;
-                    //   setDasar(newDasar);
-                    // }}
-                  />
-                </Col>
+              <CardBody className="pt-0 d-grid gap-3">
                 <Row>
-                  <label
-                    htmlFor="example-date-input"
-                    className="col-md-2 col-form-label"
-                  >
-                    Tanggal Berangkat
-                  </label>
-                  <div className="col-md-10">
-                    <input
-                      className="form-control"
-                      type="date"
-                      // defaultValue="2019-08-19"
-                      id="example-date-input"
+                  <Col md={2} className="d-flex align-items-center">
+                    Jabatan
+                  </Col>
+                  <Col md={10}>
+                    <Select
+                      // value={selectedGroup}
+                      // onChange={() => {
+                      //   handleSelectGroup();
+                      // }}
+                      // options={anggaranOption}
+                      classNamePrefix="select2-selection"
                     />
-                  </div>
+                  </Col>
                 </Row>
                 <Row>
-                  <label
-                    htmlFor="example-date-input"
-                    className="col-md-2 col-form-label"
-                  >
-                    Tanggal Kembali
-                  </label>
-                  <div className="col-md-10">
-                    <input
-                      className="form-control"
-                      type="date"
-                      // defaultValue="2019-08-19"
-                      id="example-date-input"
+                  <Col md={2} className="d-flex align-items-center">
+                    Nama
+                  </Col>
+                  <Col md={10}>
+                    <Select
+                      // value={selectedGroup}
+                      // onChange={() => {
+                      //   handleSelectGroup();
+                      // }}
+                      // options={anggaranOption}
+                      classNamePrefix="select2-selection"
                     />
-                  </div>
+                  </Col>
                 </Row>
-                <Col>
-                  <CardTitle>Yang Memberi tugas</CardTitle>
-                  <select className="form-control">
-                    <option value={""}>
-                      <em>Pilih Anggota</em>
-                    </option>
-                    <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                    <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                    <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                  </select>
-                </Col>
-              </div>
-            </CardBody>
-          </Card>
-
-          <h4 className="page-title-box mb-0 font-size-18">
-            TERM OF REFERANCE
-          </h4>
-          <Card>
-            <CardBody className="d-grid gap-4">
-              <div>
-                <CardTitle className="fw-bold">
-                  LEMBAR PENGAJUAN PERJALANAN DINAS
-                </CardTitle>
-                <CardBody className="d-grid gap-3 py-0">
-                  <Row>
-                    <label
-                      htmlFor="example-date-input"
-                      className="col-md-2 col-form-label d-flex align-items-center justify-content-start"
-                    >
-                      Tujuan Kegiatan
-                    </label>
-                    <div className="col-md-10">
-                      <textarea className="form-control" rows="3" />
-                    </div>
-                  </Row>
-                  <Row>
-                    <label
-                      htmlFor="example-date-input"
-                      className="col-md-2 col-form-label d-flex align-items-center justify-content-start"
-                    >
-                      Sasaran Kegiatan
-                    </label>
-                    <div className="col-md-10">
-                      <textarea className="form-control" rows="3" />
-                    </div>
-                  </Row>
-                  <Row>
-                    <label
-                      htmlFor="example-date-input"
-                      className="col-md-2 col-form-label d-flex align-items-center justify-content-start"
-                    >
-                      Output yang diharapkan
-                    </label>
-                    <div className="col-md-10">
-                      <textarea className="form-control" rows="3" />
-                    </div>
-                  </Row>
-                </CardBody>
-              </div>
-              <div>
-                <CardTitle className="fw-bold">YANG BERTANDA TANGAN</CardTitle>
-                <CardBody className="d-grid gap-3 py-2">
-                  <Col>
-                    <CardTitle>Mengetahui</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Anggota</em>
-                      </option>
-                      <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                      <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                      <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                    </select>
-                  </Col>
-                  <Col>
-                    <CardTitle>Ketua Tim</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Anggota</em>
-                      </option>
-                      <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                      <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                      <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                    </select>
-                  </Col>
-                  <Col>
-                    <CardTitle>Menyetujui</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Anggota</em>
-                      </option>
-                      <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                      <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                      <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                    </select>
-                  </Col>
-                </CardBody>
-              </div>
-            </CardBody>
-          </Card>
-
-          <h4 className="page-title-box mb-0 font-size-18">
-            {`SPD (SURAT PERJALANAN DINAS)`}
-          </h4>
-          <Card>
-            <CardBody className="d-grid gap-4">
-              <div>
-                <CardTitle className="fw-bold">
-                  PIHAK PEMBUAT KOMITMEN
-                </CardTitle>
-                <CardBody className="d-grid gap-3 py-2">
-                  <Col>
-                    <CardTitle>Pejabat Pembuat Komitmen</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Anggota</em>
-                      </option>
-                      <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                      <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                      <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                    </select>
-                  </Col>
-                </CardBody>
-              </div>
-              <div>
-                <CardTitle className="fw-bold">
-                  KEBERANGKATAN & DESTINASI
-                </CardTitle>
-                <CardBody className="d-grid gap-3 py-2">
-                  <Col>
-                    <CardTitle>Tempat Berangkat</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Tempat Berangkat</em>
-                      </option>
-                      <option>{`Manado, Sulawesi Utara`}</option>
-                      <option>{`Kabupaten Minahasa`}</option>
-                    </select>
-                  </Col>
-                  <Col>
-                    <CardTitle>Tempat Tujuan</CardTitle>
-                    <select className="form-control">
-                      <option value={""}>
-                        <em>Pilih Tempat Tujuan</em>
-                      </option>
-                      <option>{`Manado, Sulawesi Utara`}</option>
-                      <option>{`Kabupaten Minahasa`}</option>
-                    </select>
-                  </Col>
-                </CardBody>
-              </div>
-            </CardBody>
-          </Card>
-
-          <h4 className="page-title-box mb-0 font-size-18">
-            {`PERINCIAN BIAYA PERJALANAN DINAS`}
-          </h4>
-          <Card>
-            <CardBody className="d-grid gap-4">
-              <CardTitle className="fw-bold">PIHAK BENDAHARA</CardTitle>
-              <CardBody className="d-grid gap-3 py-2">
-                <Col>
-                  <CardTitle>Bendahara Pengeluaran</CardTitle>
-                  <select className="form-control">
-                    <option value={""}>
-                      <em>Pilih Anggota</em>
-                    </option>
-                    <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                    <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                    <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                  </select>
-                </Col>
-                <Col>
-                  <CardTitle>Bendahara Pengeluaran Pembantu</CardTitle>
-                  <select className="form-control">
-                    <option value={""}>
-                      <em>Pilih Anggota</em>
-                    </option>
-                    <option>{`Sidonia Ani Matindas (NIP. 196804081988032001)`}</option>
-                    <option>{`Jumria Sriwahyuni, S.Sos (NIP. 199105172019022009)`}</option>
-                    <option>{`Dinar Ariana Viestri, S.Si (NIP. 199103042019022003)`}</option>
-                  </select>
-                </Col>
               </CardBody>
             </CardBody>
           </Card>
@@ -525,6 +454,7 @@ const BuatSuratTugas = () => {
             </CardBody>
           </Card>
         </Container>
+        <AnggaranModal open={open} setOpen={setOpen} />
       </div>
     </Fragment>
   );
