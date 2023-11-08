@@ -25,6 +25,7 @@ import EditKwitansi from "../Pages/EditKwitansi";
 import DataKaryawan from "../Pages/DataKaryawan";
 import Anggaran from "../Pages/Anggaran";
 import PrintSuratTugas from "../Pages/PrintSuratTugas";
+import PrintSpdDepan from "../Pages/PrintSpdDepan";
 
 const authProtectedRoutes = [
   //dashboard
@@ -67,6 +68,10 @@ const publicRoutes = [
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/register", component: <Register /> },
   { path: "/surat-tugas/:id/print", component: <PrintSuratTugas /> },
+  {
+    path: "/surat-perjalanan-dinas/:id/print-depan",
+    component: <PrintSpdDepan />,
+  },
 ];
 
 export { authProtectedRoutes, publicRoutes };

@@ -107,13 +107,13 @@ const PrintSuratTugas = () => {
                         Kepulauan Sangihe
                       </TableCell>
                     </TableRow>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell sx={styles.seperator2}>b.</TableCell>
                       <TableCell sx={styles.item}>
                         Bahwa sehubungan dengan hal tersebut diatas, perlu
                         dibuatkan surat tugas
                       </TableCell>
-                    </TableRow>
+                    </TableRow> */}
                   </TableCell>
                 </TableRow>
                 <div style={{ height: 8 }} />
@@ -128,7 +128,7 @@ const PrintSuratTugas = () => {
                         Kependudukan dan Pembangunan Keluarga.
                       </TableCell>
                     </TableRow>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell sx={styles.seperator2}>b.</TableCell>
                       <TableCell sx={styles.item}>
                         Peraturan Pemerintah Nomor 87 Tahun 2014 tentang
@@ -143,7 +143,7 @@ const PrintSuratTugas = () => {
                         Optimalisasi Penyelenggaraan Kampung Keluarga
                         Berkualitas
                       </TableCell>
-                    </TableRow>
+                    </TableRow> */}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -153,7 +153,7 @@ const PrintSuratTugas = () => {
                   <TableCell
                     colSpan={3}
                     sx={{
-                      padding: 0,
+                      padding: 1,
                       borderBottom: "transparent",
                     }}
                   >
@@ -161,7 +161,7 @@ const PrintSuratTugas = () => {
                       style={{
                         width: "100%",
                         textAlign: "center",
-                        fontSize: "10pt",
+                        fontSize: "11pt",
                         fontWeight: "bold",
                         margin: 0,
                       }}
@@ -185,7 +185,7 @@ const PrintSuratTugas = () => {
                         NIP. 196505301991031003
                       </TableCell>
                     </TableRow>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell sx={styles.seperator2}>2.</TableCell>
                       <TableCell sx={styles.item}>
                         Ir. Ronny Sumilat
@@ -220,7 +220,7 @@ const PrintSuratTugas = () => {
                         Penata KKB Ahli Madya <br />
                         NIP. 196505301991031003
                       </TableCell>
-                    </TableRow>
+                    </TableRow> */}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -246,7 +246,7 @@ const PrintSuratTugas = () => {
                 <h4
                   style={{
                     width: "100%",
-                    fontSize: "10pt",
+                    fontSize: "11pt",
                     fontWeight: "bold",
                   }}
                 >
@@ -256,7 +256,7 @@ const PrintSuratTugas = () => {
                 <h4
                   style={{
                     width: "100%",
-                    fontSize: "10pt",
+                    fontSize: "11pt",
                     fontWeight: "bold",
                   }}
                 >
@@ -288,14 +288,14 @@ const PrintSuratTugas = () => {
             >
               Perwakilan BKKBN Provinsi Sulawesi Utara
             </h4>
-            <p style={{ fontSize: "10pt", margin: 0 }}>
+            <p style={{ fontSize: "8pt", margin: 0 }}>
               Jln. 17 Agustus Wanea, Manado, Sulawesi Utara 95117
             </p>
-            <p style={{ fontSize: "10pt", margin: 0 }}>
+            <p style={{ fontSize: "8pt", margin: 0 }}>
               T:(0431) 862504, 841093, 866466 | F:(0431) 855663 | E:
               prov.sulut@bkkbn.go.id
             </p>
-            <p style={{ fontSize: "10pt", margin: 0 }}>sulut.bkkbn.go.id</p>
+            <p style={{ fontSize: "8pt", margin: 0 }}>sulut.bkkbn.go.id</p>
           </div>
         </div>
         <button onClick={handlePrint}>Print PDF</button>

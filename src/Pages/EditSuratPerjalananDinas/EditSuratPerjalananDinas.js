@@ -90,6 +90,7 @@ const EditSuratPerjalananDinas = () => {
                     // onChange={() => {
                     //   handleSelectGroup();
                     // }}
+                    isMulti
                     options={filteredDistricts}
                     classNamePrefix="select2-selection"
                   />

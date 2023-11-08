@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
   Card,
   CardBody,
@@ -9,9 +9,11 @@ import {
   Input,
   Label,
   Row,
+  InputGroup,
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Select from "react-select";
+import Flatpickr from "react-flatpickr";
 
 const data = [
   {
@@ -27,8 +29,7 @@ const data = [
 
 const EditNominatif = () => {
   const [type, setType] = useState("");
-
-  const toRender = type === "Perorangan" ? data : data.slice(0, 1);
+  const datePickerRef = useRef(null);
   return (
     <Fragment>
       <div className="page-content">
@@ -45,7 +46,6 @@ const EditNominatif = () => {
                   <Select
                     // value={selectedGroup}
                     onChange={(newValue) => {
-                      console.log();
                       setType(newValue.value);
                     }}
                     options={transportType}
@@ -55,83 +55,86 @@ const EditNominatif = () => {
               </CardBody>
             </CardBody>
           </Card>
-          {toRender.map((item, index) => (
+          {data.map((item, index) => (
             <Card key={index}>
               <CardHeader className="bg-transparent border-bottom ">
                 <h5 className="my-0">{item.name}</h5>
               </CardHeader>
-              <CardBody>
-                <CardTitle>TRANSPORT</CardTitle>
-                <CardBody className="p-0 px-4">
-                  <h6 className="card-title">
-                    <i>
-                      Lokal <i className="mdi mdi-car" />
-                    </i>
-                  </h6>
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <Label>Pergi</Label>
-                      <Input
-                        type="text"
-                        className="colorpicker-default"
-                        // value={color}
-                        // onClick={() => {
-                        //   setsimple_color(!simple_color);
-                        // }}
-                        // readOnly
-                        placeholder="50000"
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Label>Pulang</Label>
-                      <Input
-                        type="text"
-                        className="colorpicker-default"
-                        // value={color}
-                        // onClick={() => {
-                        //   setsimple_color(!simple_color);
-                        // }}
-                        // readOnly
-                        placeholder="50000"
-                      />
-                    </Col>
-                  </Row>
-                  <h6 className="card-title">
-                    <i>
-                      Pesawat <i className="mdi mdi-airplane" /> / Kapal{" "}
-                      <i className="bx bxs-ship" />
-                    </i>
-                  </h6>
-                  <Row className="mb-3">
-                    <Col md={6}>
-                      <Label>Pergi</Label>
-                      <Input
-                        type="text"
-                        className="colorpicker-default"
-                        // value={color}
-                        // onClick={() => {
-                        //   setsimple_color(!simple_color);
-                        // }}
-                        // readOnly
-                        placeholder="50000"
-                      />
-                    </Col>
-                    <Col md={6}>
-                      <Label>Pergi</Label>
-                      <Input
-                        type="text"
-                        className="colorpicker-default"
-                        // value={color}
-                        // onClick={() => {
-                        //   setsimple_color(!simple_color);
-                        // }}
-                        // readOnly
-                        placeholder="50000"
-                      />
-                    </Col>
-                  </Row>
+
+              {type === "Tim" && index !== 0 ? null : (
+                <CardBody>
+                  <CardTitle>TRANSPORT</CardTitle>
+                  <CardBody className="p-0 px-4">
+                    <h6 className="card-title">
+                      <i>
+                        Lokal <i className="mdi mdi-car" />
+                      </i>
+                    </h6>
+                    <Row className="mb-3">
+                      <Col md={6}>
+                        <Label>Pergi</Label>
+                        <Input
+                          type="text"
+                          className="colorpicker-default"
+                          // value={color}
+                          // onClick={() => {
+                          //   setsimple_color(!simple_color);
+                          // }}
+                          // readOnly
+                          placeholder="50000"
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <Label>Pulang</Label>
+                        <Input
+                          type="text"
+                          className="colorpicker-default"
+                          // value={color}
+                          // onClick={() => {
+                          //   setsimple_color(!simple_color);
+                          // }}
+                          // readOnly
+                          placeholder="50000"
+                        />
+                      </Col>
+                    </Row>
+                    <h6 className="card-title">
+                      <i>
+                        Pesawat <i className="mdi mdi-airplane" /> / Kapal{" "}
+                        <i className="bx bxs-ship" />
+                      </i>
+                    </h6>
+                    <Row className="mb-3">
+                      <Col md={6}>
+                        <Label>Pergi</Label>
+                        <Input
+                          type="text"
+                          className="colorpicker-default"
+                          // value={color}
+                          // onClick={() => {
+                          //   setsimple_color(!simple_color);
+                          // }}
+                          // readOnly
+                          placeholder="50000"
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <Label>Pergi</Label>
+                        <Input
+                          type="text"
+                          className="colorpicker-default"
+                          // value={color}
+                          // onClick={() => {
+                          //   setsimple_color(!simple_color);
+                          // }}
+                          // readOnly
+                          placeholder="50000"
+                        />
+                      </Col>
+                    </Row>
+                  </CardBody>
                 </CardBody>
-              </CardBody>
+              )}
               <CardBody className="pt-0">
                 <CardTitle>LUMPSUM</CardTitle>
                 <CardBody className="p-0 px-4">
@@ -200,6 +203,35 @@ const EditNominatif = () => {
               </CardBody>
             </Card>
           ))}
+          <Card>
+            <CardBody>
+              <CardTitle>TANGGAL SURAT</CardTitle>
+              <CardBody className="p-0 px-4">
+                <InputGroup>
+                  <Flatpickr
+                    ref={datePickerRef}
+                    defaultValue="today"
+                    className="form-control d-block"
+                    placeholder="dd M, yyyy"
+                    options={{
+                      altInput: true,
+                      altFormat: "F j, Y",
+                      dateFormat: "Y-m-d",
+                    }}
+                  />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary docs-datepicker-trigger"
+                      onClick={() => datePickerRef.current.flatpickr.toggle()}
+                    >
+                      <i className="fa fa-calendar" aria-hidden="true" />
+                    </button>
+                  </div>
+                </InputGroup>
+              </CardBody>
+            </CardBody>
+          </Card>
           <Card>
             <CardBody>
               <div className="form-check mb-3">

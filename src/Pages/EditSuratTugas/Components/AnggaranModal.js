@@ -3,13 +3,19 @@ import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
 
 const data = [...Array(17).keys()].map((item) => ({
-  kodeAnggaran: "Mary Cousar",
-  deskripsi: "089/RT.01/J2/2023",
+  kodeAnggaran: "3331.FBA.002.248.A.524111",
+  deskripsi: "Penguatan Tata kelola Rumah Data Kependudukan",
+  anggaranTersedia: "Rp.31,120,000",
 }));
 
 const AnggaranModal = ({ open, setOpen = () => {} }) => {
   return (
-    <Modal isOpen={open} toggle={() => setOpen(!open)} scrollable={true}>
+    <Modal
+      isOpen={open}
+      size="lg"
+      toggle={() => setOpen(!open)}
+      scrollable={true}
+    >
       <div className="modal-header">
         <h5 className="modal-title mt-0">Tabel Anggaran Perjalanan Dinas</h5>
         <button
@@ -67,6 +73,11 @@ const columns = [
   {
     name: <span className="font-weight-bold fs-13">Deskripsi</span>,
     selector: (row) => row.deskripsi,
+    sortable: true,
+  },
+  {
+    name: <span className="font-weight-bold fs-13">Anggaran Tersedia</span>,
+    selector: (row) => row.anggaranTersedia,
     sortable: true,
   },
 ];

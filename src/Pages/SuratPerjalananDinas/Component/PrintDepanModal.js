@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "reactstrap";
 
 const data = [
@@ -20,6 +21,7 @@ const data = [
 ];
 
 const PrintDepanModal = ({ open, setOpen }) => {
+  const navigate = useNavigate();
   return (
     <Modal
       centered
@@ -42,7 +44,13 @@ const PrintDepanModal = ({ open, setOpen }) => {
       <div className="modal-body">
         <div>
           {data.map((item, index) => (
-            <button key={index} className="m-2 btn btn-rounded btn-primary">
+            <button
+              key={index}
+              onClick={() =>
+                navigate(`/surat-perjalanan-dinas/${index}/print-depan`)
+              }
+              className="m-2 btn btn-rounded btn-primary"
+            >
               {item.name}
             </button>
           ))}

@@ -1,9 +1,19 @@
 import { Breadcrumbs } from "@mui/material";
-import { Fragment } from "react";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Fragment, useRef } from "react";
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Col,
+  Container,
+  InputGroup,
+  Row,
+} from "reactstrap";
 import Select from "react-select";
+import Flatpickr from "react-flatpickr";
 
 const EditKwitansi = () => {
+  const datePickerRef = useRef(null);
   return (
     <Fragment>
       <div className="page-content">
@@ -14,7 +24,7 @@ const EditKwitansi = () => {
               <CardBody className="py-0 d-grid gap-3">
                 <Row>
                   <Col md={2} className="d-flex align-items-center">
-                    Bendahara
+                    BPP
                   </Col>
                   <Col md={10}>
                     <Select
@@ -29,7 +39,7 @@ const EditKwitansi = () => {
                 </Row>
                 <Row>
                   <Col md={2} className="d-flex align-items-center">
-                    Penerima
+                    Pelaksana
                   </Col>
                   <Col md={10}>
                     <Select
@@ -42,6 +52,35 @@ const EditKwitansi = () => {
                     />
                   </Col>
                 </Row>
+              </CardBody>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <CardTitle>TANGGAL SURAT</CardTitle>
+              <CardBody className="p-0 px-4">
+                <InputGroup>
+                  <Flatpickr
+                    ref={datePickerRef}
+                    defaultValue="today"
+                    className="form-control d-block"
+                    placeholder="dd M, yyyy"
+                    options={{
+                      altInput: true,
+                      altFormat: "F j, Y",
+                      dateFormat: "Y-m-d",
+                    }}
+                  />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary docs-datepicker-trigger"
+                      onClick={() => datePickerRef.current.flatpickr.toggle()}
+                    >
+                      <i className="fa fa-calendar" aria-hidden="true" />
+                    </button>
+                  </div>
+                </InputGroup>
               </CardBody>
             </CardBody>
           </Card>
