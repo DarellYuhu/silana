@@ -44,108 +44,120 @@ const PrintSpdDepan = () => {
           style={{
             width: "210mm",
             height: "297mm",
-            padding: "19px 1.5cm",
+            padding: "0.2cm 1.5cm",
             display: "flex",
             flexDirection: "column",
+            backgroundColor: "yellow",
+            color: "black",
           }}
         >
           {/* header */}
-          <div>
-            <div className="container">
-              <div className="row">
-                <div className="col-sm-5" />
-                <div
-                  className="col-sm-2"
-                  style={{
-                    justifyContent: "center",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <img src={logoMkri} style={{ width: "1.04in" }} />
-                  <p style={{ fontSize: "9pt", margin: 0 }}>
-                    MENTERI KEUANGAN
-                    <br />
-                    REPUBLIK INDONESIA
-                  </p>
-                </div>
-                <div
-                  className="col-sm-5"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p style={{ fontSize: "7pt", margin: 0 }}>
-                    LAMPIRAN 1<br />
-                    PERATURAN MENTERI KEUANGAN REPUBLIK INDONESIA <br />
-                    NOMOR 113/PMK.05/2012
-                    <br />
-                    TENTANG
-                    <br />
-                    PERJALANAN DINAS JABATAN DALAM NEGRI BAGI PEJABAT
-                    <br />
-                    NEGARA, PEGAWAI NEGRI, DAN PEGAWAI TIDAK TETAP
-                    <br />
-                  </p>
-                </div>
-              </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginRight: "65px",
+                textAlign: "center",
+              }}
+            >
+              <img src={logoMkri} style={{ width: "1.04in" }} />
+              <p style={{ fontSize: "9pt", margin: 0 }}>
+                MENTERI KEUANGAN
+                <br />
+                REPUBLIK INDONESIA
+              </p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <p style={{ fontSize: "5.5pt", margin: 0 }}>
+                LAMPIRAN 1<br />
+                PERATURAN MENTERI KEUANGAN REPUBLIK INDONESIA <br />
+                NOMOR 113/PMK.05/2012
+                <br />
+                TENTANG
+                <br />
+                PERJALANAN DINAS JABATAN DALAM NEGRI BAGI PEJABAT
+                <br />
+                NEGARA, PEGAWAI NEGRI, DAN PEGAWAI TIDAK TETAP
+                <br />
+              </p>
             </div>
           </div>
 
           {/* body */}
-          <div className="container">
-            <div className="row">
-              <div className="col-sm-7">
-                <p style={{ fontSize: "8px", fontWeight: "bold", margin: 0 }}>
-                  KEMENTERIAN NEGARA / LEMBAGA NEGARA :
-                </p>
-                <p style={{ fontSize: "8px", fontWeight: "bold", margin: 0 }}>
-                  PERWAKILAN BADAN KEPENDUDUKAN DAN KELUARGA BERENCANA NASIONAL
-                </p>
-              </div>
-              <div className="col-sm-5">
-                <div className="row">
-                  <p
-                    className="col-sm-3"
-                    style={{ fontSize: "8px", margin: 0 }}
+          <div>
+            <Table style={{ paddingTop: 9, paddingBottom: 9 }}>
+              <TableBody>
+                <TableRow>
+                  <TableCell
+                    sx={[
+                      styles.cell1,
+                      {
+                        paddingX: 0,
+                        border: "transparent",
+                        verticalAlign: "top",
+                      },
+                    ]}
                   >
-                    LEMBAR KE
-                  </p>
-                  <p
-                    className="col-sm-1"
-                    style={{ fontSize: "8px", margin: 0 }}
+                    <p
+                      style={{ fontSize: "7pt", fontWeight: "bold", margin: 0 }}
+                    >
+                      KEMENTERIAN NEGARA / LEMBAGA NEGARA :
+                    </p>
+                    <p
+                      style={{ fontSize: "7pt", fontWeight: "bold", margin: 0 }}
+                    >
+                      PERWAKILAN BADAN KEPENDUDUKAN DAN KELUARGA BERENCANA
+                      NASIONAL
+                    </p>
+                  </TableCell>
+                  <TableCell
+                    sx={{ padding: 0, width: 250, border: "transparent" }}
                   >
-                    :
-                  </p>
-                  <p
-                    className="col-sm-8"
-                    style={{ fontSize: "8px", margin: 0 }}
-                  ></p>
-                </div>
-                <div className="row">
-                  <p className="col-sm-3" style={styles.text1}>
-                    Kode No.
-                  </p>
-                  <p className="col-sm-1" style={styles.text1}>
-                    :
-                  </p>
-                  <p className="col-sm-8" style={styles.text1}></p>
-                </div>
-                <div className="row">
-                  <p className="col-sm-3" style={styles.text1}>
-                    Nomor
-                  </p>
-                  <p className="col-sm-1" style={styles.text1}>
-                    :
-                  </p>
-                  <p className="col-sm-8" style={styles.text1}></p>
-                </div>
-              </div>
-            </div>
-            <div className="row">
+                    <TableRow>
+                      <TableCell sx={styles.cell2}>LEMBAR KE</TableCell>
+                      <TableCell sx={[styles.cell2, { paddingX: 1 }]}>
+                        :
+                      </TableCell>
+                      <TableCell
+                        sx={[styles.cell2, { width: "100%" }]}
+                      ></TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={styles.cell3}>Kode No</TableCell>
+                      <TableCell sx={[styles.cell3, { paddingX: 1 }]}>
+                        :
+                      </TableCell>
+                      <TableCell
+                        sx={[styles.cell3, { width: "100%" }]}
+                      ></TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={styles.cell3}>Nomor</TableCell>
+                      <TableCell sx={[styles.cell3, { paddingX: 1 }]}>
+                        :
+                      </TableCell>
+                      <TableCell
+                        sx={[styles.cell3, { width: "100%" }]}
+                      ></TableCell>
+                    </TableRow>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div style={{ paddingTop: 10, paddingBottom: 10 }}>
               <h3
                 style={{
                   fontSize: "10px",
@@ -156,7 +168,7 @@ const PrintSpdDepan = () => {
                 SURAT PERJALANAN DINAS (SPD)
               </h3>
             </div>
-            <div className="row">
+            <div>
               <Table>
                 <TableBody>
                   <TableRow>
@@ -164,7 +176,12 @@ const PrintSpdDepan = () => {
                     <TableCell sx={styles.cell1}>
                       Pejabat Pembuat Komitmen
                     </TableCell>
-                    <TableCell sx={styles.cell1}>
+                    <TableCell
+                      sx={[
+                        styles.cell1,
+                        { fontSize: "9pt", fontWeight: "bold", paddingY: 1 },
+                      ]}
+                    >
                       Koba L.A. Paul, S.Farm., Apt.
                     </TableCell>
                   </TableRow>
@@ -202,7 +219,7 @@ const PrintSpdDepan = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>5</TableCell>
-                    <TableCell sx={styles.cell1}>
+                    <TableCell sx={[styles.cell1, { whiteSpace: "nowrap" }]}>
                       Alat angkutan yang dipergunakan
                     </TableCell>
                     <TableCell sx={styles.cell1}>
@@ -239,57 +256,11 @@ const PrintSpdDepan = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>8</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>Pengikut:</TableCell>
-                          <TableCell sx={styles.cell1}>Nama</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>1.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>2.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>3.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>4.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>6.</TableCell>
-                        </TableRow>
-                      </TableBody>
+                    <TableCell sx={[styles.cell1, { columnSpan: 2 }]}>
+                      8
                     </TableCell>
-                    <TableCell sx={styles.cell1}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>Tanggal Lahir</TableCell>
-                          <TableCell sx={styles.cell1}>Keterangan</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow></TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>1.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>2.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>3.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>4.</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell sx={styles.cell1}>6.</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </TableCell>
+                    <TableCell sx={styles.cell1}>8</TableCell>
+                    <TableCell sx={styles.cell1}>8</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>9</TableCell>
@@ -321,8 +292,7 @@ const PrintSpdDepan = () => {
             style={{
               display: "flex",
               justifyContent: "flex-end",
-              flex: 1,
-              alignItems: "flex-end",
+              marginTop: 20,
             }}
           >
             <div>
@@ -343,7 +313,7 @@ const PrintSpdDepan = () => {
                   </div>
                 </div>
               </div>
-              <div style={{ marginRight: 108 }}>
+              <div style={{ marginRight: 108, marginTop: 20 }}>
                 <h4
                   style={{ margin: 0, fontSize: "11.5px", fontWeight: "bold" }}
                 >
@@ -352,9 +322,6 @@ const PrintSpdDepan = () => {
                 <div
                   style={{
                     marginTop: 60,
-                    height: "2px",
-                    backgroundColor: "black",
-                    width: "100%",
                   }}
                 />
                 <h5
@@ -362,6 +329,13 @@ const PrintSpdDepan = () => {
                 >
                   Koba L.A. Paul, S.Farm., Apt.
                 </h5>
+                <div
+                  style={{
+                    height: "2px",
+                    backgroundColor: "black",
+                    width: "100%",
+                  }}
+                />
                 <p style={{ margin: 0, fontSize: "11.5px" }}>
                   NIP. 198605182014021004
                 </p>
@@ -379,9 +353,21 @@ const styles = {
   text1: { fontSize: "8px", margin: 0 },
   cell1: {
     paddingX: "8px",
-    paddingY: 0,
+    paddingY: 0.5,
     fontSize: "11.5px",
     border: "1px solid black",
+  },
+  cell2: {
+    fontSize: "7pt",
+    padding: 0,
+    whiteSpace: "nowrap",
+    border: "transparent",
+  },
+  cell3: {
+    fontSize: "6.5pt",
+    padding: 0,
+    whiteSpace: "nowrap",
+    border: "transparent",
   },
 };
 

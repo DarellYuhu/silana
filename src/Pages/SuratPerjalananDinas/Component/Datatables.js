@@ -8,6 +8,7 @@ import {
 } from "reactstrap";
 
 const Datatables = ({ item, handleEditClick = () => {} }) => {
+  const navigate = useNavigate();
   const columns = [
     {
       name: <span className="font-weight-bold fs-13">No.</span>,
@@ -65,7 +66,12 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Depan
               </DropdownItem>
-              <DropdownItem className="remove-item-btn">
+              <DropdownItem
+                onClick={() =>
+                  navigate(`/surat-perjalanan-dinas/${index}/print-belakang`)
+                }
+                className="remove-item-btn"
+              >
                 {" "}
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Belakang{" "}
