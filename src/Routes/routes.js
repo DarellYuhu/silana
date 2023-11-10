@@ -27,6 +27,7 @@ import Anggaran from "../Pages/Anggaran";
 import PrintSuratTugas from "../Pages/PrintSuratTugas";
 import PrintSpdDepan from "../Pages/PrintSpdDepan";
 import PrintSpdBelakang from "../Pages/PrintSpdBelakang";
+import PrintNominatif from "../Pages/PrintNominatif";
 
 const authProtectedRoutes = [
   //dashboard
@@ -76,6 +77,10 @@ const publicRoutes = [
   {
     path: "/surat-perjalanan-dinas/:id/print-belakang",
     component: <PrintSpdBelakang />,
+  },
+  {
+    path: "/nominatif/:id/print",
+    component: <PrintNominatif />,
   },
 ];
 
