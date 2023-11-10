@@ -28,6 +28,7 @@ import PrintSuratTugas from "../Pages/PrintSuratTugas";
 import PrintSpdDepan from "../Pages/PrintSpdDepan";
 import PrintSpdBelakang from "../Pages/PrintSpdBelakang";
 import PrintNominatif from "../Pages/PrintNominatif";
+import PrintKwitansi from "../Pages/PrintKwitansi";
 
 const authProtectedRoutes = [
   //dashboard
@@ -81,6 +82,10 @@ const publicRoutes = [
   {
     path: "/nominatif/:id/print",
     component: <PrintNominatif />,
+  },
+  {
+    path: "/kwitansi/:id/print",
+    component: <PrintKwitansi />,
   },
 ];
 

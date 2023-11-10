@@ -74,7 +74,7 @@ const columns = [
             <i className="ri-more-fill align-middle"></i>
           </DropdownToggle>
           <DropdownMenu className="dropdown-menu-end">
-            <DropdownItem href="#!">
+            <DropdownItem href={`/kwitansi/${index}/print`}>
               <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
               Cetak
             </DropdownItem>
