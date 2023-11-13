@@ -13,18 +13,11 @@ const PrintSpdDepan = () => {
   const printRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
-    // pageStyle: `
-    //   @page {
-    //     size: A4;
-    //     margin: 0;
-    //   }
-    //   @media print {
-    //     html, body {
-    //       width: 210mm;
-    //       height: 297mm;
-    //     }
-    //   }
-    // `,
+    pageStyle: `
+      @page {
+        size: A4;
+      }
+    `,
   });
 
   return (
@@ -47,7 +40,7 @@ const PrintSpdDepan = () => {
             padding: "0.2cm 1.5cm",
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "yellow",
+            backgroundColor: "white",
             color: "black",
           }}
         >
@@ -67,7 +60,7 @@ const PrintSpdDepan = () => {
                 textAlign: "center",
               }}
             >
-              <img src={logoMkri} style={{ width: "1.04in" }} />
+              <img src={logoMkri} style={{ width: "1.04in" }} alt="garuda" />
               <p style={{ fontSize: "9pt", margin: 0 }}>
                 MENTERI KEUANGAN
                 <br />
@@ -256,11 +249,239 @@ const PrintSpdDepan = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>8</TableCell>
-                    <TableCell sx={[styles.cell1, { columnSpan: 2 }]}>
-                      8
+                    <TableCell sx={[styles.cell1, { padding: 0 }]}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell1,
+                              { width: "10%", border: "transparent" },
+                            ]}
+                          >
+                            Pengikut:
+                          </TableCell>
+                          <TableCell
+                            sx={[
+                              styles.cell1,
+                              { width: "100%", border: "transparent" },
+                            ]}
+                          >
+                            Nama
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderTop: "1px solid black",
+                                paddingTop: "3px",
+                              },
+                            ]}
+                          >
+                            1.
+                          </TableCell>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderTop: "1px solid black",
+                                paddingTop: "3px",
+                              },
+                            ]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                              },
+                            ]}
+                          >
+                            2.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                              },
+                            ]}
+                          >
+                            3
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                              },
+                            ]}
+                          >
+                            4.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                              },
+                            ]}
+                          >
+                            5.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                      </TableBody>
                     </TableCell>
-                    <TableCell sx={styles.cell1}>8</TableCell>
-                    <TableCell sx={styles.cell1}>8</TableCell>
+                    <TableCell sx={[styles.cell1, { padding: 0 }]}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell1,
+                              {
+                                width: "20%",
+                                border: "transparent",
+                              },
+                            ]}
+                          >
+                            Tanggal Lahir
+                          </TableCell>
+                          <TableCell
+                            sx={[
+                              styles.cell1,
+                              {
+                                width: "20%",
+                                border: "transparent",
+                                borderLeft: "1px solid black",
+                              },
+                            ]}
+                          >
+                            Keterangan
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderTop: "1px solid black",
+                                paddingTop: "3px",
+                                borderRight: "1px solid black",
+                                visibility: "hidden",
+                              },
+                            ]}
+                          >
+                            1.
+                          </TableCell>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderTop: "1px solid black",
+                                paddingTop: "3px",
+                              },
+                            ]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderRight: "1px solid black",
+                                visibility: "hidden",
+                              },
+                            ]}
+                          >
+                            2.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderRight: "1px solid black",
+                                visibility: "hidden",
+                              },
+                            ]}
+                          >
+                            3
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderRight: "1px solid black",
+                                visibility: "hidden",
+                              },
+                            ]}
+                          >
+                            4.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            sx={[
+                              styles.cell4,
+                              {
+                                border: "1px solid white",
+                                borderRight: "1px solid black",
+                                visibility: "hidden",
+                              },
+                            ]}
+                          >
+                            5.
+                          </TableCell>
+                          <TableCell
+                            sx={[styles.cell4, { border: "1px solid white" }]}
+                          ></TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>9</TableCell>
@@ -368,6 +589,13 @@ const styles = {
     padding: 0,
     whiteSpace: "nowrap",
     border: "transparent",
+  },
+  cell4: {
+    paddingX: "8px",
+    paddingY: 0.5,
+    fontSize: "11.5px",
+    borderTop: "1px solid black",
+    borderBottom: "transparent",
   },
 };
 
