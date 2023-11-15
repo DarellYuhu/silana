@@ -1,18 +1,19 @@
+import axios from "axios";
+import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
 
-const EditAnggaranModal = ({ modal }) => {
+const EditAnggaranModal = ({ modal, data }) => {
+  const handleClose = () => {
+    modal.value = false;
+    data.value = {};
+  };
   return (
-    <Modal
-      centered
-      isOpen={modal.value}
-      toggle={() => (modal.value = false)}
-      scrollable={true}
-    >
+    <Modal centered isOpen={modal.value} toggle={handleClose} scrollable={true}>
       <div className="modal-header d-flex justify-content-center bg-info">
         <h5 className="modal-title mt-0 text-white">EDIT ANGGARAN</h5>
         <button
           type="button"
-          onClick={() => (modal.value = false)}
+          onClick={handleClose}
           className="close"
           data-dismiss="modal"
           aria-label="Close"
@@ -20,54 +21,86 @@ const EditAnggaranModal = ({ modal }) => {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div className="modal-body">
-        <div>
-          <i>Silahkan isi data anggaran di bawah ini.</i>
+      <Formik
+        initialValues={data.value}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await axios.patch(`http://localhost:2000/budgets/${values.id}`, {
+              ...values,
+            });
+            modal.value = false;
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ handleChange, handleSubmit, isSubmitting }) => (
+          <Form onSubmit={handleSubmit}>
+            <div className="modal-body">
+              <div>
+                <i>Silahkan isi data anggaran di bawah ini.</i>
 
-          <div className="d-grid gap-3 py-3">
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Kode Anggaran
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Kode Anggaran" disabled />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Deskripsi
-              </Col>
-              <Col md={9}>
-                <Input type="textarea" placeholder="Masukan Deskripsi" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Jumlah Anggaran
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Anggaran" type="number" />
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-rounded btn-secondary"
-            onClick={() => (modal.value = false)}
-          >
-            Kembali
-          </button>
-          <button
-            type="button"
-            className="btn btn-rounded btn-success"
-            // onClick={() => (modal.value = false)}
-          >
-            Selesai
-          </button>
-        </div>
-      </div>
+                <div className="d-grid gap-3 py-3">
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Kode Anggaran
+                    </Col>
+                    <Col md={9}>
+                      <Input defaultValue={data.value.id} disabled />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Deskripsi
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="description"
+                        defaultValue={data.value.description}
+                        type="textarea"
+                        placeholder="Masukan Deskripsi"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Jumlah Anggaran
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="amount"
+                        defaultValue={data.value.amount}
+                        placeholder="Masukan Anggaran"
+                        type="number"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-rounded btn-secondary"
+                  onClick={handleClose}
+                >
+                  Kembali
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-rounded btn-success"
+                  disabled={isSubmitting}
+                >
+                  Selesai
+                </button>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };

@@ -1,3 +1,5 @@
+import axios from "axios";
+import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
 
 const TambaAnggaranModal = ({ modal }) => {
@@ -20,54 +22,88 @@ const TambaAnggaranModal = ({ modal }) => {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div className="modal-body">
-        <div>
-          <i>Silahkan isi data anggaran di bawah ini.</i>
+      <Formik
+        initialValues={{ id: "", description: "", amount: 0 }}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await axios.post("http://localhost:2000/budgets", {
+              ...values,
+            });
+            modal.value = false;
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ handleChange, isSubmitting, handleSubmit }) => (
+          <Form onSubmit={handleSubmit}>
+            <div className="modal-body">
+              <div>
+                <i>Silahkan isi data anggaran di bawah ini.</i>
 
-          <div className="d-grid gap-3 py-3">
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Kode Anggaran
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Kode Anggaran" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Deskripsi
-              </Col>
-              <Col md={9}>
-                <Input type="textarea" placeholder="Masukan Deskripsi" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Jumlah Anggaran
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Anggaran" type="number" />
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-rounded btn-secondary"
-            onClick={() => (modal.value = false)}
-          >
-            Kembali
-          </button>
-          <button
-            type="button"
-            className="btn btn-rounded btn-success"
-            // onClick={() => (modal.value = false)}
-          >
-            Selesai
-          </button>
-        </div>
-      </div>
+                <div className="d-grid gap-3 py-3">
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Kode Anggaran
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="id"
+                        placeholder="Masukan Kode Anggaran"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Deskripsi
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="description"
+                        type="textarea"
+                        placeholder="Masukan Deskripsi"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Jumlah Anggaran
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="amount"
+                        placeholder="Masukan Anggaran"
+                        type="number"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-rounded btn-secondary"
+                  onClick={() => (modal.value = false)}
+                >
+                  Kembali
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-rounded btn-success"
+                  disabled={isSubmitting}
+                >
+                  Selesai
+                </button>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };

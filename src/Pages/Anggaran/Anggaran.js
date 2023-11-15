@@ -1,18 +1,25 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
-
-const data = [...Array(17).keys()].map((item) => ({
-  kodeAnggaran: "3331.FBA.002.248.A.524111",
-  deskripsi: "Penguatan Tata kelola Rumah Data Kependudukan",
-  jumlahAnggaran: "200000",
-}));
+import axios from "axios";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
+const editData = signal({});
 
 const Anggaran = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:2000/budgets")
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -48,7 +55,6 @@ const Anggaran = () => {
                       <Col className="col-sm">
                         <div className="d-flex justify-content-sm-end gap-2">
                           <div className="search-box ms-2">
-                            {/* <i className="ri-search-line search-icon"></i> */}
                             <input
                               type="text"
                               className="form-control search"
@@ -65,27 +71,15 @@ const Anggaran = () => {
                           <CardBody>
                             <Datatables
                               item={data}
-                              handleEditClick={() => (editModal.value = true)}
+                              handleEditClick={(item) => {
+                                editData.value = item;
+                                editModal.value = true;
+                              }}
                             />
                           </CardBody>
                         </Card>
                       </Col>
                     </Row>
-
-                    {/* <div className="d-flex justify-content-end">
-                  <div className="pagination-wrap hstack gap-2">
-                    <Link
-                      className="page-item pagination-prev disabled"
-                      to="#"
-                    >
-                      Previous
-                    </Link>
-                    <ul className="pagination listjs-pagination mb-0"></ul>
-                    <Link className="page-item pagination-next" to="#">
-                      Next
-                    </Link>
-                  </div>
-                </div> */}
                   </div>
                 </CardBody>
               </Card>
@@ -93,7 +87,7 @@ const Anggaran = () => {
           </Row>
         </Container>
         <TambaAnggaranModal modal={tambahModal} />
-        <EditAnggaranModal modal={editModal} />
+        <EditAnggaranModal modal={editModal} data={editData} />
       </div>
     </Fragment>
   );
