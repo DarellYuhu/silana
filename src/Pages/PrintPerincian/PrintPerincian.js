@@ -39,7 +39,7 @@ const PrintPerincian = () => {
             padding: "0.2cm 1.5cm",
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "yellow",
+            backgroundColor: "white",
           }}
         >
           {/* header */}

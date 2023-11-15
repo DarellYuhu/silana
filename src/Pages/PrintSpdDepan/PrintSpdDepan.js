@@ -232,7 +232,7 @@ const PrintSpdDepan = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>7</TableCell>
-                    <TableCell sx={styles.cell1}>
+                    <TableCell sx={[styles.cell1, { whiteSpace: "nowrap" }]}>
                       a. Lama Perjalanan Dinas
                       <br />
                       b. Tanggal Berangkat
