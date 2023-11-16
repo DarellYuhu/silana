@@ -1,14 +1,21 @@
-import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
 
-const data = [...Array(17).keys()].map((item) => ({
-  kodeAnggaran: "3331.FBA.002.248.A.524111",
-  deskripsi: "Penguatan Tata kelola Rumah Data Kependudukan",
-  anggaranTersedia: "Rp.31,120,000",
-}));
-
-const AnggaranModal = ({ open, setOpen = () => {} }) => {
+const AnggaranModal = ({
+  open,
+  setOpen = () => {},
+  handleRowClick = () => {},
+}) => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get("http://localhost:2000/budgets");
+      setData(res);
+    };
+    fetchData();
+  }, []);
   return (
     <Modal
       isOpen={open}
@@ -30,7 +37,7 @@ const AnggaranModal = ({ open, setOpen = () => {} }) => {
       </div>
       <div className="modal-body">
         <DataTable
-          onRowClicked={(row) => console.log(row)}
+          onRowClicked={handleRowClick}
           pointerOnHover
           highlightOnHover
           columns={columns}
@@ -67,17 +74,22 @@ const columns = [
   },
   {
     name: <span className="font-weight-bold fs-13">Kode Anggaran</span>,
-    selector: (row) => row.kodeAnggaran,
+    selector: (row) => row.id,
     sortable: true,
   },
   {
     name: <span className="font-weight-bold fs-13">Deskripsi</span>,
-    selector: (row) => row.deskripsi,
+    selector: (row) => row.description,
     sortable: true,
   },
   {
     name: <span className="font-weight-bold fs-13">Anggaran Tersedia</span>,
-    selector: (row) => row.anggaranTersedia,
+    selector: (row) =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(row.amount),
     sortable: true,
   },
 ];
