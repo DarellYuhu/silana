@@ -75,6 +75,18 @@ const Anggaran = () => {
                                 editData.value = item;
                                 editModal.value = true;
                               }}
+                              handleDeleteClick={async (item) => {
+                                await axios
+                                  .delete(
+                                    `http://localhost:2000/budgets/${item.id}`
+                                  )
+                                  .then((res) => {
+                                    console.log("Delete Success");
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
                             />
                           </CardBody>
                         </Card>

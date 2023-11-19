@@ -88,6 +88,18 @@ const DataKaryawan = () => {
                                 editData.value = user;
                                 editModal.value = true;
                               }}
+                              handleDeleteClick={(user) => {
+                                axios
+                                  .delete(
+                                    `http://localhost:2000/employees/${user.id}`
+                                  )
+                                  .then((res) => {
+                                    console.log("Delete Success");
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
                             />
                           </CardBody>
                         </Card>

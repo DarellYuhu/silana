@@ -19,12 +19,30 @@ import Flatpickr from "react-flatpickr";
 import { AnggaranModal } from "./Component";
 import { Form, Formik } from "formik";
 import axios from "axios";
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+
+const CreateLetterSchema = Yup.object().shape({
+  barColor: Yup.string().required("Required"),
+  burden: Yup.string().required("Required"),
+  fiscalYear: Yup.number().not([0], "Required").required("Required"),
+  budgetLineitem: Yup.string().required("Required"),
+  vehicleType: Yup.string().required("Required"),
+  dateOfletter: Yup.string().required("Required"),
+  dateOftravel: Yup.string().required("Required"),
+  considerans: Yup.array().min(1).required("Required"),
+  desideratum: Yup.array().min(1).required("Required"),
+  dictum: Yup.array().min(1).required("Required"),
+  assignor: Yup.string().required("Required"),
+});
 
 const BuatSuratTugas = () => {
   const [open, setOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState([]);
   const dateRangePickerRef = useRef(null);
   const datePickerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -55,21 +73,42 @@ const BuatSuratTugas = () => {
             vehicleType: "",
             dateOfletter: new Date().toISOString(),
             dateOftravel: "",
+            startDateOftravel: "",
+            endDateOftravel: "",
             considerans: [""],
             desideratum: [""],
             dictum: [""],
             assignor: "",
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              console.log(values);
+          validationSchema={CreateLetterSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            const payload = { ...values };
+            delete payload.dateOftravel;
+            try {
+              const res = await axios.post(
+                "http://localhost:2000/letters",
+                payload
+              );
+              console.log(res);
+              navigate("/surat-tugas");
+            } catch (error) {
+              console.log(error);
+            } finally {
               setSubmitting(false);
-            }, 2000);
+            }
           }}
         >
-          {({ values, setFieldValue, handleChange, isSubmitting }) => {
+          {({
+            values,
+            setFieldValue,
+            handleChange,
+            isSubmitting,
+            errors,
+            touched,
+            handleSubmit,
+          }) => {
             return (
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <Container fluid={true}>
                   <Breadcrumbs
                     title="Surat Tugas"
@@ -88,6 +127,9 @@ const BuatSuratTugas = () => {
                             options={warnaOptions}
                             classNamePrefix="select2-selection"
                           />
+                          {errors.barColor && touched.barColor ? (
+                            <p className="text-danger">{`* ${errors.barColor}`}</p>
+                          ) : null}
                         </div>
                       </CardBody>
                     </CardBody>
@@ -106,6 +148,9 @@ const BuatSuratTugas = () => {
                               name="burden"
                               onChange={handleChange}
                             />
+                            {errors.burden && touched.burden ? (
+                              <p className="text-danger">{`* ${errors.burden}`}</p>
+                            ) : null}
                           </CardBody>
                         </CardBody>
                         <CardBody className="p-0 px-1">
@@ -118,6 +163,9 @@ const BuatSuratTugas = () => {
                               name="fiscalYear"
                               onChange={handleChange}
                             />
+                            {errors.fiscalYear && touched.fiscalYear ? (
+                              <p className="text-danger">{`* ${errors.fiscalYear}`}</p>
+                            ) : null}
                           </CardBody>
                         </CardBody>
                         <CardBody className="p-0 px-1">
@@ -131,6 +179,9 @@ const BuatSuratTugas = () => {
                               readOnly
                               onClick={() => setOpen(!open)}
                             />
+                            {errors.budgetLineitem && touched.budgetLineitem ? (
+                              <p className="text-danger">{`* ${errors.budgetLineitem}`}</p>
+                            ) : null}
                           </CardBody>
                         </CardBody>
                       </Col>
@@ -150,6 +201,9 @@ const BuatSuratTugas = () => {
                             options={kendaraanOptions}
                             classNamePrefix="select2-selection"
                           />
+                          {errors.vehicleType && touched.vehicleType ? (
+                            <p className="text-danger">{`* ${errors.vehicleType}`}</p>
+                          ) : null}
                         </CardBody>
                         <CardBody className="p-0 px-1">
                           <FormGroup className="mb-4">
@@ -187,6 +241,9 @@ const BuatSuratTugas = () => {
                                 </button>
                               </div>
                             </InputGroup>
+                            {errors.dateOfletter && touched.dateOfletter ? (
+                              <p className="text-danger">{`* ${errors.dateOfletter}`}</p>
+                            ) : null}
                           </FormGroup>
                         </CardBody>
                       </Col>
@@ -214,6 +271,14 @@ const BuatSuratTugas = () => {
                                   console.log(date);
                                   const newRangeDate = `${date[0].toISOString()} - ${date[1].toISOString()}`;
                                   setFieldValue("dateOftravel", newRangeDate);
+                                  setFieldValue(
+                                    "startDateOftravel",
+                                    date[0].toISOString()
+                                  );
+                                  setFieldValue(
+                                    "endDateOftravel",
+                                    date[1].toISOString()
+                                  );
                                 }}
                               />
                               <div className="input-group-append">
@@ -231,6 +296,9 @@ const BuatSuratTugas = () => {
                                 </button>
                               </div>
                             </InputGroup>
+                            {errors.dateOftravel && touched.dateOftravel ? (
+                              <p className="text-danger">{`* ${errors.dateOftravel}`}</p>
+                            ) : null}
                           </FormGroup>
                         </CardBody>
                       </Col>
@@ -287,6 +355,9 @@ const BuatSuratTugas = () => {
                       </CardBody>
                     </CardBody>
                     <CardFooter className="bg-transparent">
+                      {errors.considerans && touched.considerans ? (
+                        <p className="text-danger">{`* ${errors.considerans}`}</p>
+                      ) : null}
                       <button
                         name="considerans"
                         type="button"
@@ -351,6 +422,9 @@ const BuatSuratTugas = () => {
                       </CardBody>
                     </CardBody>
                     <CardFooter className="bg-transparent">
+                      {errors.desideratum && touched.desideratum ? (
+                        <p className="text-danger">{`* ${errors.desideratum}`}</p>
+                      ) : null}
                       <button
                         type="button"
                         className="btn btn-outline-light waves-effect"
@@ -385,10 +459,12 @@ const BuatSuratTugas = () => {
                             <div className="col-md-10">
                               <Select
                                 options={employees}
-                                value={item}
-                                onChange={(value) => {
+                                value={employees.find(
+                                  (option) => option.value === item
+                                )}
+                                onChange={(item) => {
                                   const newDictum = [...values.dictum];
-                                  newDictum[index] = value;
+                                  newDictum[index] = item.value;
                                   setFieldValue("dictum", newDictum);
                                 }}
                                 classNamePrefix="select2-selection"
@@ -423,6 +499,9 @@ const BuatSuratTugas = () => {
                       </CardBody>
                     </CardBody>
                     <CardFooter className="bg-transparent">
+                      {errors.dictum && touched.dictum ? (
+                        <p className="text-danger">{`* ${errors.dictum}`}</p>
+                      ) : null}
                       <button
                         type="button"
                         className="btn btn-outline-light waves-effect"
@@ -450,10 +529,10 @@ const BuatSuratTugas = () => {
                           </Col>
                           <Col md={10}>
                             <Select
-                              name="assignor"
-                              onChange={(value) => {
-                                setFieldValue("assignor", value.value);
-                              }}
+                              // name="assignor"
+                              // onChange={(value) => {
+                              //   setFieldValue("assignor", value.value);
+                              // }}
                               options={jabatanOptions}
                               classNamePrefix="select2-selection"
                             />
@@ -474,6 +553,9 @@ const BuatSuratTugas = () => {
                             />
                           </Col>
                         </Row>
+                        {errors.assignor && touched.assignor ? (
+                          <p className="text-danger">{`* ${errors.assignor}`}</p>
+                        ) : null}
                       </CardBody>
                     </CardBody>
                   </Card>
@@ -486,6 +568,9 @@ const BuatSuratTugas = () => {
                           type="checkbox"
                           defaultValue=""
                           id="defaultCheck1"
+                          onChange={(e) => {
+                            setIsChecked(e.target.checked);
+                          }}
                         />
                         <label
                           className="form-check-label"
@@ -498,7 +583,7 @@ const BuatSuratTugas = () => {
                       <button
                         type="submit"
                         className="btn btn-primary btn-rounded btn-lg waves-effect waves-light"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isChecked}
                       >
                         Cetak Surat
                       </button>

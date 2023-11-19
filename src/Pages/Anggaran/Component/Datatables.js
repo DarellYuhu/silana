@@ -6,7 +6,11 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 
-const Datatables = ({ item, handleEditClick = () => {} }) => {
+const Datatables = ({
+  item,
+  handleEditClick = () => {},
+  handleDeleteClick = () => {},
+}) => {
   const columns = [
     {
       name: <span className="font-weight-bold fs-13">No.</span>,
@@ -61,6 +65,13 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
               >
                 <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
                 Edit
+              </DropdownItem>
+              <DropdownItem
+                onClick={() => handleDeleteClick(item)}
+                className="edit-item-btn"
+              >
+                <i className="mdi mdi-delete-outline align-bottom me-2 text-muted"></i>
+                Delete
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
