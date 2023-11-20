@@ -10,6 +10,7 @@ const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [letterNumber, setLetterNumber] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
@@ -23,8 +24,9 @@ const SuratTugas = () => {
     setPage(0);
   };
 
-  const handlePrintNoSurat = () => {
+  const handlePrintNoSurat = (item) => {
     setOpen(!open);
+    setLetterNumber(item);
   };
 
   const getData = () => {
@@ -207,7 +209,12 @@ const SuratTugas = () => {
             </Card>
           </Col>
         </Row>
-        <PrintModal open={open} setOpen={setOpen} />
+        <PrintModal
+          open={open}
+          setOpen={setOpen}
+          item={letterNumber}
+          setItem={setLetterNumber}
+        />
       </div>
     </Fragment>
   );
@@ -285,7 +292,9 @@ const TableItem = ({
           className="btn btn-sm btn-outline-warning mail-item-btn"
           data-bs-toggle="modal"
           data-bs-target="#showModal"
-          onClick={handlePrintNoSurat}
+          onClick={() =>
+            handlePrintNoSurat({ letterNumber: item.letterNumber, id: item.id })
+          }
         >
           <i className="mdi mdi-email-check-outline fs-5"></i>
         </button>

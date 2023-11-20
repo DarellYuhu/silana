@@ -67,6 +67,7 @@ const PrintSuratTugas = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-end",
+              visibility: state.isPrintNoOnly ? "hidden" : "visible",
             }}
           >
             <img src={logoBkkbnDark} style={{ width: "2.8cm" }} />
@@ -91,25 +92,53 @@ const PrintSuratTugas = () => {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell sx={styles.label}>Nomor</TableCell>
-                  <TableCell sx={styles.seperator}>:</TableCell>
+                  <TableCell
+                    sx={[
+                      styles.label,
+                      {
+                        visibility: state.isPrintNoOnly ? "hidden" : "visible",
+                      },
+                    ]}
+                  >
+                    Nomor
+                  </TableCell>
+                  <TableCell
+                    sx={[
+                      styles.seperator,
+                      {
+                        visibility: state.isPrintNoOnly ? "hidden" : "visible",
+                      },
+                    ]}
+                  >
+                    :
+                  </TableCell>
                   <TableCell sx={styles.item}>
                     {state.letterNumber ? state.letterNumber : "*Belum dicetak"}
                   </TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow
+                  sx={{
+                    visibility: state.isPrintNoOnly ? "hidden" : "visible",
+                  }}
+                >
                   <TableCell sx={styles.label}>Beban</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>{state.burden}</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow
+                  sx={{
+                    visibility: state.isPrintNoOnly ? "hidden" : "visible",
+                  }}
+                >
                   <TableCell sx={styles.label}>Mata Anggaran</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>{state.budgetLineitem}</TableCell>
                 </TableRow>
               </TableBody>
               <div style={{ height: 20 }} />
-              <TableBody>
+              <TableBody
+                sx={{ visibility: state.isPrintNoOnly ? "hidden" : "visible" }}
+              >
                 <TableRow>
                   <TableCell sx={styles.label}>Menimbang</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
@@ -141,7 +170,9 @@ const PrintSuratTugas = () => {
                 </TableRow>
               </TableBody>
               <div style={{ height: 8 }} />
-              <TableBody>
+              <TableBody
+                sx={{ visibility: state.isPrintNoOnly ? "hidden" : "visible" }}
+              >
                 <TableRow>
                   <TableCell
                     colSpan={3}
@@ -164,7 +195,9 @@ const PrintSuratTugas = () => {
                   </TableCell>
                 </TableRow>
               </TableBody>
-              <TableBody>
+              <TableBody
+                sx={{ visibility: state.isPrintNoOnly ? "hidden" : "visible" }}
+              >
                 <TableRow>
                   <TableCell sx={styles.label}>Kepada</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
@@ -191,7 +224,9 @@ const PrintSuratTugas = () => {
                 </TableRow>
               </TableBody>
               <div style={{ height: 8 }} />
-              <TableBody>
+              <TableBody
+                sx={{ visibility: state.isPrintNoOnly ? "hidden" : "visible" }}
+              >
                 <TableRow>
                   <TableCell sx={styles.label}>Untuk</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
@@ -210,7 +245,13 @@ const PrintSuratTugas = () => {
                 </TableRow>
               </TableBody>
             </Table>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                visibility: state.isPrintNoOnly ? "hidden" : "visible",
+              }}
+            >
               <Assignor
                 name={state.assignor}
                 employees={employees}
@@ -227,6 +268,7 @@ const PrintSuratTugas = () => {
               flexDirection: "column",
               justifyContent: "flex-end",
               flex: 1,
+              visibility: "hidden",
             }}
           >
             <h4
@@ -277,9 +319,9 @@ const Assignor = ({ name, employees, title }) => {
           marginBottom: 0,
         }}
       >
-        {person.name}
+        {person?.name}
       </h4>
-      <p style={{ fontSize: "10pt", margin: 0 }}>{`NIP. ${person.id}`}</p>
+      <p style={{ fontSize: "10pt", margin: 0 }}>{`NIP. ${person?.id}`}</p>
     </div>
   );
 };
