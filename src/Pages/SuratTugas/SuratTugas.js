@@ -6,14 +6,6 @@ import { PrintModal } from "./Component";
 import axios from "axios";
 import moment from "moment";
 
-const data = [...Array(17).keys()].map((item) => ({
-  author: "Mary Cousar",
-  noSurat: "089/RT.01/J2/2023",
-  tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-  tugas:
-    "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-}));
-
 const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -260,7 +252,6 @@ const TableItem = ({
                 className="btn btn-sm btn-outline-info edit-item-btn"
                 data-bs-toggle="modal"
                 data-bs-target="#showModal"
-                // onClick={() => navigate(`/surat-tugas/${item.id}`)}
               >
                 <i className="mdi mdi-pencil-outline fs-5"></i>
               </button>
@@ -279,14 +270,15 @@ const TableItem = ({
         </div>
       </td>
       <td>
-        <button
-          onClick={() => navigate(`/surat-tugas/${item.id}/print`)}
-          className="btn btn-sm btn-outline-primary print-item-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#showModal"
-        >
-          <i className="mdi mdi-printer fs-5"></i>
-        </button>
+        <Link to={`/surat-tugas/${item.id}/print`} state={item}>
+          <button
+            className="btn btn-sm btn-outline-primary print-item-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#showModal"
+          >
+            <i className="mdi mdi-printer fs-5"></i>
+          </button>
+        </Link>
       </td>
       <td>
         <button

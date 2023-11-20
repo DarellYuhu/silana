@@ -1,25 +1,43 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import moment from "moment";
 
 const PrintSuratTugas = () => {
+  const [employees, setEmployees] = useState([]);
   const printRef = useRef();
+  const { state } = useLocation();
+
+  console.log(state);
+
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
-    // pageStyle: `
-    //   @page {
-    //     size: A4;
-    //     margin: 0;
-    //   }
-    //   @media print {
-    //     html, body {
-    //       width: 210mm;
-    //       height: 297mm;
-    //     }
-    //   }
-    // `,
   });
+
+  const getEmployeesData = async () => {
+    try {
+      const res = await axios.get("http://localhost:2000/employees");
+      setEmployees(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployeesData();
+  }, []);
+
+  if (!state) {
+    return <div>404 Not Found</div>;
+  }
+
+  if (employees.length === 0) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Fragment>
       {/* <div className="page-content">Yuhu</div> */}
@@ -56,16 +74,16 @@ const PrintSuratTugas = () => {
             <div
               style={{
                 width: "5.3cm",
-                backgroundColor: "red",
+                backgroundColor: state.barColor,
                 height: "0.4cm",
               }}
             />
             <h1 style={{ fontSize: "14pt", fontWeight: "bold", margin: 0 }}>
               SURAT TUGAS
             </h1>
-            <p style={{ fontSize: "10pt", margin: 0 }}>
-              Manado, 1 Augustus 2023
-            </p>
+            <p style={{ fontSize: "10pt", margin: 0 }}>{`Manado, ${moment(
+              state.dateOftravel
+            ).format("DD MMMM YYYY")}`}</p>
           </div>
 
           {/* body */}
@@ -75,21 +93,19 @@ const PrintSuratTugas = () => {
                 <TableRow>
                   <TableCell sx={styles.label}>Nomor</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
-                  <TableCell sx={styles.item}>2788/RT.01/J2/2023</TableCell>
+                  <TableCell sx={styles.item}>
+                    {state.letterNumber ? state.letterNumber : "*Belum dicetak"}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={styles.label}>Beban</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
-                  <TableCell sx={styles.item}>
-                    DIPA Perwakilan BKKBN Provinsi Sulawesi Utara
-                  </TableCell>
+                  <TableCell sx={styles.item}>{state.burden}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={styles.label}>Mata Anggaran</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
-                  <TableCell sx={styles.item}>
-                    3331.UBA.002.256.A.524111
-                  </TableCell>
+                  <TableCell sx={styles.item}>{state.budgetLineitem}</TableCell>
                 </TableRow>
               </TableBody>
               <div style={{ height: 20 }} />
@@ -98,22 +114,14 @@ const PrintSuratTugas = () => {
                   <TableCell sx={styles.label}>Menimbang</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>a.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Dalam rangka pelaksanaan kegiatan Pemberdayaan Kelompok
-                        Masyarakat di Kampung Keluarga Berkualitas (KB) dalam
-                        rangka Percepatan Penurunan Stunting di Kabupaten
-                        Kepulauan Sangihe
-                      </TableCell>
-                    </TableRow>
-                    {/* <TableRow>
-                      <TableCell sx={styles.seperator2}>b.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Bahwa sehubungan dengan hal tersebut diatas, perlu
-                        dibuatkan surat tugas
-                      </TableCell>
-                    </TableRow> */}
+                    {state.considerans?.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={styles.seperator2}>
+                          {String.fromCharCode(97 + index)}
+                        </TableCell>
+                        <TableCell sx={styles.item}>{item}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableCell>
                 </TableRow>
                 <div style={{ height: 8 }} />
@@ -121,29 +129,14 @@ const PrintSuratTugas = () => {
                   <TableCell sx={styles.label}>Dasar</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>a.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Undang-undang Nomor 52 Tahun 2009 tentang Perkembangan
-                        Kependudukan dan Pembangunan Keluarga.
-                      </TableCell>
-                    </TableRow>
-                    {/* <TableRow>
-                      <TableCell sx={styles.seperator2}>b.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Peraturan Pemerintah Nomor 87 Tahun 2014 tentang
-                        Perkembangan Kependudukan dan Pembangunan Keluarga,
-                        Keluarga Berencana dan Sistem Informasi Keluarga.
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>c.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Instruksi Presiden Nomor 3 Tahun 2022 tentang
-                        Optimalisasi Penyelenggaraan Kampung Keluarga
-                        Berkualitas
-                      </TableCell>
-                    </TableRow> */}
+                    {state.desideratum?.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={styles.seperator2}>
+                          {String.fromCharCode(97 + index)}
+                        </TableCell>
+                        <TableCell sx={styles.item}>{item}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -176,96 +169,53 @@ const PrintSuratTugas = () => {
                   <TableCell sx={styles.label}>Kepada</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>1.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Ir. Ronny Sumilat
-                        <br />
-                        Penata KKB Ahli Madya <br />
-                        NIP. 196505301991031003
-                      </TableCell>
-                    </TableRow>
-                    {/* <TableRow>
-                      <TableCell sx={styles.seperator2}>2.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Ir. Ronny Sumilat
-                        <br />
-                        Penata KKB Ahli Madya <br />
-                        NIP. 196505301991031003
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>3.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Ir. Ronny Sumilat
-                        <br />
-                        Penata KKB Ahli Madya <br />
-                        NIP. 196505301991031003
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>4.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Ir. Ronny Sumilat
-                        <br />
-                        Penata KKB Ahli Madya <br />
-                        NIP. 196505301991031003
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={styles.seperator2}>5.</TableCell>
-                      <TableCell sx={styles.item}>
-                        Ir. Ronny Sumilat
-                        <br />
-                        Penata KKB Ahli Madya <br />
-                        NIP. 196505301991031003
-                      </TableCell>
-                    </TableRow> */}
+                    {state.dictum?.map((item, index) => {
+                      const person = employees.find(
+                        (person) => person.name === item
+                      );
+                      return (
+                        <TableRow key={index}>
+                          <TableCell sx={styles.seperator2}>
+                            {index + 1}.
+                          </TableCell>
+                          <TableCell sx={styles.item}>
+                            {person?.name}
+                            <br />
+                            {person?.jobTitle} <br />
+                            {`NIP. ${person?.id}`}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableCell>
                 </TableRow>
+              </TableBody>
+              <div style={{ height: 8 }} />
+              <TableBody>
                 <TableRow>
                   <TableCell sx={styles.label}>Untuk</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
-                  <TableCell sx={styles.item}>
-                    Melaksanakan perjalanan dinas Pemberdayaan Kelompok
-                    Masyarakat di Kampung KB dalam rangka Percepatan Penurunan
-                    Stunting di Kabupaten Kepulauan Sangihe
-                  </TableCell>
+                  <TableCell sx={styles.item}>{state.assignedTo}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={styles.label}>Tanggal</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
                   <TableCell sx={styles.item}>
-                    6 Agustus 2023 s/d 8 Agustus 2023
+                    {`${moment(state.startDateOftravel).format(
+                      "DD MMMM YYYY"
+                    )} s/d ${moment(state.endDateOftravel).format(
+                      "DD MMMM YYYY"
+                    )}`}
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <div>
-                <h4
-                  style={{
-                    width: "100%",
-                    fontSize: "11pt",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Kepala,
-                </h4>
-                <div style={{ height: "1.8cm" }} />
-                <h4
-                  style={{
-                    width: "100%",
-                    fontSize: "11pt",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Ir. Diano Tino Tandjau, M.Erg
-                </h4>
-                <p style={{ fontSize: "10pt", margin: 0 }}>
-                  NIP. 196603301988031004
-                </p>
-              </div>
+              <Assignor
+                name={state.assignor}
+                employees={employees}
+                title={state.assignorTitle}
+              />
             </div>
           </div>
 
@@ -301,6 +251,36 @@ const PrintSuratTugas = () => {
         <button onClick={handlePrint}>Print PDF</button>
       </div>
     </Fragment>
+  );
+};
+
+const Assignor = ({ name, employees, title }) => {
+  const person = employees.find((person) => person.name === name);
+  return (
+    <div>
+      <h4
+        style={{
+          width: "100%",
+          fontSize: "11pt",
+          fontWeight: "bold",
+        }}
+      >
+        {title}
+      </h4>
+      <div style={{ height: "1.8cm" }} />
+      <h4
+        style={{
+          width: "100%",
+          fontSize: "11pt",
+          fontWeight: "bold",
+          borderBottom: "1px solid black",
+          marginBottom: 0,
+        }}
+      >
+        {person.name}
+      </h4>
+      <p style={{ fontSize: "10pt", margin: 0 }}>{`NIP. ${person.id}`}</p>
+    </div>
   );
 };
 
