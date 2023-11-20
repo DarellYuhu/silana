@@ -30,6 +30,7 @@ const CreateLetterSchema = Yup.object().shape({
   vehicleType: Yup.string().required("Required"),
   dateOfletter: Yup.string().required("Required"),
   dateOftravel: Yup.string().required("Required"),
+  assignedTo: Yup.string().required("Required"),
   considerans: Yup.array().min(1).required("Required"),
   desideratum: Yup.array().min(1).required("Required"),
   dictum: Yup.array().min(1).required("Required"),
@@ -75,6 +76,7 @@ const BuatSuratTugas = () => {
             dateOftravel: "",
             startDateOftravel: "",
             endDateOftravel: "",
+            assignedTo: "",
             considerans: [""],
             desideratum: [""],
             dictum: [""],
@@ -89,7 +91,6 @@ const BuatSuratTugas = () => {
                 "http://localhost:2000/letters",
                 payload
               );
-              console.log(res);
               navigate("/surat-tugas");
             } catch (error) {
               console.log(error);
@@ -252,9 +253,9 @@ const BuatSuratTugas = () => {
 
                   <Card>
                     <CardBody>
-                      <Col md={12} className="d-grid gap-3">
+                      <Col md={12} className="d-grid ">
                         <CardBody className="p-0 px-1">
-                          <FormGroup className="mb-4">
+                          <FormGroup>
                             <Label>Waktu / Tanggal (Perjalanan Dinas)</Label>
                             <InputGroup>
                               <Flatpickr
@@ -268,7 +269,6 @@ const BuatSuratTugas = () => {
                                   altFormat: "F j, Y",
                                 }}
                                 onChange={(date) => {
-                                  console.log(date);
                                   const newRangeDate = `${date[0].toISOString()} - ${date[1].toISOString()}`;
                                   setFieldValue("dateOftravel", newRangeDate);
                                   setFieldValue(
@@ -300,6 +300,21 @@ const BuatSuratTugas = () => {
                               <p className="text-danger">{`* ${errors.dateOftravel}`}</p>
                             ) : null}
                           </FormGroup>
+                        </CardBody>
+                        <CardBody className="p-0 px-1">
+                          <CardTitle>Ditugaskan untuk</CardTitle>
+                          <CardBody className="p-0">
+                            <Input
+                              type="textarea"
+                              rows="3"
+                              className="colorpicker-default"
+                              name="assignedTo"
+                              onChange={handleChange}
+                            />
+                            {errors.assignedTo && touched.assignedTo ? (
+                              <p className="text-danger">{`* ${errors.assignedTo}`}</p>
+                            ) : null}
+                          </CardBody>
                         </CardBody>
                       </Col>
                     </CardBody>
@@ -343,7 +358,6 @@ const BuatSuratTugas = () => {
                                     ...values.considerans,
                                   ];
                                   newConsiderans.splice(index, 1);
-                                  console.log(newConsiderans);
                                   setFieldValue("considerans", newConsiderans);
                                 }}
                               >
@@ -410,7 +424,6 @@ const BuatSuratTugas = () => {
                                     ...values.desideratum,
                                   ];
                                   newDesideratum.splice(index, 1);
-                                  console.log(newDesideratum);
                                   setFieldValue("desideratum", newDesideratum);
                                 }}
                               >
@@ -477,7 +490,6 @@ const BuatSuratTugas = () => {
                                 onClick={() => {
                                   const newDictum = [...values.dictum];
                                   newDictum.splice(index, 1);
-                                  console.log(newDictum);
                                   setFieldValue("dictum", newDictum);
                                 }}
                               >
