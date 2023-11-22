@@ -26,7 +26,7 @@ const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
   burden: Yup.string().required("Required"),
   fiscalYear: Yup.number().not([0], "Required").required("Required"),
-  budgetLineitem: Yup.string().required("Required"),
+  budgetId: Yup.string().required("Required"),
   vehicleType: Yup.string().required("Required"),
   dateOfletter: Yup.string().required("Required"),
   dateOftravel: Yup.string().required("Required"),
@@ -34,7 +34,8 @@ const CreateLetterSchema = Yup.object().shape({
   considerans: Yup.array().min(1).required("Required"),
   desideratum: Yup.array().min(1).required("Required"),
   dictum: Yup.array().min(1).required("Required"),
-  assignor: Yup.string().required("Required"),
+  assignorId: Yup.string().required("Required"),
+  assignorTitle: Yup.string().required("Required"),
 });
 
 const BuatSuratTugas = () => {
@@ -52,6 +53,7 @@ const BuatSuratTugas = () => {
         const options = res.map((item) => {
           return {
             value: item.name,
+            id: item.id,
             label: item.name,
           };
         });
@@ -70,7 +72,7 @@ const BuatSuratTugas = () => {
             barColor: "",
             burden: "",
             fiscalYear: 0,
-            budgetLineitem: "",
+            budgetId: "",
             vehicleType: "",
             dateOfletter: new Date().toISOString(),
             dateOftravel: "",
@@ -80,7 +82,8 @@ const BuatSuratTugas = () => {
             considerans: [""],
             desideratum: [""],
             dictum: [""],
-            assignor: "",
+            assignorId: "",
+            assignorTitle: "",
           }}
           validationSchema={CreateLetterSchema}
           onSubmit={async (values, { setSubmitting }) => {
@@ -173,15 +176,15 @@ const BuatSuratTugas = () => {
                           <CardTitle>Mata Anggaran</CardTitle>
                           <CardBody className="p-0">
                             <Input
-                              value={values.budgetLineitem}
+                              value={values.budgetId}
                               type="text"
                               className="colorpicker-default"
                               placeholder="cth.. 3331.UBA.002.256.A.524111"
                               readOnly
                               onClick={() => setOpen(!open)}
                             />
-                            {errors.budgetLineitem && touched.budgetLineitem ? (
-                              <p className="text-danger">{`* ${errors.budgetLineitem}`}</p>
+                            {errors.budgetId && touched.budgetId ? (
+                              <p className="text-danger">{`* ${errors.budgetId}`}</p>
                             ) : null}
                           </CardBody>
                         </CardBody>
@@ -532,7 +535,6 @@ const BuatSuratTugas = () => {
                       <h5 className="my-0">Pemberi Tugas</h5>
                     </CardHeader>
 
-                    {/* <CardTitle>Kepada</CardTitle> */}
                     <CardBody>
                       <CardBody className="pt-0 d-grid gap-3">
                         <Row>
@@ -541,32 +543,35 @@ const BuatSuratTugas = () => {
                           </Col>
                           <Col md={10}>
                             <Select
-                              // name="assignor"
-                              // onChange={(value) => {
-                              //   setFieldValue("assignor", value.value);
-                              // }}
+                              name="assignorTitle"
+                              onChange={(value) => {
+                                setFieldValue("assignorTitle", value.value);
+                              }}
                               options={jabatanOptions}
                               classNamePrefix="select2-selection"
                             />
                           </Col>
                         </Row>
+                        {errors.assignorTitle && touched.assignorTitle ? (
+                          <p className="text-danger">{`* ${errors.assignorTitle}`}</p>
+                        ) : null}
                         <Row>
                           <Col md={2} className="d-flex align-items-center">
                             Nama
                           </Col>
                           <Col md={10}>
                             <Select
-                              name="assignor"
+                              name="assignorId"
                               onChange={(newValue) => {
-                                setFieldValue("assignor", newValue.value);
+                                setFieldValue("assignorId", newValue.id);
                               }}
                               options={employees}
                               classNamePrefix="select2-selection"
                             />
                           </Col>
                         </Row>
-                        {errors.assignor && touched.assignor ? (
-                          <p className="text-danger">{`* ${errors.assignor}`}</p>
+                        {errors.assignorId && touched.assignorId ? (
+                          <p className="text-danger">{`* ${errors.assignorId}`}</p>
                         ) : null}
                       </CardBody>
                     </CardBody>
@@ -606,7 +611,7 @@ const BuatSuratTugas = () => {
                   open={open}
                   setOpen={setOpen}
                   handleRowClick={(row) => {
-                    setFieldValue("budgetLineitem", row.id);
+                    setFieldValue("budgetId", row.id);
                     setOpen(!open);
                   }}
                 />

@@ -112,9 +112,7 @@ const PrintSuratTugas = () => {
                   >
                     :
                   </TableCell>
-                  <TableCell sx={styles.item}>
-                    {state.letterNumber ? state.letterNumber : "*Belum dicetak"}
-                  </TableCell>
+                  <TableCell sx={styles.item}>{state.letterNumber}</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{
@@ -132,7 +130,7 @@ const PrintSuratTugas = () => {
                 >
                   <TableCell sx={styles.label}>Mata Anggaran</TableCell>
                   <TableCell sx={styles.seperator}>:</TableCell>
-                  <TableCell sx={styles.item}>{state.budgetLineitem}</TableCell>
+                  <TableCell sx={styles.item}>{state.budgetId}</TableCell>
                 </TableRow>
               </TableBody>
               <div style={{ height: 20 }} />
@@ -250,10 +248,11 @@ const PrintSuratTugas = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 visibility: state.isPrintNoOnly ? "hidden" : "visible",
+                marginTop: 30,
               }}
             >
               <Assignor
-                name={state.assignor}
+                id={state.assignorId}
                 employees={employees}
                 title={state.assignorTitle}
               />
@@ -268,7 +267,7 @@ const PrintSuratTugas = () => {
               flexDirection: "column",
               justifyContent: "flex-end",
               flex: 1,
-              visibility: "hidden",
+              visibility: state.isPrintNoOnly ? "hidden" : "visible",
             }}
           >
             <h4
@@ -296,32 +295,38 @@ const PrintSuratTugas = () => {
   );
 };
 
-const Assignor = ({ name, employees, title }) => {
-  const person = employees.find((person) => person.name === name);
+const Assignor = ({ id, employees, title }) => {
+  const person = employees.find((person) => person.id === id);
   return (
-    <div>
-      <h4
-        style={{
-          width: "100%",
-          fontSize: "11pt",
-          fontWeight: "bold",
-        }}
-      >
-        {title}
-      </h4>
-      <div style={{ height: "1.8cm" }} />
-      <h4
-        style={{
-          width: "100%",
-          fontSize: "11pt",
-          fontWeight: "bold",
-          borderBottom: "1px solid black",
-          marginBottom: 0,
-        }}
-      >
-        {person?.name}
-      </h4>
-      <p style={{ fontSize: "10pt", margin: 0 }}>{`NIP. ${person?.id}`}</p>
+    <div
+      style={{
+        textAlign: "start",
+      }}
+    >
+      <div style={{ minWidth: 180 }}>
+        <h4
+          style={{
+            width: "100%",
+            fontSize: "11pt",
+            fontWeight: "bold",
+          }}
+        >
+          {`${title},`}
+        </h4>
+        <div style={{ height: "1.8cm" }} />
+        <h4
+          style={{
+            width: "100%",
+            fontSize: "11pt",
+            fontWeight: "bold",
+            borderBottom: "1px solid black",
+            marginBottom: 0,
+          }}
+        >
+          {person?.name}
+        </h4>
+        <p style={{ fontSize: "10pt", margin: 0 }}>{`NIP. ${person?.id}`}</p>
+      </div>
     </div>
   );
 };

@@ -27,7 +27,7 @@ const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
   burden: Yup.string().required("Required"),
   fiscalYear: Yup.number().not([0], "Required").required("Required"),
-  budgetLineitem: Yup.string().required("Required"),
+  budgetId: Yup.string().required("Required"),
   vehicleType: Yup.string().required("Required"),
   dateOfletter: Yup.string().required("Required"),
   dateOftravel: Yup.string().required("Required"),
@@ -35,8 +35,8 @@ const CreateLetterSchema = Yup.object().shape({
   considerans: Yup.array().min(1).required("Required"),
   desideratum: Yup.array().min(1).required("Required"),
   dictum: Yup.array().min(1).required("Required"),
-  assignor: Yup.string().required("Required"),
-  // assignorTitle: Yup.string().required("Required"),
+  assignorId: Yup.string().required("Required"),
+  assignorTitle: Yup.string().required("Required"),
 });
 
 const EditSuratTugas = () => {
@@ -54,6 +54,7 @@ const EditSuratTugas = () => {
       const res = await axios.get("http://localhost:2000/employees");
       const options = res.map((item) => ({
         value: item.id,
+        id: item.id,
         label: item.name,
       }));
       setEmployees(options);
@@ -94,7 +95,7 @@ const EditSuratTugas = () => {
             barColor: state.barColor,
             burden: state.burden,
             fiscalYear: state.fiscalYear,
-            budgetLineitem: state.budgetLineitem,
+            budgetId: state.budgetId,
             vehicleType: state.vehicleType,
             dateOfletter: state.dateOfletter,
             dateOftravel: `${state.dateOftravel} - ${state.endDateOftravel}`,
@@ -104,8 +105,8 @@ const EditSuratTugas = () => {
             considerans: state.considerans,
             desideratum: state.desideratum,
             dictum: state.dictum,
-            assignor: state.assignor,
-            // assignorTitle: state.assignorTitle,
+            assignorId: state.assignorId,
+            assignorTitle: state.assignorTitle,
           }}
           validationSchema={CreateLetterSchema}
           onSubmit={async (values, { setSubmitting }) => {
@@ -206,15 +207,15 @@ const EditSuratTugas = () => {
                           <CardTitle>Mata Anggaran</CardTitle>
                           <CardBody className="p-0">
                             <Input
-                              value={values.budgetLineitem}
+                              value={values.budgetId}
                               type="text"
                               className="colorpicker-default"
                               placeholder="cth.. 3331.UBA.002.256.A.524111"
                               readOnly
                               onClick={() => setOpen(!open)}
                             />
-                            {errors.budgetLineitem && touched.budgetLineitem ? (
-                              <p className="text-danger">{`* ${errors.budgetLineitem}`}</p>
+                            {errors.budgetId && touched.budgetId ? (
+                              <p className="text-danger">{`* ${errors.budgetId}`}</p>
                             ) : null}
                           </CardBody>
                         </CardBody>
@@ -616,22 +617,23 @@ const EditSuratTugas = () => {
                           <Col md={10}>
                             <Select
                               defaultValue={{
-                                value: state.assignor,
+                                value: state.assignorId,
+                                id: state.assignorId,
                                 label: employees.find(
-                                  (option) => option.label === state.assignor
+                                  (option) => option.id === state.assignorId
                                 )?.label,
                               }}
-                              name="assignor"
+                              name="assignorId"
                               onChange={(newValue) => {
-                                setFieldValue("assignor", newValue.value);
+                                setFieldValue("assignorId", newValue.value);
                               }}
                               options={employees}
                               classNamePrefix="select2-selection"
                             />
                           </Col>
                         </Row>
-                        {errors.assignor && touched.assignor ? (
-                          <p className="text-danger">{`* ${errors.assignor}`}</p>
+                        {errors.assignorId && touched.assignorId ? (
+                          <p className="text-danger">{`* ${errors.assignorId}`}</p>
                         ) : null}
                       </CardBody>
                     </CardBody>
@@ -671,7 +673,7 @@ const EditSuratTugas = () => {
                   open={open}
                   setOpen={setOpen}
                   handleRowClick={(row) => {
-                    setFieldValue("budgetLineitem", row.id);
+                    setFieldValue("budgetId", row.id);
                     setOpen(!open);
                   }}
                 />

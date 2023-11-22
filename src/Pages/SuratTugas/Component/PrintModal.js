@@ -93,7 +93,6 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
             <Col md={8}>
               <Input
                 value={noSurat.value}
-                placeholder="089"
                 onChange={(e) => {
                   noSurat.value = e.target.value;
                 }}
@@ -122,7 +121,6 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
             <Col md={8}>
               <Input
                 value={kodeSurat.value}
-                placeholder="RT.01"
                 onChange={(e) => {
                   kodeSurat.value = e.target.value;
                 }}
@@ -150,7 +148,6 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
                 onChange={(e) => {
                   kompSurat.value = e.value;
                 }}
-                placeholder="J2"
                 options={[
                   { value: "J1", label: "J1" },
                   { value: "J2", label: "J2" },
@@ -180,7 +177,6 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
             <Col md={8}>
               <Input
                 value={tahunSurat.value}
-                placeholder="2023"
                 onChange={(e) => {
                   tahunSurat.value = e.target.value;
                 }}
