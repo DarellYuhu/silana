@@ -16,6 +16,7 @@ import { Form, Formik } from "formik";
 import axios from "axios";
 import { capitalizeString } from "../../Utility";
 import * as Yup from "yup";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   commitmentMaker: Yup.string().required("PPB harus dipilih"),
@@ -26,8 +27,12 @@ const validationSchema = Yup.object().shape({
 
 const EditSuratPerjalananDinas = () => {
   const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [checked, setChecked] = useState(false);
   const datePickerRef = useRef(null);
+  const { id } = useParams();
+  const businessTrip = useLocation().state;
+  const navigate = useNavigate();
 
   const filteredDistricts = Object.keys(DISTRICT)
     .filter((key) => key.startsWith("71"))
@@ -36,22 +41,26 @@ const EditSuratPerjalananDinas = () => {
       label: DISTRICT[key],
     }));
 
-  console.log(filteredDistricts);
+  const getEmployees = async () => {
+    try {
+      const res = await axios.get("http://localhost:2000/employees");
+      const data = res.map((item) => ({
+        value: item.name,
+        label: item.name,
+      }));
+      setEmployees(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:2000/employees")
-      .then((res) => {
-        const normalized = res.map((employee) => ({
-          value: employee.name,
-          label: employee.name,
-        }));
-        setEmployees(normalized);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getEmployees();
   }, []);
+
+  if (loading) return <h1>Loading...</h1>;
 
   return (
     <Fragment>
@@ -63,153 +72,184 @@ const EditSuratPerjalananDinas = () => {
           />
           <Formik
             initialValues={{
-              commitmentMaker: "",
-              placeOfDeparture: "",
-              destination: [],
-              dateOfLetter: new Date().toISOString(),
+              commitmentMaker: businessTrip?.commitmentMaker || "",
+              placeOfDeparture: businessTrip?.placeOfDeparture || "",
+              destination: businessTrip?.destination || [],
+              dateOfLetter:
+                businessTrip?.dateOfLetter || new Date().toISOString(),
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               const normalized = {
                 ...values,
                 placeOfDeparture: capitalizeString(values.placeOfDeparture),
                 destination: values.destination.map((item) =>
                   capitalizeString(item)
                 ),
+                letterId: id,
               };
-              setTimeout(() => {
-                console.log(values);
+              try {
+                let res;
+                if (businessTrip) {
+                  res = await axios.patch(
+                    `http://localhost:2000/businessTrip/${businessTrip.letterId}`,
+                    normalized
+                  );
+                } else {
+                  res = await axios.post(
+                    "http://localhost:2000/businessTrip",
+                    normalized
+                  );
+                }
+                console.log(res);
+                navigate(`/surat-perjalanan-dinas`);
+              } catch (error) {
+                console.log(error);
+              } finally {
                 setSubmitting(false);
-              }, 2000);
+              }
             }}
           >
-            {({ setFieldValue, isSubmitting, errors, touched }) => (
-              <Form>
-                <Card>
-                  <CardBody>
-                    <CardTitle>PEJABAT PEMBUAT KOMITMEN</CardTitle>
-                    <CardBody className="p-0 px-4">
-                      <div className="mb-3">
-                        <Select
-                          onChange={(option) => {
-                            console.log(option);
-                            setFieldValue("commitmentMaker", option.value);
-                          }}
-                          options={employees}
-                          classNamePrefix="select2-selection"
-                          aria-errormessage="commitmentMaker"
-                        />
-                        <Error
-                          touched={touched.commitmentMaker}
-                          message={errors.commitmentMaker}
-                        />
-                      </div>
-                    </CardBody>
-                  </CardBody>
-                  <CardBody className="pt-0">
-                    <CardTitle>KEBERANGKATAN & DESTINASI</CardTitle>
-                    <CardBody className="p-0 px-4">
-                      <div className="mb-3">
-                        <Label>Tempat Berangkat</Label>
-                        <Select
-                          // value={selectedGroup}
-                          onChange={(newValue) => {
-                            setFieldValue("placeOfDeparture", newValue.value);
-                          }}
-                          classNamePrefix="select2-selection"
-                          options={filteredDistricts}
-                        />
-                        <Error
-                          touched={touched.placeOfDeparture}
-                          message={errors.placeOfDeparture}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <Label>Tempat Tujuan</Label>
-                        <Creatable
-                          onChange={(option) => {
-                            console.log(option);
-                            setFieldValue(
-                              "destination",
-                              option.map((item) => item.value)
-                            );
-                          }}
-                          isMulti
-                          options={filteredDistricts}
-                          classNamePrefix="select2-selection"
-                        />
-                        <Error
-                          touched={touched.destination}
-                          message={errors.destination}
-                        />
-                      </div>
-                    </CardBody>
-                  </CardBody>
-                  <CardBody className="pt-0">
-                    <CardTitle>TANGGAL SURAT</CardTitle>
-                    <CardBody className="p-0 px-4">
-                      <InputGroup>
-                        <Flatpickr
-                          ref={datePickerRef}
-                          defaultValue="today"
-                          className="form-control d-block"
-                          placeholder="dd M, yyyy"
-                          options={{
-                            altInput: true,
-                            altFormat: "F j, Y",
-                            dateFormat: "Y-m-d",
-                          }}
-                        />
-                        <div>
-                          <button
-                            type="button"
-                            className="btn btn-outline-secondary docs-datepicker-trigger"
-                            onClick={() =>
-                              datePickerRef.current.flatpickr.toggle()
-                            }
-                            style={{ zIndex: 0 }}
-                          >
-                            <i className="fa fa-calendar" aria-hidden="true" />
-                          </button>
+            {({ values, setFieldValue, isSubmitting, errors, touched }) => {
+              return (
+                <Form>
+                  <Card>
+                    <CardBody>
+                      <CardTitle>PEJABAT PEMBUAT KOMITMEN</CardTitle>
+                      <CardBody className="p-0 px-4">
+                        <div className="mb-3">
+                          <Select
+                            onChange={(option) => {
+                              setFieldValue("commitmentMaker", option.value);
+                            }}
+                            options={employees}
+                            classNamePrefix="select2-selection"
+                            aria-errormessage="commitmentMaker"
+                            value={{
+                              value: values.commitmentMaker,
+                              label: values.commitmentMaker,
+                            }}
+                          />
+                          <Error
+                            touched={touched.commitmentMaker}
+                            message={errors.commitmentMaker}
+                          />
                         </div>
-                      </InputGroup>
-                      <Error
-                        touched={touched.dateOfLetter}
-                        message={errors.dateOfLetter}
-                      />
+                      </CardBody>
                     </CardBody>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardBody>
-                    <div className="form-check mb-3">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        defaultValue=""
-                        id="defaultCheck1"
-                        checked={checked}
-                        onChange={(e) => setChecked(e.target.checked)}
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="defaultCheck1"
+                    <CardBody className="pt-0">
+                      <CardTitle>KEBERANGKATAN & DESTINASI</CardTitle>
+                      <CardBody className="p-0 px-4">
+                        <div className="mb-3">
+                          <Label>Tempat Berangkat</Label>
+                          <Select
+                            value={{
+                              value: values.placeOfDeparture.toUpperCase(),
+                              label: values.placeOfDeparture.toUpperCase(),
+                            }}
+                            onChange={(newValue) => {
+                              setFieldValue("placeOfDeparture", newValue.value);
+                            }}
+                            classNamePrefix="select2-selection"
+                            options={filteredDistricts}
+                          />
+                          <Error
+                            touched={touched.placeOfDeparture}
+                            message={errors.placeOfDeparture}
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <Label>Tempat Tujuan</Label>
+                          <Creatable
+                            onChange={(option) => {
+                              setFieldValue(
+                                "destination",
+                                option.map((item) => item.value)
+                              );
+                            }}
+                            value={values.destination.map((item) => ({
+                              value: item.toUpperCase(),
+                              label: item.toUpperCase(),
+                            }))}
+                            isMulti
+                            options={filteredDistricts}
+                            classNamePrefix="select2-selection"
+                          />
+                          <Error
+                            touched={touched.destination}
+                            message={errors.destination}
+                          />
+                        </div>
+                      </CardBody>
+                    </CardBody>
+                    <CardBody className="pt-0">
+                      <CardTitle>TANGGAL SURAT</CardTitle>
+                      <CardBody className="p-0 px-4">
+                        <InputGroup>
+                          <Flatpickr
+                            ref={datePickerRef}
+                            defaultValue={values.dateOfLetter || "today"}
+                            className="form-control d-block"
+                            placeholder="dd M, yyyy"
+                            options={{
+                              altInput: true,
+                              altFormat: "F j, Y",
+                              dateFormat: "Y-m-d",
+                            }}
+                          />
+                          <div>
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary docs-datepicker-trigger"
+                              onClick={() =>
+                                datePickerRef.current.flatpickr.toggle()
+                              }
+                              style={{ zIndex: 0 }}
+                            >
+                              <i
+                                className="fa fa-calendar"
+                                aria-hidden="true"
+                              />
+                            </button>
+                          </div>
+                        </InputGroup>
+                        <Error
+                          touched={touched.dateOfLetter}
+                          message={errors.dateOfLetter}
+                        />
+                      </CardBody>
+                    </CardBody>
+                  </Card>
+                  <Card>
+                    <CardBody>
+                      <div className="form-check mb-3">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          defaultValue=""
+                          id="defaultCheck1"
+                          onChange={(e) => setChecked(e.target.checked)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="defaultCheck1"
+                        >
+                          Pastikan data yang anda masukan sudah benar{" "}
+                          <span className="mdi mdi-information-outline"></span>
+                        </label>
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn btn-info btn-rounded btn-lg waves-effect waves-light"
+                        disabled={isSubmitting || !checked}
                       >
-                        Pastikan data yang anda masukan sudah benar{" "}
-                        <span className="mdi mdi-information-outline"></span>
-                      </label>
-                    </div>
-                    <button
-                      type="submit"
-                      className="btn btn-info btn-rounded btn-lg waves-effect waves-light"
-                      disabled={isSubmitting || !checked}
-                    >
-                      SIMPAN
-                    </button>
-                  </CardBody>
-                </Card>
-              </Form>
-            )}
+                        SIMPAN
+                      </button>
+                    </CardBody>
+                  </Card>
+                </Form>
+              );
+            }}
           </Formik>
         </Container>
       </div>

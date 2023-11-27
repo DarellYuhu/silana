@@ -1,17 +1,26 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, PrintDepanModal } from "./Component";
-
-const data = [...Array(17).keys()].map((item) => ({
-  ketuaTim: "Mary Cousar",
-  noSurat: "089/RT.01/J2/2023",
-  tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-  tugas:
-    "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-}));
+import axios from "axios";
 
 const SuratPerjalananDinas = () => {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
+
+  const getData = () => {
+    axios
+      .get("http://localhost:2000/businessTrip")
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -38,7 +47,6 @@ const SuratPerjalananDinas = () => {
                       <Col className="col-sm">
                         <div className="d-flex justify-content-sm-end gap-2">
                           <div className="search-box ms-2">
-                            {/* <i className="ri-search-line search-icon"></i> */}
                             <input
                               type="text"
                               className="form-control search"
@@ -61,21 +69,6 @@ const SuratPerjalananDinas = () => {
                         </Card>
                       </Col>
                     </Row>
-
-                    {/* <div className="d-flex justify-content-end">
-                      <div className="pagination-wrap hstack gap-2">
-                        <Link
-                          className="page-item pagination-prev disabled"
-                          to="#"
-                        >
-                          Previous
-                        </Link>
-                        <ul className="pagination listjs-pagination mb-0"></ul>
-                        <Link className="page-item pagination-next" to="#">
-                          Next
-                        </Link>
-                      </div>
-                    </div> */}
                   </div>
                 </CardBody>
               </Card>
