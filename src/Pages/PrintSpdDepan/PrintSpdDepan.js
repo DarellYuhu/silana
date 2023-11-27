@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import logoMkri from "../../assets/images/logo-mkri.png";
 import {
@@ -8,9 +8,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import moment from "moment";
+import angkaTerbilang from "@develoka/angka-terbilang-js";
 
 const PrintSpdDepan = () => {
+  const [employees, setEmployees] = useState([]);
   const printRef = useRef();
+  const data = useLocation().state;
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -19,6 +25,22 @@ const PrintSpdDepan = () => {
       }
     `,
   });
+
+  console.log(data);
+
+  const getEmployees = async () => {
+    try {
+      const res = await axios.get("http://localhost:2000/employees");
+      console.log(res);
+      setEmployees(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
 
   return (
     <Fragment>
@@ -175,7 +197,7 @@ const PrintSpdDepan = () => {
                         { fontSize: "9pt", fontWeight: "bold", paddingY: 1 },
                       ]}
                     >
-                      Koba L.A. Paul, S.Farm., Apt.
+                      {data?.data?.BusinessTrip?.commitmentMaker}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -183,7 +205,14 @@ const PrintSpdDepan = () => {
                     <TableCell sx={styles.cell1}>
                       Nama/NIP Pegawai yang melaksanakan perjalanan dinas
                     </TableCell>
-                    <TableCell sx={styles.cell1}></TableCell>
+                    <TableCell
+                      sx={[
+                        styles.cell1,
+                        { fontSize: "9pt", fontWeight: "bold", paddingY: 1 },
+                      ]}
+                    >
+                      {data?.selectedPerson}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>3</TableCell>
@@ -193,8 +222,20 @@ const PrintSpdDepan = () => {
                       c. Tingkat Biaya Perjalanan Dinas
                     </TableCell>
                     <TableCell sx={styles.cell1}>
-                      a. <br />
-                      b. <br />
+                      a.{" "}
+                      {
+                        employees.find(
+                          (item) => item.name === data?.selectedPerson
+                        )?.classRank
+                      }{" "}
+                      <br />
+                      b.{" "}
+                      {
+                        employees.find(
+                          (item) => item.name === data?.selectedPerson
+                        )?.jobTitle
+                      }{" "}
+                      <br />
                       c.
                     </TableCell>
                   </TableRow>
@@ -204,10 +245,7 @@ const PrintSpdDepan = () => {
                       Maksud Perjalanan Dinas
                     </TableCell>
                     <TableCell sx={styles.cell1}>
-                      Melaksanakan Perjalanan Dinas dalam rangka Kegiatan
-                      Fasilitasi dan Pembinaan Teknis Sekolah Siaga Kependudukan
-                      di tingkat Provinsi dan Kabupaten/Kota di Kabupaten
-                      Kepulauan Siau Tagulandang Biaro.
+                      {data?.data?.assignedTo}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -216,18 +254,19 @@ const PrintSpdDepan = () => {
                       Alat angkutan yang dipergunakan
                     </TableCell>
                     <TableCell sx={styles.cell1}>
-                      Angkutan Laut (Kapal)
+                      {data?.data?.vehicleType}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell sx={styles.cell1}>6</TableCell>
-                    <TableCell sx={styles.cell1}>
+                    <TableCell sx={[styles.cell1, { verticalAlign: "top" }]}>
                       a. Tempat Berangkat
                       <br />
                       b. Tempat Tujuan
                     </TableCell>
                     <TableCell sx={styles.cell1}>
-                      a. <br /> b.
+                      a. {data?.data?.BusinessTrip?.placeOfDeparture} <br /> b.{" "}
+                      {data?.data?.BusinessTrip?.destination?.join(", dan ")}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -239,12 +278,24 @@ const PrintSpdDepan = () => {
                       <br />
                       c. Tanggal harus kembali/tiba di tempat baru
                     </TableCell>
-                    <TableCell sx={styles.cell1}>
-                      a. 3 (Tiga) Hari
-                      <br />
-                      b. 26 Juli
-                      <br />
-                      c. 28 Juli
+                    <TableCell
+                      sx={[styles.cell1, { whiteSpace: "break-spaces" }]}
+                    >
+                      {`a. ${moment(data?.data?.endDateOftravel).diff(
+                        data?.data?.startDateOftravel,
+                        "days"
+                      )} (${angkaTerbilang(
+                        moment(data?.data?.endDateOftravel).diff(
+                          data?.data?.startDateOftravel,
+                          "days"
+                        )
+                      )}) hari \nb. ${moment(data?.data?.startDateOftravel)
+                        .locale("id")
+                        .format("DD MMMM")} \nc. ${moment(
+                        data?.data?.endDateOftravel
+                      )
+                        .locale("id")
+                        .format("DD MMMM")}`}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -490,10 +541,10 @@ const PrintSpdDepan = () => {
                       a. Instansi <br />
                       b. Mata Anggaran
                     </TableCell>
-                    <TableCell sx={styles.cell1}>
-                      <br />
-                      a. <br />
-                      b.
+                    <TableCell
+                      sx={[styles.cell1, { whiteSpace: "break-spaces" }]}
+                    >
+                      {`\na. ${data?.data?.burden} \nb. ${data?.data?.budgetId}`}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -530,7 +581,9 @@ const PrintSpdDepan = () => {
                   <div className="row">
                     <div className="col-sm-4">Tanggal</div>
                     <div className="col-sm-1">:</div>
-                    <div className="col-sm-7">29 Agustus 2001</div>
+                    <div className="col-sm-7">
+                      {moment().locale("id").format("DD MMMM YYYY")}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -548,7 +601,7 @@ const PrintSpdDepan = () => {
                 <h5
                   style={{ margin: 0, fontSize: "11.5px", fontWeight: "bold" }}
                 >
-                  Koba L.A. Paul, S.Farm., Apt.
+                  {data?.data?.BusinessTrip?.commitmentMaker}
                 </h5>
                 <div
                   style={{
@@ -558,7 +611,12 @@ const PrintSpdDepan = () => {
                   }}
                 />
                 <p style={{ margin: 0, fontSize: "11.5px" }}>
-                  NIP. 198605182014021004
+                  {`NIP. ${
+                    employees.find(
+                      (item) =>
+                        item.name === data?.data?.BusinessTrip?.commitmentMaker
+                    )?.id
+                  }`}
                 </p>
               </div>
             </div>

@@ -9,7 +9,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 
-const Datatables = ({ item, handleEditClick = () => {} }) => {
+const Datatables = ({ item, handleDepanClick = () => {} }) => {
   const navigate = useNavigate();
   const columns = [
     {
@@ -68,7 +68,7 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
                   Cetak
                 </h5>
               </div>
-              <DropdownItem onClick={handleEditClick} href="#!">
+              <DropdownItem onClick={() => handleDepanClick(row)}>
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Depan
               </DropdownItem>
