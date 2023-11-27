@@ -1,5 +1,7 @@
+import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
+import axios from "axios";
 
 const TambahKaryawanModal = ({ modal }) => {
   return (
@@ -22,60 +24,103 @@ const TambahKaryawanModal = ({ modal }) => {
         </button>
       </div>
       <div className="modal-body">
-        <div>
-          <i>Silahkan isi data karyawan di bawah ini.</i>
+        <Formik
+          initialValues={{
+            id: "",
+            name: "",
+            jobTitle: "",
+            classRank: "",
+            password: "12345",
+            roles: ["user"],
+          }}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              await axios.post("http://localhost:2000/employees", {
+                ...values,
+              });
+              modal.value = false;
+            } catch (error) {
+              console.log(error);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ isSubmitting, handleChange }) => (
+            <Form>
+              <div>
+                <i>Silahkan isi data karyawan di bawah ini.</i>
 
-          <div className="d-grid gap-3 py-3">
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Nama
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Nama" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                NIP
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan NIP" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Golongan
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Golongan" />
-              </Col>
-            </Row>
-            <Row md={2}>
-              <Col md={3} className="d-flex align-items-center">
-                Jabatan
-              </Col>
-              <Col md={9}>
-                <Input placeholder="Masukan Jabatan" />
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-rounded btn-secondary"
-            onClick={() => (modal.value = false)}
-          >
-            Kembali
-          </button>
-          <button
-            type="button"
-            className="btn btn-rounded btn-success"
-            // onClick={() => (modal.value = false)}
-          >
-            Selesai
-          </button>
-        </div>
+                <div className="d-grid gap-3 py-3">
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Nama
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="name"
+                        placeholder="Masukan Nama"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      NIP
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="id"
+                        placeholder="Masukan NIP"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Golongan
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="classRank"
+                        placeholder="Masukan Golongan"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                  <Row md={2}>
+                    <Col md={3} className="d-flex align-items-center">
+                      Jabatan
+                    </Col>
+                    <Col md={9}>
+                      <Input
+                        name="jobTitle"
+                        placeholder="Masukan Jabatan"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-rounded btn-secondary"
+                  onClick={() => (modal.value = false)}
+                >
+                  Kembali
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-rounded btn-success"
+                  disabled={isSubmitting}
+                >
+                  Selesai
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </Modal>
   );

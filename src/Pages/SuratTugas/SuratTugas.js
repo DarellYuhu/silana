@@ -1,31 +1,18 @@
 import { TablePagination } from "@mui/material";
-import { Fragment, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  ButtonDropdown,
-  Card,
-  CardBody,
-  Col,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Row,
-} from "reactstrap";
+import { Fragment, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
-
-const data = [...Array(17).keys()].map((item) => ({
-  author: "Mary Cousar",
-  noSurat: "089/RT.01/J2/2023",
-  tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-  tugas:
-    "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-}));
+import axios from "axios";
+import moment from "moment";
 
 const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [letterNumber, setLetterNumber] = useState(null);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -37,9 +24,25 @@ const SuratTugas = () => {
     setPage(0);
   };
 
-  const handlePrintNoSurat = () => {
+  const handlePrintNoSurat = (item) => {
     setOpen(!open);
+    setLetterNumber(item);
   };
+
+  const getData = () => {
+    axios
+      .get("http://localhost:2000/letters")
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -79,7 +82,7 @@ const SuratTugas = () => {
                             placeholder="Search..."
                           />
                         </div>
-                        <div className="btn-group" role="group">
+                        {/* <div className="btn-group" role="group">
                           <ButtonDropdown
                             isOpen={isDropdownOpen}
                             toggle={() => {
@@ -95,7 +98,7 @@ const SuratTugas = () => {
                               <DropdownItem>Dropdown link</DropdownItem>
                             </DropdownMenu>
                           </ButtonDropdown>
-                        </div>
+                        </div> */}
                       </div>
                     </Col>
                   </Row>
@@ -147,6 +150,16 @@ const SuratTugas = () => {
                               page={page}
                               rowsPerPage={rowsPerPage}
                               handlePrintNoSurat={handlePrintNoSurat}
+                              handleDeleteSurat={(id) => {
+                                axios
+                                  .delete(`http://localhost:2000/letters/${id}`)
+                                  .then((_) => {
+                                    getData();
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
                             />
                           ))}
                       </tbody>
@@ -196,7 +209,12 @@ const SuratTugas = () => {
             </Card>
           </Col>
         </Row>
-        <PrintModal open={open} setOpen={setOpen} />
+        <PrintModal
+          open={open}
+          setOpen={setOpen}
+          item={letterNumber}
+          setItem={setLetterNumber}
+        />
       </div>
     </Fragment>
   );
@@ -208,14 +226,21 @@ const TableItem = ({
   page,
   rowsPerPage,
   handlePrintNoSurat = () => {},
+  handleDeleteSurat = () => {},
 }) => {
   const navigate = useNavigate();
   return (
     <tr>
       <td className="no">{index + 1 + rowsPerPage * page}</td>
-      <td className="author">{item.author}</td>
-      <td className="noSurat">{item.noSurat}</td>
-      <td className="tanggal">{item.tanggal}</td>
+      <td className="author">{item.dictum[0]}</td>
+      <td className="noSurat">
+        {item.letterNumber ? item.letterNumber : "Belum dicetak"}
+      </td>
+      <td className="tanggal">
+        {`${moment(item.startDateOftravel).format("DD MMMM YYYY")} s/d ${moment(
+          item.endDateOftravel
+        ).format("DD MMMM YYYY")}`}
+      </td>
       <td
         className="tugas"
         style={{
@@ -224,25 +249,27 @@ const TableItem = ({
           display: "flex",
         }}
       >
-        {item.tugas}
+        {item.assignedTo}
       </td>
       <td>
         <div className="d-flex gap-2">
           <div className="edit">
-            <button
-              className="btn btn-sm btn-outline-info edit-item-btn"
-              data-bs-toggle="modal"
-              data-bs-target="#showModal"
-              onClick={() => navigate("/surat-tugas/1")}
-            >
-              <i className="mdi mdi-pencil-outline fs-5"></i>
-            </button>
+            <Link to={`/surat-tugas/${item.id}`} state={item}>
+              <button
+                className="btn btn-sm btn-outline-info edit-item-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#showModal"
+              >
+                <i className="mdi mdi-pencil-outline fs-5"></i>
+              </button>
+            </Link>
           </div>
           <div className="remove">
             <button
               className="btn btn-sm btn-outline-danger remove-item-btn"
               data-bs-toggle="modal"
               data-bs-target="#deleteRecordModal"
+              onClick={() => handleDeleteSurat(item.id)}
             >
               <i className="mdi mdi-delete-outline fs-5"></i>
             </button>
@@ -250,21 +277,24 @@ const TableItem = ({
         </div>
       </td>
       <td>
-        <button
-          onClick={() => navigate(`/surat-tugas/${index}/print`)}
-          className="btn btn-sm btn-outline-primary print-item-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#showModal"
-        >
-          <i className="mdi mdi-printer fs-5"></i>
-        </button>
+        <Link to={`/surat-tugas/${item.id}/print`} state={item}>
+          <button
+            className="btn btn-sm btn-outline-primary print-item-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#showModal"
+          >
+            <i className="mdi mdi-printer fs-5"></i>
+          </button>
+        </Link>
       </td>
       <td>
         <button
           className="btn btn-sm btn-outline-warning mail-item-btn"
           data-bs-toggle="modal"
           data-bs-target="#showModal"
-          onClick={handlePrintNoSurat}
+          onClick={() =>
+            handlePrintNoSurat({ letterNumber: item.letterNumber, id: item.id })
+          }
         >
           <i className="mdi mdi-email-check-outline fs-5"></i>
         </button>

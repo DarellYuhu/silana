@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 import {
   Button,
   Card,
@@ -7,12 +7,15 @@ import {
   Col,
   Container,
   Input,
+  InputGroup,
   Row,
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Select from "react-select";
+import Flatpickr from "react-flatpickr";
 
 const EditPerincian = () => {
+  const datePickerRef = useRef(null);
   return (
     <Fragment>
       <div className="page-content">
@@ -71,6 +74,35 @@ const EditPerincian = () => {
                     />
                   </Col>
                 </Row>
+              </CardBody>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody>
+              <CardTitle>TANGGAL SURAT</CardTitle>
+              <CardBody className="p-0 px-4">
+                <InputGroup>
+                  <Flatpickr
+                    ref={datePickerRef}
+                    defaultValue="today"
+                    className="form-control d-block"
+                    placeholder="dd M, yyyy"
+                    options={{
+                      altInput: true,
+                      altFormat: "F j, Y",
+                      dateFormat: "Y-m-d",
+                    }}
+                  />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary docs-datepicker-trigger"
+                      onClick={() => datePickerRef.current.flatpickr.toggle()}
+                    >
+                      <i className="fa fa-calendar" aria-hidden="true" />
+                    </button>
+                  </div>
+                </InputGroup>
               </CardBody>
             </CardBody>
           </Card>

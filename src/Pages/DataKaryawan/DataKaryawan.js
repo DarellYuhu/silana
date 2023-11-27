@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
   Datatables,
@@ -6,18 +6,32 @@ import {
   TambahKaryawanModal,
 } from "./Component";
 import { signal } from "@preact/signals-react";
+import axios from "axios";
 
-const data = [...Array(17).keys()].map((item) => ({
-  nama: "Jhon Petrus Hasudungan, S.Psi",
-  nip: "198807292015031003",
-  golongan: "Penata Muda Tingkat I, III/b",
-  jabatan: "Analis Kepegawaian dan Hukum",
-}));
+// const data = [...Array(17).keys()].map((item) => ({
+//   nama: "Jhon Petrus Hasudungan, S.Psi",
+//   nip: "198807292015031003",
+//   golongan: "Penata Muda Tingkat I, III/b",
+//   jabatan: "Analis Kepegawaian dan Hukum",
+// }));
 
 const tambahModal = signal(false);
 const editModal = signal(false);
+const editData = signal({});
 
 const DataKaryawan = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:2000/employees")
+      .then((res) => {
+        console.log(res);
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -70,7 +84,22 @@ const DataKaryawan = () => {
                           <CardBody>
                             <Datatables
                               item={data}
-                              handleEditClick={() => (editModal.value = true)}
+                              handleEditClick={(user) => {
+                                editData.value = user;
+                                editModal.value = true;
+                              }}
+                              handleDeleteClick={(user) => {
+                                axios
+                                  .delete(
+                                    `http://localhost:2000/employees/${user.id}`
+                                  )
+                                  .then((res) => {
+                                    console.log("Delete Success");
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
                             />
                           </CardBody>
                         </Card>
@@ -98,7 +127,7 @@ const DataKaryawan = () => {
           </Row>
         </Container>
         <TambahKaryawanModal modal={tambahModal} />
-        <EditKaryawanModal modal={editModal} />
+        <EditKaryawanModal modal={editModal} data={editData} />
       </div>
     </Fragment>
   );

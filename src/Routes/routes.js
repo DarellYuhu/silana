@@ -23,12 +23,15 @@ import EditNominatif from "../Pages/EditNominatif";
 import EditPerincian from "../Pages/EditPerincian";
 import EditKwitansi from "../Pages/EditKwitansi";
 import DataKaryawan from "../Pages/DataKaryawan";
-import Anggaran from "../Pages/Anggaran";
 import PrintSuratTugas from "../Pages/PrintSuratTugas";
+import PrintSpdDepan from "../Pages/PrintSpdDepan";
+import PrintSpdBelakang from "../Pages/PrintSpdBelakang";
+import PrintNominatif from "../Pages/PrintNominatif";
+import PrintKwitansi from "../Pages/PrintKwitansi";
+import PrintPerincian from "../Pages/PrintPerincian";
+import Anggaran from "../Pages/Anggaran/Anggaran";
 
 const authProtectedRoutes = [
-  //dashboard
-  { path: "/dashboard", component: <Dashboard /> },
   {
     path: "/",
     exact: true,
@@ -67,6 +70,26 @@ const publicRoutes = [
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/register", component: <Register /> },
   { path: "/surat-tugas/:id/print", component: <PrintSuratTugas /> },
+  {
+    path: "/surat-perjalanan-dinas/:id/print-depan",
+    component: <PrintSpdDepan />,
+  },
+  {
+    path: "/surat-perjalanan-dinas/:id/print-belakang",
+    component: <PrintSpdBelakang />,
+  },
+  {
+    path: "/nominatif/:id/print",
+    component: <PrintNominatif />,
+  },
+  {
+    path: "/kwitansi/:id/print",
+    component: <PrintKwitansi />,
+  },
+  {
+    path: "/perincian/:id/print",
+    component: <PrintPerincian />,
+  },
 ];
 
 export { authProtectedRoutes, publicRoutes };

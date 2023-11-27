@@ -1,5 +1,11 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { Fragment } from "react";
+import {
+  Routes,
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
 
 // redux
 import { useSelector } from "react-redux";
@@ -37,9 +43,9 @@ const Index = () => {
 
   const Layout = getLayout(layoutType);
 
-  return (
-    <Routes>
-      <Route>
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Fragment>
         {publicRoutes.map((route, idx) => {
           return (
             <Route
@@ -55,12 +61,11 @@ const Index = () => {
               }
               key={idx}
               exact={true}
+              loader={route.loader}
             />
           );
         })}
-      </Route>
 
-      <Route>
         {authProtectedRoutes.map((route, idx) => (
           <Route
             path={route.path}
@@ -71,11 +76,14 @@ const Index = () => {
             }
             key={idx}
             exact={true}
+            loader={route?.loader}
           />
         ))}
-      </Route>
-    </Routes>
+      </Fragment>
+    )
   );
+
+  return <RouterProvider router={router} />;
 };
 
 export default Index;

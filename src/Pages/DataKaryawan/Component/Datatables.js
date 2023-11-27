@@ -6,41 +6,45 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 
-const Datatables = ({ item, handleEditClick = () => {} }) => {
+const Datatables = ({
+  item,
+  handleEditClick = () => {},
+  handleDeleteClick = () => {},
+}) => {
   const columns = [
     {
       name: <span className="font-weight-bold fs-13">No.</span>,
-      selector: (row, index) => index + 1,
+      selector: (_, index) => index + 1,
       sortable: true,
       width: "50px",
     },
     {
       name: <span className="font-weight-bold fs-13">Nama</span>,
-      selector: (row) => row.nama,
+      selector: (row) => row.name,
       sortable: true,
       width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">NIP</span>,
-      selector: (row) => row.nip,
+      selector: (row) => row.id,
       sortable: true,
       width: "150px",
     },
     {
       name: <span className="font-weight-bold fs-13">Golongan</span>,
-      selector: (row) => row.golongan,
+      selector: (row) => row.classRank,
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Jabatan</span>,
-      selector: (row) => row.jabatan,
+      selector: (row) => row.jobTitle,
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Action</span>,
       sortable: false,
       width: "80px",
-      cell: (_, index) => {
+      cell: (item) => {
         return (
           <UncontrolledDropdown className="dropdown d-inline-block">
             <DropdownToggle
@@ -50,9 +54,19 @@ const Datatables = ({ item, handleEditClick = () => {} }) => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <DropdownItem onClick={handleEditClick} className="edit-item-btn">
+              <DropdownItem
+                onClick={() => handleEditClick(item)}
+                className="edit-item-btn"
+              >
                 <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
                 Edit
+              </DropdownItem>
+              <DropdownItem
+                onClick={() => handleDeleteClick(item)}
+                className="edit-item-btn"
+              >
+                <i className="mdi mdi-delete-outline align-bottom me-2 text-muted"></i>
+                Delete
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
