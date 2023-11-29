@@ -1,10 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-//Dashboard
-import Dashboard from "../Pages/Dashboard";
-
-// Import Authentication pages
 import Login from "../Pages/Authentication/Login";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
@@ -30,6 +26,7 @@ import PrintNominatif from "../Pages/PrintNominatif";
 import PrintKwitansi from "../Pages/PrintKwitansi";
 import PrintPerincian from "../Pages/PrintPerincian";
 import Anggaran from "../Pages/Anggaran/Anggaran";
+import EditSuratPerjalananDinasBelakang from "../Pages/EditSuratPerjalananDinasBelakang";
 
 const authProtectedRoutes = [
   {
@@ -44,6 +41,10 @@ const authProtectedRoutes = [
   {
     path: "/surat-perjalanan-dinas/:id",
     component: <EditSuratPerjalananDinas />,
+  },
+  {
+    path: "/surat-perjalanan-dinas/:id/belakang",
+    component: <EditSuratPerjalananDinasBelakang />,
   },
   { path: "/nominatif", component: <Nominatif /> },
   { path: "/nominatif/:id", component: <EditNominatif /> },

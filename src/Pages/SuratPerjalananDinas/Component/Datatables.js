@@ -1,8 +1,7 @@
 import moment from "moment";
 import DataTable from "react-data-table-component";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
-  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -10,7 +9,6 @@ import {
 } from "reactstrap";
 
 const Datatables = ({ item, handleDepanClick = () => {} }) => {
-  const navigate = useNavigate();
   const columns = [
     {
       name: <span className="font-weight-bold fs-13">No.</span>,
@@ -72,16 +70,16 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Depan
               </DropdownItem>
-              <DropdownItem
-                onClick={() =>
-                  navigate(`/surat-perjalanan-dinas/${index}/print-belakang`)
-                }
-                className="remove-item-btn"
+              <Link
+                to={`/surat-perjalanan-dinas/${row.id}/print-belakang`}
+                state={{ data: row, isPrintOnly: false, values: [] }}
               >
-                {" "}
-                <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
-                Belakang{" "}
-              </DropdownItem>
+                <DropdownItem className="remove-item-btn">
+                  {" "}
+                  <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
+                  Belakang{" "}
+                </DropdownItem>
+              </Link>
               <div
                 className="dropdown-divider"
                 style={{ height: "2px", backgroundColor: "darkgrey" }}
@@ -92,7 +90,16 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
               >
                 <DropdownItem className="edit-item-btn">
                   <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
-                  Edit
+                  Edit Depan
+                </DropdownItem>
+              </Link>
+              <Link
+                to={`/surat-perjalanan-dinas/${row.id}/belakang`}
+                state={row}
+              >
+                <DropdownItem className="edit-item-btn">
+                  <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
+                  Edit Belakang
                 </DropdownItem>
               </Link>
             </DropdownMenu>
