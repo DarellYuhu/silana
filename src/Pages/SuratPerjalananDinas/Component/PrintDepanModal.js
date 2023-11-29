@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Modal } from "reactstrap";
 
 const data = [
@@ -20,7 +20,7 @@ const data = [
   },
 ];
 
-const PrintDepanModal = ({ open, setOpen }) => {
+const PrintDepanModal = ({ open, setOpen, data }) => {
   const navigate = useNavigate();
   return (
     <Modal
@@ -43,16 +43,15 @@ const PrintDepanModal = ({ open, setOpen }) => {
       </div>
       <div className="modal-body">
         <div>
-          {data.map((item, index) => (
-            <button
+          {data?.dictum?.map((item, index) => (
+            <Link
               key={index}
-              onClick={() =>
-                navigate(`/surat-perjalanan-dinas/${index}/print-depan`)
-              }
+              to={`/surat-perjalanan-dinas/${data.id}/print-depan`}
+              state={{ data, selectedPerson: item }}
               className="m-2 btn btn-rounded btn-primary"
             >
-              {item.name}
-            </button>
+              {item}
+            </Link>
           ))}
         </div>
         <div className="modal-footer">

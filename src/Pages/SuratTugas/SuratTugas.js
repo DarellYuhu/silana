@@ -33,6 +33,7 @@ const SuratTugas = () => {
     axios
       .get("http://localhost:2000/letters")
       .then((res) => {
+        console.log(res);
         setData(res);
       })
       .catch((err) => {

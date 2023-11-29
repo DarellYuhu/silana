@@ -113,7 +113,7 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.BusinessTrip?.placeOfDeparture}
+                      {state?.data?.Travels?.placeOfDeparture}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -141,7 +141,7 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.BusinessTrip?.destination[0]}
+                      {state?.data?.Travels?.destination[0]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -167,14 +167,13 @@ const PrintSpdBelakang = () => {
                     <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                     <div style={styles.signHeight} />
                     <h3 style={styles.text1}>
-                      {state?.data?.BusinessTrip?.commitmentMaker}
+                      {state?.data?.Travels?.commitmentMaker}
                     </h3>
 
                     <p style={styles.signId}>{`NIP. ${
                       employees.find(
                         (item) =>
-                          item.name ===
-                          state?.data?.BusinessTrip?.commitmentMaker
+                          item.name === state?.data?.Travels?.commitmentMaker
                       )?.id
                     }`}</p>
                   </div>
@@ -199,9 +198,9 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.BusinessTrip?.destination[0] &&
+                      {state?.data?.Travels?.destination[0] &&
                       state?.isPrintOnly ? (
-                        state?.data?.BusinessTrip?.destination[0]
+                        state?.data?.Travels?.destination[0]
                       ) : (
                         <>&nbsp;</>
                       )}
@@ -264,9 +263,9 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.BusinessTrip?.destination[0] &&
+                      {state?.data?.Travels?.destination[0] &&
                       state?.isPrintOnly ? (
-                        state?.data?.BusinessTrip?.destination[0]
+                        state?.data?.Travels?.destination[0]
                       ) : (
                         <>&nbsp;</>
                       )}
@@ -770,7 +769,7 @@ const PrintSpdBelakang = () => {
                       </TableCell>
                       <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                       <TableCell sx={styles.cell1}>
-                        {state?.data?.BusinessTrip?.placeOfDeparture}
+                        {state?.data?.Travels?.placeOfDeparture}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -796,14 +795,13 @@ const PrintSpdBelakang = () => {
                       <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                       <div style={styles.signHeight} />
                       <h3 style={styles.text1}>
-                        {state?.data?.BusinessTrip?.commitmentMaker}
+                        {state?.data?.Travels?.commitmentMaker}
                       </h3>
 
                       <p style={styles.signId}>{`NIP. ${
                         employees.find(
                           (item) =>
-                            item.name ===
-                            state?.data?.BusinessTrip?.commitmentMaker
+                            item.name === state?.data?.Travels?.commitmentMaker
                         )?.id
                       }`}</p>
                     </div>
@@ -828,14 +826,13 @@ const PrintSpdBelakang = () => {
                     <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                     <div style={styles.signHeight} />
                     <h3 style={styles.text1}>
-                      {state?.data?.BusinessTrip?.commitmentMaker}
+                      {state?.data?.Travels?.commitmentMaker}
                     </h3>
 
                     <p style={styles.signId}>{`NIP. ${
                       employees.find(
                         (item) =>
-                          item.name ===
-                          state?.data?.BusinessTrip?.commitmentMaker
+                          item.name === state?.data?.Travels?.commitmentMaker
                       )?.id
                     }`}</p>
                   </div>

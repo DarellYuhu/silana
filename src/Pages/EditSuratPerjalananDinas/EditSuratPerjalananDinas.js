@@ -20,7 +20,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   commitmentMaker: Yup.string().required("PPB harus dipilih"),
-  placeOfDeparture: Yup.string().required("Tempat berangkat harus dipilih"),
+  departure: Yup.string().required("Tempat berangkat harus dipilih"),
   destination: Yup.array().min(1, "Pilih minimal 1 tujuan"),
   dateOfLetter: Yup.string().required("Tanggal surat harus diisi"),
 });
@@ -31,7 +31,7 @@ const EditSuratPerjalananDinas = () => {
   const [checked, setChecked] = useState(false);
   const datePickerRef = useRef(null);
   const { id } = useParams();
-  const businessTrip = useLocation().state;
+  const travels = useLocation().state;
   const navigate = useNavigate();
 
   const filteredDistricts = Object.keys(DISTRICT)
@@ -72,17 +72,16 @@ const EditSuratPerjalananDinas = () => {
           />
           <Formik
             initialValues={{
-              commitmentMaker: businessTrip?.commitmentMaker || "",
-              placeOfDeparture: businessTrip?.placeOfDeparture || "",
-              destination: businessTrip?.destination || [],
-              dateOfLetter:
-                businessTrip?.dateOfLetter || new Date().toISOString(),
+              commitmentMaker: travels?.commitmentMaker || "",
+              departure: travels?.departure || "",
+              destination: travels?.destination || [],
+              dateOfLetter: travels?.dateOfLetter || new Date().toISOString(),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
               const normalized = {
                 ...values,
-                placeOfDeparture: capitalizeString(values.placeOfDeparture),
+                departure: capitalizeString(values.departure),
                 destination: values.destination.map((item) =>
                   capitalizeString(item)
                 ),
@@ -90,14 +89,14 @@ const EditSuratPerjalananDinas = () => {
               };
               try {
                 let res;
-                if (businessTrip) {
+                if (travels) {
                   res = await axios.patch(
-                    `http://localhost:2000/businessTrip/${businessTrip.letterId}`,
+                    `http://localhost:2000/travels/${travels.letterId}`,
                     normalized
                   );
                 } else {
                   res = await axios.post(
-                    "http://localhost:2000/businessTrip",
+                    "http://localhost:2000/travels",
                     normalized
                   );
                 }
@@ -144,18 +143,18 @@ const EditSuratPerjalananDinas = () => {
                           <Label>Tempat Berangkat</Label>
                           <Select
                             value={{
-                              value: values.placeOfDeparture.toUpperCase(),
-                              label: values.placeOfDeparture.toUpperCase(),
+                              value: values.departure.toUpperCase(),
+                              label: values.departure.toUpperCase(),
                             }}
                             onChange={(newValue) => {
-                              setFieldValue("placeOfDeparture", newValue.value);
+                              setFieldValue("departure", newValue.value);
                             }}
                             classNamePrefix="select2-selection"
                             options={filteredDistricts}
                           />
                           <Error
-                            touched={touched.placeOfDeparture}
-                            message={errors.placeOfDeparture}
+                            touched={touched.departure}
+                            message={errors.departure}
                           />
                         </div>
                         <div className="mb-3">

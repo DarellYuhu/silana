@@ -1477,6 +1477,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-2.1.1.tgz#c9c61d9fe5ca5ac664e1153bb0aa0eba1c6d6308"
   integrity sha512-jwx+WCqszn53YHOfvFMJJRd/B2GqkCBt+1MJSG6o5/s8+ytHMvDZXsJgUEWLk12UnLd7HYKac4BYU5i/Ron1Cw==
 
+"@develoka/angka-terbilang-js@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@develoka/angka-terbilang-js/-/angka-terbilang-js-1.4.2.tgz#2756421b24d4dcf04643697c87b204130757bfcd"
+  integrity sha512-eunTDwPs1JmtY1bpP7SBrjjn3eTcy9NcGWUrECbH3CWjfznOsTiNbxLDMGeNxRCUYUR5rL9lI0hr6bTOXeVmzQ==
+
 "@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"

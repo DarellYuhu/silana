@@ -66,7 +66,7 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
                   Cetak
                 </h5>
               </div>
-              <DropdownItem onClick={handleDepanClick} href="#!">
+              <DropdownItem onClick={() => handleDepanClick(row)}>
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Depan
               </DropdownItem>
@@ -86,7 +86,7 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
               ></div>
               <Link
                 to={`/surat-perjalanan-dinas/${row.id}`}
-                state={row.BusinessTrip}
+                state={row.Travels}
               >
                 <DropdownItem className="edit-item-btn">
                   <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>

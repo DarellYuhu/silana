@@ -70,7 +70,7 @@ const PrintSuratTugas = () => {
               visibility: state.isPrintNoOnly ? "hidden" : "visible",
             }}
           >
-            <img src={logoBkkbnDark} style={{ width: "2.8cm" }} />
+            <img src={logoBkkbnDark} style={{ width: "4cm" }} />
             <p style={{ fontSize: 10, marginRight: 29 }}>Sulawesi Utara</p>
             <div
               style={{

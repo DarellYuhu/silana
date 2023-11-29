@@ -651,7 +651,7 @@ const warnaOptions = [
   { label: "Merah", value: "red" },
   { label: "Hijau", value: "green" },
   { label: "Biru", value: "blue" },
-  { label: "Kuning", value: "yellow" },
+  { label: "Ungu", value: "purple" },
 ];
 
 const jabatanOptions = [

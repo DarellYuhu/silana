@@ -213,16 +213,14 @@ const EditSuratPerjalananDinasBelakang = () => {
                             Berangkat dari
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            {data?.BusinessTrip?.placeOfDeparture}
-                          </Col>
+                          <Col xs={7}>{data?.Travels?.placeOfDeparture}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
                             Ke
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>{data?.BusinessTrip?.destination[0]}</Col>
+                          <Col xs={7}>{data?.Travels?.destination[0]}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
@@ -230,7 +228,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                           </Col>
                           <Col xs={1}>:</Col>
                           <Col xs={7}>
-                            {moment(data?.BusinessTrip?.startDateOftravel)
+                            {moment(data?.Travels?.startDateOftravel)
                               .locale("id")
                               .format("DD MMMM")}
                           </Col>
@@ -247,9 +245,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                             Nama
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            {data?.BusinessTrip?.commitmentMaker}
-                          </Col>
+                          <Col xs={7}>{data?.Travels?.commitmentMaker}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
@@ -260,8 +256,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                             {
                               employees.find(
                                 (item) =>
-                                  item.name ===
-                                  data?.BusinessTrip?.commitmentMaker
+                                  item.name === data?.Travels?.commitmentMaker
                               )?.id
                             }
                           </Col>
@@ -287,7 +282,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                               type="text"
                               placeholder="Masukan Lokasi"
                               readOnly
-                              value={data?.BusinessTrip?.destination[0]}
+                              value={data?.Travels?.destination[0]}
                             />
                           </Col>
                         </Row>
@@ -359,7 +354,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                               type="text"
                               placeholder="Masukan Lokasi"
                               readOnly
-                              value={data?.BusinessTrip?.destination[0]}
+                              value={data?.Travels?.destination[0]}
                             />
                           </Col>
                         </Row>

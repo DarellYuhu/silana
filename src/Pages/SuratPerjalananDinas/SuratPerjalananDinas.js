@@ -5,12 +5,14 @@ import axios from "axios";
 
 const SuratPerjalananDinas = () => {
   const [open, setOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState({});
   const [data, setData] = useState([]);
 
   const getData = () => {
     axios
-      .get("http://localhost:2000/businessTrip")
+      .get("http://localhost:2000/travels")
       .then((res) => {
+        console.log(res);
         setData(res);
       })
       .catch((err) => {
@@ -63,7 +65,10 @@ const SuratPerjalananDinas = () => {
                           <CardBody>
                             <Datatables
                               item={data}
-                              handleEditClick={() => setOpen(!open)}
+                              handleDepanClick={(item) => {
+                                setSelectedData(item);
+                                setOpen(!open);
+                              }}
                             />
                           </CardBody>
                         </Card>
@@ -75,7 +80,7 @@ const SuratPerjalananDinas = () => {
             </Col>
           </Row>
         </Container>
-        <PrintDepanModal open={open} setOpen={setOpen} />
+        <PrintDepanModal open={open} setOpen={setOpen} data={selectedData} />
       </div>
     </Fragment>
   );
