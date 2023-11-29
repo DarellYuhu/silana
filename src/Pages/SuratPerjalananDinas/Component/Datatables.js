@@ -66,7 +66,7 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
                   Cetak
                 </h5>
               </div>
-              <DropdownItem onClick={() => handleDepanClick(row)}>
+              <DropdownItem onClick={handleEditClick} href="#!">
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Depan
               </DropdownItem>

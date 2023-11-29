@@ -5,7 +5,6 @@ import axios from "axios";
 
 const SuratPerjalananDinas = () => {
   const [open, setOpen] = useState(false);
-  const [selectedData, setSelectedData] = useState({});
   const [data, setData] = useState([]);
 
   const getData = () => {
@@ -64,10 +63,7 @@ const SuratPerjalananDinas = () => {
                           <CardBody>
                             <Datatables
                               item={data}
-                              handleDepanClick={(item) => {
-                                setSelectedData(item);
-                                setOpen(!open);
-                              }}
+                              handleEditClick={() => setOpen(!open)}
                             />
                           </CardBody>
                         </Card>
@@ -79,7 +75,7 @@ const SuratPerjalananDinas = () => {
             </Col>
           </Row>
         </Container>
-        <PrintDepanModal open={open} setOpen={setOpen} data={selectedData} />
+        <PrintDepanModal open={open} setOpen={setOpen} />
       </div>
     </Fragment>
   );
