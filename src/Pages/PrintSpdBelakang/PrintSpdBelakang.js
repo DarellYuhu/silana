@@ -38,6 +38,7 @@ const PrintSpdBelakang = () => {
   }, []);
 
   const hiddenStyle = { visibility: state?.isPrintOnly ? "hidden" : "visible" };
+  // const hideLocationStyle = { visibility: state?.value ? "hidden" : "visible" };
 
   return (
     <Fragment>
@@ -113,7 +114,7 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.Travels?.placeOfDeparture}
+                      {state?.data?.travel?.departure}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -141,7 +142,7 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.Travels?.destination[0]}
+                      {state?.data?.travel?.destination[0]}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -159,7 +160,7 @@ const PrintSpdBelakang = () => {
                     <TableCell sx={styles.cell1}>
                       {moment(state?.data?.startDateOftravel)
                         .locale("id")
-                        .format("DD MMMM")}
+                        .format("D MMMM")}
                     </TableCell>
                   </TableRow>
 
@@ -167,13 +168,13 @@ const PrintSpdBelakang = () => {
                     <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                     <div style={styles.signHeight} />
                     <h3 style={styles.text1}>
-                      {state?.data?.Travels?.commitmentMaker}
+                      {state?.data?.travel?.commitmentMaker}
                     </h3>
 
                     <p style={styles.signId}>{`NIP. ${
                       employees.find(
                         (item) =>
-                          item.name === state?.data?.Travels?.commitmentMaker
+                          item.name === state?.data?.travel?.commitmentMaker
                       )?.id
                     }`}</p>
                   </div>
@@ -198,9 +199,9 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.Travels?.destination[0] &&
+                      {state?.data?.travel?.destination[0] &&
                       state?.isPrintOnly ? (
-                        state?.data?.Travels?.destination[0]
+                        state?.data?.travel?.destination[0]
                       ) : (
                         <>&nbsp;</>
                       )}
@@ -263,9 +264,10 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.Travels?.destination[0] &&
-                      state?.isPrintOnly ? (
-                        state?.data?.Travels?.destination[0]
+                      {state?.data?.travel?.destination[0] &&
+                      state?.isPrintOnly &&
+                      state?.values[0]?.berangkat?.ke ? (
+                        state?.data?.travel?.destination[0]
                       ) : (
                         <>&nbsp;</>
                       )}
@@ -349,7 +351,12 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[0]?.berangkat?.ke &&
+                      state?.values[1]?.tiba?.nama ? (
+                        state?.values[0]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -408,7 +415,12 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[0]?.berangkat?.ke &&
+                      state?.values[1]?.berangkat?.ke ? (
+                        state?.values[0]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -488,7 +500,11 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[1]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[2]?.tiba?.nama ? (
+                        state?.values[1]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -547,7 +563,11 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[1]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[3]?.berangkat?.ke ? (
+                        state?.values[2]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -627,7 +647,11 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[3]?.tiba?.nama ? (
+                        state?.values[2]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -686,7 +710,11 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.berangkat?.ke ?? <>&nbsp;</>}
+                      {state?.values[3]?.berangkat?.ke ? (
+                        state?.values[2]?.berangkat?.ke
+                      ) : (
+                        <>&nbsp;</>
+                      )}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -768,8 +796,8 @@ const PrintSpdBelakang = () => {
                         Tiba di
                       </TableCell>
                       <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                      <TableCell sx={styles.cell1}>
-                        {state?.data?.Travels?.placeOfDeparture}
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>
+                        {state?.data?.travel?.departure}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -781,7 +809,7 @@ const PrintSpdBelakang = () => {
                       <TableCell sx={[styles.cell1, hiddenStyle]}>
                         {moment(state?.data?.endDateOftravel)
                           .locale("id")
-                          .format("DD MMMM")}
+                          .format("D MMMM")}
                       </TableCell>
                     </TableRow>
                   </div>
@@ -795,13 +823,13 @@ const PrintSpdBelakang = () => {
                       <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                       <div style={styles.signHeight} />
                       <h3 style={styles.text1}>
-                        {state?.data?.Travels?.commitmentMaker}
+                        {state?.data?.travel?.commitmentMaker}
                       </h3>
 
                       <p style={styles.signId}>{`NIP. ${
                         employees.find(
                           (item) =>
-                            item.name === state?.data?.Travels?.commitmentMaker
+                            item.name === state?.data?.travel?.commitmentMaker
                         )?.id
                       }`}</p>
                     </div>
@@ -826,13 +854,13 @@ const PrintSpdBelakang = () => {
                     <h3 style={styles.text1}>Pejabat Pembuat Komitmen,</h3>
                     <div style={styles.signHeight} />
                     <h3 style={styles.text1}>
-                      {state?.data?.Travels?.commitmentMaker}
+                      {state?.data?.travel?.commitmentMaker}
                     </h3>
 
                     <p style={styles.signId}>{`NIP. ${
                       employees.find(
                         (item) =>
-                          item.name === state?.data?.Travels?.commitmentMaker
+                          item.name === state?.data?.travel?.commitmentMaker
                       )?.id
                     }`}</p>
                   </div>

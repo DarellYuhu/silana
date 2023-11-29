@@ -213,14 +213,14 @@ const EditSuratPerjalananDinasBelakang = () => {
                             Berangkat dari
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>{data?.Travels?.placeOfDeparture}</Col>
+                          <Col xs={7}>{data?.travel?.departure}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
                             Ke
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>{data?.Travels?.destination[0]}</Col>
+                          <Col xs={7}>{data?.travel?.destination[0]}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
@@ -228,7 +228,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                           </Col>
                           <Col xs={1}>:</Col>
                           <Col xs={7}>
-                            {moment(data?.Travels?.startDateOftravel)
+                            {moment(data?.travel?.startDateOftravel)
                               .locale("id")
                               .format("DD MMMM")}
                           </Col>
@@ -245,7 +245,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                             Nama
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>{data?.Travels?.commitmentMaker}</Col>
+                          <Col xs={7}>{data?.travel?.commitmentMaker}</Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
@@ -256,7 +256,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                             {
                               employees.find(
                                 (item) =>
-                                  item.name === data?.Travels?.commitmentMaker
+                                  item.name === data?.travel?.commitmentMaker
                               )?.id
                             }
                           </Col>
@@ -282,7 +282,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                               type="text"
                               placeholder="Masukan Lokasi"
                               readOnly
-                              value={data?.Travels?.destination[0]}
+                              value={data?.travel?.destination[0]}
                             />
                           </Col>
                         </Row>
@@ -354,7 +354,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                               type="text"
                               placeholder="Masukan Lokasi"
                               readOnly
-                              value={data?.Travels?.destination[0]}
+                              value={data?.travel?.destination[0]}
                             />
                           </Col>
                         </Row>
