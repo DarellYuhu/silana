@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   Card,
   CardBody,
@@ -16,26 +16,18 @@ import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-
-const data = [
-  {
-    name: "Daniel Hamonangan, S.Kom, M.Sc",
-  },
-  {
-    name: "Dinar Ariana Viestri, S.Si",
-  },
-  {
-    name: "Ir. Ronny Sumilat",
-  },
-];
+import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment";
+import axiosClient from "../../helpers/axiosClient";
+import axios from "axios";
 
 const NominativeSchema = Yup.object().shape({
-  type: Yup.string().required("Required"),
+  tranportType: Yup.string().required("Required"),
   data: Yup.array().of(
     Yup.object().shape({
-      lumpsumDay: Yup.number().nullable().required("Required"),
+      lumpsumDuration: Yup.number().nullable().required("Required"),
       lumpsumAmount: Yup.number().nullable().required("Required"),
-      lodgingDay: Yup.number().nullable().required("Required"),
+      lodgingDuration: Yup.number().nullable().required("Required"),
       lodgingAmount: Yup.number().nullable().required("Required"),
     })
   ),
@@ -44,7 +36,23 @@ const NominativeSchema = Yup.object().shape({
 const EditNominatif = () => {
   const [type, setType] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [employees, setEmployees] = useState([]);
   const datePickerRef = useRef(null);
+  const dataExample = useLocation().state;
+  const navigate = useNavigate();
+
+  const getEmployees = async () => {
+    try {
+      const res = await axiosClient.get("employees");
+      setEmployees(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -55,30 +63,81 @@ const EditNominatif = () => {
           />
           <Formik
             initialValues={{
-              type: "",
-              data: data.map((item) => ({
-                name: item.name,
-                localTransportDeparture: null,
-                localTransportReturn: null,
-                planeShipDeparture: null,
-                planeShipReturn: null,
-                lumpsumDay: null,
-                lumpsumAmount: null,
-                lodgingDay: null,
-                lodgingAmount: null,
-              })),
+              tranportType: dataExample.nominative.tranportType ?? "",
+              dateOfLetter:
+                dataExample.nominative.dateOfLetter ?? moment().toISOString(),
+              letterId: dataExample.nominative.letterId ?? dataExample.id,
+              data:
+                dataExample.nominative.helpers ??
+                dataExample.dictum.map((item) => ({
+                  name: item,
+                  transportDeparture: null,
+                  transportReturn: null,
+                  planeShipDearture: null,
+                  planeShipReturn: null,
+                  lumpsumDuration:
+                    moment(dataExample.endDateOftravel).diff(
+                      dataExample.startDateOftravel,
+                      "days"
+                    ) ?? null,
+                  lumpsumAmount: null,
+                  lodgingDuration:
+                    moment(dataExample.endDateOftravel).diff(
+                      dataExample.startDateOftravel,
+                      "days"
+                    ) - 1 ?? null,
+                  lodgingAmount: null,
+                })),
             }}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                console.log(values);
+            onSubmit={async (values, { setSubmitting }) => {
+              const nominativePayload = {
+                letterId: values.letterId,
+                dateOfLetter: values.dateOfLetter,
+                tranportType: values.tranportType,
+              };
+
+              try {
+                if (dataExample.nominative) {
+                  await axiosClient.patch(
+                    `nominative/${dataExample.nominative.id}`,
+                    nominativePayload
+                  );
+                  await axios.all(
+                    values.data.map((item) =>
+                      axiosClient.patch(`helpers/${item.nominativeId}`, item)
+                    )
+                  );
+                  console.log("success");
+                  navigate("/nominatif");
+                  return;
+                }
+                const res = await axiosClient.post(
+                  "nominative",
+                  nominativePayload
+                );
+                const helperPayload = values.data.map((item) => ({
+                  ...item,
+                  nominativeId: res.data.id,
+                  employeeId: employees.find(
+                    (employee) => employee.name === item.name
+                  ).id,
+                }));
+                helperPayload.map((item) => delete item.name);
+                await axiosClient.post("helpers", helperPayload);
+                console.log("success");
+                navigate("/nominatif");
+              } catch (error) {
+                console.log(error);
+              } finally {
                 setSubmitting(false);
-              }, 400);
+              }
             }}
             validationSchema={NominativeSchema}
             validateOnChange={false}
             validateOnBlur={false}
           >
             {({
+              values,
               handleChange,
               setFieldValue,
               isSubmitting,
@@ -96,27 +155,41 @@ const EditNominatif = () => {
                           <Select
                             onChange={(newValue) => {
                               setType(newValue.value);
-                              setFieldValue("type", newValue.value);
+                              setFieldValue("tranportType", newValue.value);
+                              if (newValue.value === "Tim") {
+                                values.data.map((item, index) => {
+                                  if (index !== 0) {
+                                    item.transportDeparture = null;
+                                    item.transportReturn = null;
+                                    item.planeShipDearture = null;
+                                    item.planeShipReturn = null;
+                                  }
+                                });
+                              }
+                            }}
+                            value={{
+                              label: values.tranportType,
+                              value: values.tranportType,
                             }}
                             options={transportType}
                             classNamePrefix="select2-selection"
                           />
-                          {errors.type && touched.type ? (
+                          {errors.tranportType && touched.tranportType ? (
                             <div className="invalid-feedback d-block">
-                              {errors.type}
+                              {errors.tranportType}
                             </div>
                           ) : null}
                         </div>
                       </CardBody>
                     </CardBody>
                   </Card>
-                  {data.map((item, index) => (
+                  {dataExample.dictum.map((item, index) => (
                     <Card key={index}>
                       <CardHeader className="bg-transparent border-bottom ">
-                        <h5 className="my-0">{item.name}</h5>
+                        <h5 className="my-0">{item}</h5>
                       </CardHeader>
 
-                      {type === "Tim" && index !== 0 ? null : (
+                      {values.tranportType === "Tim" && index !== 0 ? null : (
                         <CardBody>
                           <CardTitle>TRANSPORT</CardTitle>
                           <CardBody className="p-0 px-4">
@@ -131,8 +204,9 @@ const EditNominatif = () => {
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
-                                  name={`data[${index}].localTransportDeparture`}
+                                  name={`data[${index}].transportDeparture`}
                                   onChange={handleChange}
+                                  value={values.data[index].transportDeparture}
                                 />
                               </Col>
                               <Col md={6}>
@@ -140,8 +214,9 @@ const EditNominatif = () => {
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
-                                  name={`data[${index}].localTransportReturn`}
+                                  name={`data[${index}].transportReturn`}
                                   onChange={handleChange}
+                                  value={values.data[index].transportReturn}
                                 />
                               </Col>
                             </Row>
@@ -157,8 +232,9 @@ const EditNominatif = () => {
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
-                                  name={`data[${index}].planeShipDeparture`}
+                                  name={`data[${index}].planeShipDearture`}
                                   onChange={handleChange}
+                                  value={values.data[index].planeShipDearture}
                                 />
                               </Col>
                               <Col md={6}>
@@ -168,6 +244,7 @@ const EditNominatif = () => {
                                   className="colorpicker-default"
                                   name={`data[${index}].planeShipReturn`}
                                   onChange={handleChange}
+                                  value={values.data[index].planeShipReturn}
                                 />
                               </Col>
                             </Row>
@@ -183,11 +260,12 @@ const EditNominatif = () => {
                               <Input
                                 type="number"
                                 className="colorpicker-default"
-                                name={`data[${index}].lumpsumDay`}
+                                name={`data[${index}].lumpsumDuration`}
+                                value={values.data[index].lumpsumDuration}
                                 onChange={handleChange}
                                 invalid={
-                                  errors?.data?.[index]?.lumpsumDay &&
-                                  touched?.data?.[index]?.lumpsumDay
+                                  errors?.data?.[index]?.lumpsumDuration &&
+                                  touched?.data?.[index]?.lumpsumDuration
                                 }
                               />
                             </Col>
@@ -202,6 +280,7 @@ const EditNominatif = () => {
                                   errors?.data?.[index]?.lumpsumAmount &&
                                   touched?.data?.[index]?.lumpsumAmount
                                 }
+                                value={values.data[index].lumpsumAmount}
                               />
                             </Col>
                           </Row>
@@ -216,11 +295,12 @@ const EditNominatif = () => {
                               <Input
                                 type="number"
                                 className="colorpicker-default"
-                                name={`data[${index}].lodgingDay`}
+                                name={`data[${index}].lodgingDuration`}
+                                value={values.data[index].lodgingDuration}
                                 onChange={handleChange}
                                 invalid={
-                                  errors?.data?.[index]?.lodgingDay &&
-                                  touched?.data?.[index]?.lodgingDay
+                                  errors?.data?.[index]?.lodgingDuration &&
+                                  touched?.data?.[index]?.lodgingDuration
                                 }
                               />
                             </Col>
@@ -235,6 +315,7 @@ const EditNominatif = () => {
                                   errors?.data?.[index]?.lodgingAmount &&
                                   touched?.data?.[index]?.lodgingAmount
                                 }
+                                value={values.data[index].lodgingAmount}
                               />
                             </Col>
                           </Row>
@@ -256,6 +337,13 @@ const EditNominatif = () => {
                               altInput: true,
                               altFormat: "F j, Y",
                               dateFormat: "Y-m-d",
+                            }}
+                            value={values.dateOfLetter}
+                            onChange={(date) => {
+                              setFieldValue(
+                                "dateOfLetter",
+                                moment(date[0]).toISOString()
+                              );
                             }}
                           />
                           <div className="input-group-append">

@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
 import {
@@ -8,9 +8,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
+import axiosClient from "../../helpers/axiosClient";
+import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 
 const PrintNominatif = () => {
+  const [employees, setEmployees] = useState([]);
   const printRef = useRef();
+  const data = useLocation().state;
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -19,6 +25,19 @@ const PrintNominatif = () => {
       }
     `,
   });
+
+  const getEmployees = async () => {
+    try {
+      const res = await axiosClient.get("/employees");
+      setEmployees(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
   return (
     <Fragment>
       <div
@@ -42,7 +61,7 @@ const PrintNominatif = () => {
         >
           {/* header */}
           <div>
-            <p style={{ fontSize: "9pt", margin: 0 }}>
+            <p style={{ fontSize: "9pt", color: "black" }}>
               DEPARTEMEN/LEMBAGA
               <br />
               SATKER: PERWAKILAN BKKBN PROVINSI SULAWESI UTARA
@@ -52,14 +71,15 @@ const PrintNominatif = () => {
                 DAFTAR NOMINATIF/RINCIAN PERJALANAN DINAS
               </h1>
               <h2 style={{ fontSize: "9pt", margin: 0, fontWeight: "bold" }}>
-                Melaksanakan Perjalanan Dinas dalam rangka Kegiatan Fasilitasi
-                dan Pembinaan Teknis Sekolah Siaga Kependudukan di tingkat
-                Provinsi dan Kabupaten/Kota di Kabupaten Kepulauan Siau
-                Tagulandang Biaro.
+                {`${data?.assignedTo}`}
                 <br />
-                sesuai ST No: / RT.01 / J2 / 2023 tanggal 25 Juli 2023
+                {`sesuai ST No: ${data?.letterNumber} tanggal ${moment(
+                  data?.dateOfletter
+                ).format("D MMMM YYYY")}`}
                 <br />
-                Tanggal: 26 Juli s/d 28 Juli 2023
+                {`Tanggal: ${moment(data?.startDateOftravel).format(
+                  "D MMMM"
+                )} s/d ${moment(data?.endDateOftravel).format("D MMMM YYYY")}`}
               </h2>
             </div>
           </div>
@@ -105,28 +125,86 @@ const PrintNominatif = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Array.from(Array(5).keys()).map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={styles.cell1}>{index + 1}</TableCell>
-                  <TableCell sx={[styles.cell1, { textAlign: "start" }]}>
-                    Daniel Hamonangan, S.Kom, M.Sc
-                  </TableCell>
-                  <TableCell sx={styles.cell1}>
-                    198405222010121002
-                    <br />
-                    Penata, III/c
-                  </TableCell>
-                  <TableCell sx={styles.cell1}>28 Juli</TableCell>
-                  <TableCell sx={styles.cell1}>3 (Tiga)</TableCell>
-                  <TableCell sx={styles.cell1}>
-                    Kabupaten Kepulauan Sitaro
-                  </TableCell>
-                  <TableCell sx={styles.cell1}>Rp 800.000</TableCell>
-                  <TableCell sx={styles.cell1}>Rp 975.000</TableCell>
-                  <TableCell sx={styles.cell1}>Rp 700.000</TableCell>
-                  <TableCell sx={styles.cell1}>Rp 2.475.000</TableCell>
-                </TableRow>
-              ))}
+              {data?.nominative?.helpers.map((item, index) => {
+                const tripDuration = moment(data.endDateOftravel).diff(
+                  data.startDateOftravel,
+                  "days"
+                );
+                const personalTransport =
+                  item.transportDeparture + item.transportReturn;
+                const lumpsum = item.lumpsumDuration * item.lumpsumAmount;
+                const lodging = item.lodgingDuration * item.lodgingAmount;
+                const total = personalTransport + lumpsum + lodging;
+                return (
+                  <TableRow key={index}>
+                    <TableCell sx={styles.cell1}>{index + 1}</TableCell>
+                    <TableCell sx={[styles.cell1, { textAlign: "start" }]}>
+                      {
+                        employees?.find(
+                          (employee) => employee.id === item.employeeId
+                        )?.name
+                      }
+                    </TableCell>
+                    <TableCell sx={styles.cell1}>
+                      {
+                        employees?.find(
+                          (employee) => employee.id === item.employeeId
+                        )?.id
+                      }
+                      <br />
+                      {
+                        employees?.find(
+                          (employee) => employee.id === item.employeeId
+                        )?.classRank
+                      }
+                    </TableCell>
+                    <TableCell sx={styles.cell1}>
+                      {moment(data.startDateOftravel).format("D MMMM")}
+                    </TableCell>
+                    <TableCell
+                      sx={styles.cell1}
+                    >{`${tripDuration} (${angkaTerbilangJs(
+                      tripDuration
+                    )})`}</TableCell>
+                    <TableCell
+                      sx={[
+                        styles.cell1,
+                        { whiteSpace: "break-spaces", height: "50px" },
+                      ]}
+                    >
+                      {data?.travel?.destination?.join("\n")}
+                    </TableCell>
+                    <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(personalTransport) ?? "-"}
+                    </TableCell>
+                    <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(lumpsum) ?? "-"}
+                    </TableCell>
+                    <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(lodging) ?? "-"}
+                    </TableCell>
+                    <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(total) ?? "-"}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
               <TableRow>
                 <TableCell
                   colSpan={8}
@@ -140,8 +218,26 @@ const PrintNominatif = () => {
                 >
                   TOTAL
                 </TableCell>
-                <TableCell sx={[styles.cell1, { borderLeftWidth: "0px" }]}>
-                  Rp 7.879.000
+                <TableCell
+                  sx={[
+                    styles.cell1,
+                    { borderLeftWidth: "0px", textAlign: "right" },
+                  ]}
+                >
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format(
+                    data?.nominative?.helpers?.reduce((acc, curr) => {
+                      const personalTransport =
+                        curr.transportDeparture + curr.transportReturn;
+                      const lumpsum = curr.lumpsumDuration * curr.lumpsumAmount;
+                      const lodging = curr.lodgingDuration * curr.lodgingAmount;
+                      const total = personalTransport + lumpsum + lodging;
+                      return acc + total;
+                    }, 0)
+                  ) ?? "-"}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -175,9 +271,18 @@ const PrintNominatif = () => {
                   borderBottomStyle: "solid",
                 }}
               >
-                Koba L.A. Paul, S.Farm., Apt.
+                {
+                  employees?.find(
+                    (employee) =>
+                      employee.name === data?.travel?.commitmentMaker
+                  )?.name
+                }
               </h2>
-              <p>NIP. 198605182014021004</p>
+              <p>{`NIP. ${
+                employees?.find(
+                  (employee) => employee.name === data?.travel?.commitmentMaker
+                )?.id
+              }`}</p>
             </div>
           </div>
         </div>

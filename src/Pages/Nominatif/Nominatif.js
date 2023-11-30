@@ -1,16 +1,30 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
+import axiosClient from "../../helpers/axiosClient";
 
-const data = [...Array(17).keys()].map((item) => ({
-  ketuaTim: "Mary Cousar",
-  noSurat: "089/RT.01/J2/2023",
-  tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-  tugas:
-    "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-}));
+// const data = [...Array(17).keys()].map((item) => ({
+//   ketuaTim: "Mary Cousar",
+//   noSurat: "089/RT.01/J2/2023",
+//   tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
+//   tugas:
+//     "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
+// }));
 
 const Nominatif = () => {
+  const [data, setData] = useState([]);
+  const getLetters = async () => {
+    try {
+      const res = await axiosClient.get("/nominative");
+      setData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getLetters();
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
