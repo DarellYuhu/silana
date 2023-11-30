@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";

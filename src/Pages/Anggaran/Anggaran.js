@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
-import axios from "axios";
 import axiosClient from "../../helpers/axiosClient";
 
 const tambahModal = signal(false);

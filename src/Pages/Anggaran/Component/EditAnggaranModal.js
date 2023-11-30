@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";

@@ -1,9 +1,7 @@
 import { Col, Input, Modal, Row } from "reactstrap";
 import Select from "react-select";
-import { computed, effect, signal, useSignal } from "@preact/signals-react";
-import { useEffect } from "react";
+import { effect, signal } from "@preact/signals-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import axiosClient from "../../../helpers/axiosClient";
 
 const noSurat = signal("");

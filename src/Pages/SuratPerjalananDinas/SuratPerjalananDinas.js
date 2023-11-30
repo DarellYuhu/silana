@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, PrintDepanModal } from "./Component";
-import axios from "axios";
 import axiosClient from "../../helpers/axiosClient";
 
 const SuratPerjalananDinas = () => {

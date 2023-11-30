@@ -3,7 +3,6 @@ import { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
-import axios from "axios";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 

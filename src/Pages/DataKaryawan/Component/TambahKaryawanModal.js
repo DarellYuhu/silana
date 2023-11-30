@@ -1,7 +1,6 @@
 import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
-import axios from "axios";
 import axiosClient from "../../../helpers/axiosClient";
 
 const TambahKaryawanModal = ({ modal }) => {

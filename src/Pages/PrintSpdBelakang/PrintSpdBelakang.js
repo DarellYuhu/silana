@@ -4,7 +4,6 @@ import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import logoMkri from "../../assets/images/logo-mkri.png";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
-import axios from "axios";
 import { effect, signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
 

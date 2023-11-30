@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import moment from "moment";
 import localization from "moment/locale/id";
 import angkaTerbilang from "@develoka/angka-terbilang-js";

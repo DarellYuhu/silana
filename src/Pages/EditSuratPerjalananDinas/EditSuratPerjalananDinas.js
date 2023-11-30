@@ -13,7 +13,6 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Flatpickr from "react-flatpickr";
 import DISTRICT from "@regions-of-indonesia/data/district";
 import { Form, Formik } from "formik";
-import axios from "axios";
 import { capitalizeString } from "../../Utility";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";

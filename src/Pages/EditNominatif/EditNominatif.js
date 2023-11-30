@@ -19,7 +19,6 @@ import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
-import axios from "axios";
 
 const NominativeSchema = Yup.object().shape({
   tranportType: Yup.string().required("Required"),

@@ -6,15 +6,7 @@ import {
   TambahKaryawanModal,
 } from "./Component";
 import { signal } from "@preact/signals-react";
-import axios from "axios";
 import axiosClient from "../../helpers/axiosClient";
-
-// const data = [...Array(17).keys()].map((item) => ({
-//   nama: "Jhon Petrus Hasudungan, S.Psi",
-//   nip: "198807292015031003",
-//   golongan: "Penata Muda Tingkat I, III/b",
-//   jabatan: "Analis Kepegawaian dan Hukum",
-// }));
 
 const tambahModal = signal(false);
 const editModal = signal(false);
