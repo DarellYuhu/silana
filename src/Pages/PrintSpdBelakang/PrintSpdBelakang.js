@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
 import { effect, signal } from "@preact/signals-react";
+import axiosClient from "../../helpers/axiosClient";
 
 const PrintSpdBelakang = () => {
   const [employees, setEmployees] = useState([]);
@@ -26,9 +27,9 @@ const PrintSpdBelakang = () => {
 
   const getEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
+      const res = await axiosClient.get("employees");
       console.log(res);
-      setEmployees(res);
+      setEmployees(res.data);
     } catch (error) {
       console.log(error);
     }

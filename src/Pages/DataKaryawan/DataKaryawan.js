@@ -7,6 +7,7 @@ import {
 } from "./Component";
 import { signal } from "@preact/signals-react";
 import axios from "axios";
+import axiosClient from "../../helpers/axiosClient";
 
 // const data = [...Array(17).keys()].map((item) => ({
 //   nama: "Jhon Petrus Hasudungan, S.Psi",
@@ -22,11 +23,11 @@ const editData = signal({});
 const DataKaryawan = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    axios
-      .get("http://localhost:2000/employees")
+    axiosClient
+      .get("employees")
       .then((res) => {
         console.log(res);
-        setData(res);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -89,10 +90,8 @@ const DataKaryawan = () => {
                                 editModal.value = true;
                               }}
                               handleDeleteClick={(user) => {
-                                axios
-                                  .delete(
-                                    `http://localhost:2000/employees/${user.id}`
-                                  )
+                                axiosClient
+                                  .delete(`employees/${user.id}`)
                                   .then((res) => {
                                     console.log("Delete Success");
                                   })

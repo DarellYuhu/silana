@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
+import axiosClient from "../../../helpers/axiosClient";
 
 const TambaAnggaranModal = ({ modal }) => {
   return (
@@ -26,7 +27,7 @@ const TambaAnggaranModal = ({ modal }) => {
         initialValues={{ id: "", description: "", amount: 0 }}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await axios.post("http://localhost:2000/budgets", {
+            await axiosClient.post("budgets", {
               ...values,
             });
             modal.value = false;

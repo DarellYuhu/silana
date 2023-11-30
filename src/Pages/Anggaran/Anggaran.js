@@ -3,6 +3,7 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
 import axios from "axios";
+import axiosClient from "../../helpers/axiosClient";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
@@ -11,10 +12,10 @@ const editData = signal({});
 const Anggaran = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    axios
-      .get("http://localhost:2000/budgets")
+    axiosClient
+      .get("budgets")
       .then((res) => {
-        setData(res);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -76,10 +77,8 @@ const Anggaran = () => {
                                 editModal.value = true;
                               }}
                               handleDeleteClick={async (item) => {
-                                await axios
-                                  .delete(
-                                    `http://localhost:2000/budgets/${item.id}`
-                                  )
+                                await axiosClient
+                                  .delete(`budgets/${item.id}`)
                                   .then((res) => {
                                     console.log("Delete Success");
                                   })

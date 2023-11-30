@@ -17,6 +17,7 @@ import axios from "axios";
 import { capitalizeString } from "../../Utility";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axiosClient from "../../helpers/axiosClient";
 
 const validationSchema = Yup.object().shape({
   commitmentMaker: Yup.string().required("PPB harus dipilih"),
@@ -31,8 +32,10 @@ const EditSuratPerjalananDinas = () => {
   const [checked, setChecked] = useState(false);
   const datePickerRef = useRef(null);
   const { id } = useParams();
-  const travels = useLocation().state;
+  const travel = useLocation().state;
   const navigate = useNavigate();
+
+  console.log(travel);
 
   const filteredDistricts = Object.keys(DISTRICT)
     .filter((key) => key.startsWith("71"))
@@ -43,8 +46,8 @@ const EditSuratPerjalananDinas = () => {
 
   const getEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
-      const data = res.map((item) => ({
+      const res = await axiosClient.get("employees");
+      const data = res.data.map((item) => ({
         value: item.name,
         label: item.name,
       }));
@@ -72,10 +75,10 @@ const EditSuratPerjalananDinas = () => {
           />
           <Formik
             initialValues={{
-              commitmentMaker: travels?.commitmentMaker || "",
-              departure: travels?.departure || "",
-              destination: travels?.destination || [],
-              dateOfLetter: travels?.dateOfLetter || new Date().toISOString(),
+              commitmentMaker: travel?.commitmentMaker || "",
+              departure: travel?.departure || "",
+              destination: travel?.destination || [],
+              dateOfLetter: travel?.dateOfLetter || new Date().toISOString(),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -89,16 +92,13 @@ const EditSuratPerjalananDinas = () => {
               };
               try {
                 let res;
-                if (travels) {
-                  res = await axios.patch(
-                    `http://localhost:2000/travels/${travels.letterId}`,
+                if (travel) {
+                  res = await axiosClient.patch(
+                    `travels/${travel.id}`,
                     normalized
                   );
                 } else {
-                  res = await axios.post(
-                    "http://localhost:2000/travels",
-                    normalized
-                  );
+                  res = await axiosClient.post("travels", normalized);
                 }
                 console.log(res);
                 navigate(`/surat-perjalanan-dinas`);

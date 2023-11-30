@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
+import axiosClient from "../../../helpers/axiosClient";
 
 const EditAnggaranModal = ({ modal, data }) => {
   const handleClose = () => {
@@ -25,7 +26,7 @@ const EditAnggaranModal = ({ modal, data }) => {
         initialValues={data.value}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await axios.patch(`http://localhost:2000/budgets/${values.id}`, {
+            await axiosClient.patch(`budgets/${values.id}`, {
               ...values,
             });
             modal.value = false;

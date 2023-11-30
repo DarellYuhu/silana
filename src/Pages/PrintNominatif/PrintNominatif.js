@@ -256,7 +256,7 @@ const PrintNominatif = () => {
           >
             <div>
               <p>
-                Manado, 24 November 2023
+                {`Manado, ${moment(data.dateOfletter).format("D MMMM YYYY")}`}
                 <br />
                 Pejabat Pembuat Komitmen,
               </p>

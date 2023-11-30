@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import axiosClient from "../../helpers/axiosClient";
 
 const PrintSuratTugas = () => {
   const [employees, setEmployees] = useState([]);
@@ -19,8 +20,8 @@ const PrintSuratTugas = () => {
 
   const getEmployeesData = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
-      setEmployees(res);
+      const res = await axiosClient.get("employees");
+      setEmployees(res.data);
     } catch (error) {
       console.log(error);
     }

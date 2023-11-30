@@ -13,6 +13,7 @@ import axios from "axios";
 import moment from "moment";
 import localization from "moment/locale/id";
 import angkaTerbilang from "@develoka/angka-terbilang-js";
+import axiosClient from "../../helpers/axiosClient";
 
 const PrintSpdDepan = () => {
   const [employees, setEmployees] = useState([]);
@@ -31,9 +32,9 @@ const PrintSpdDepan = () => {
 
   const getEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
+      const res = await axiosClient.get("employees");
       console.log(res);
-      setEmployees(res);
+      setEmployees(res.data);
     } catch (error) {
       console.log(error);
     }

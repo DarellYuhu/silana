@@ -21,6 +21,7 @@ import { Form, Formik } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../../helpers/axiosClient";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -47,8 +48,8 @@ const BuatSuratTugas = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:2000/employees")
+    axiosClient
+      .get("employees")
       .then((res) => {
         const options = res.map((item) => {
           return {
@@ -90,10 +91,7 @@ const BuatSuratTugas = () => {
             const payload = { ...values };
             delete payload.dateOftravel;
             try {
-              const res = await axios.post(
-                "http://localhost:2000/letters",
-                payload
-              );
+              await axiosClient.post("letters", payload);
               navigate("/surat-tugas");
             } catch (error) {
               console.log(error);

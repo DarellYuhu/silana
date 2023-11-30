@@ -51,6 +51,7 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
       name: <span className="font-weight-bold fs-13">Action</span>,
       sortable: false,
       cell: (row, index) => {
+        console.log(row);
         return (
           <UncontrolledDropdown className="dropdown d-inline-block">
             <DropdownToggle
@@ -84,10 +85,7 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
                 className="dropdown-divider"
                 style={{ height: "2px", backgroundColor: "darkgrey" }}
               ></div>
-              <Link
-                to={`/surat-perjalanan-dinas/${row.id}`}
-                state={row.Travels}
-              >
+              <Link to={`/surat-perjalanan-dinas/${row.id}`} state={row.travel}>
                 <DropdownItem className="edit-item-btn">
                   <i className="mdi mdi-pencil-outline align-bottom me-2 text-muted"></i>
                   Edit Depan

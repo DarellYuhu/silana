@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
+import axiosClient from "../../../helpers/axiosClient";
 
 const AnggaranModal = ({
   open,
@@ -11,8 +12,8 @@ const AnggaranModal = ({
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:2000/budgets");
-      setData(res);
+      const res = await axiosClient.get("budgets");
+      setData(res.data);
     };
     fetchData();
   }, []);

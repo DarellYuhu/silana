@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, PrintDepanModal } from "./Component";
 import axios from "axios";
+import axiosClient from "../../helpers/axiosClient";
 
 const SuratPerjalananDinas = () => {
   const [open, setOpen] = useState(false);
@@ -9,11 +10,11 @@ const SuratPerjalananDinas = () => {
   const [data, setData] = useState([]);
 
   const getData = () => {
-    axios
-      .get("http://localhost:2000/travels")
+    axiosClient
+      .get("travels")
       .then((res) => {
         console.log(res);
-        setData(res);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);

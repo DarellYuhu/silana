@@ -4,6 +4,7 @@ import { computed, effect, signal, useSignal } from "@preact/signals-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosClient from "../../../helpers/axiosClient";
 
 const noSurat = signal("");
 const kodeSurat = signal("");
@@ -27,12 +28,9 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
       return;
     }
     try {
-      const res = await axios.patch(
-        `http://localhost:2000/letters/${item.id}`,
-        {
-          letterNumber: surat.value,
-        }
-      );
+      const res = await axiosClient.patch(`letters/${item.id}`, {
+        letterNumber: surat.value,
+      });
       console.log(res);
       navigate(`/surat-tugas/${item.id}/print`, {
         state: { letterNumber: res.letterNumber, isPrintNoOnly: true },

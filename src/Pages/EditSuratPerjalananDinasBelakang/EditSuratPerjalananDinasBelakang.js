@@ -5,6 +5,7 @@ import moment from "moment";
 import { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Card, CardBody, CardHeader, Col, Input, Row } from "reactstrap";
+import axiosClient from "../../helpers/axiosClient";
 
 const EditSuratPerjalananDinasBelakang = () => {
   const [employees, setEmployees] = useState([]);
@@ -16,9 +17,9 @@ const EditSuratPerjalananDinasBelakang = () => {
 
   const getEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
+      const res = await axiosClient.get("employees");
       console.log(res);
-      setEmployees(res);
+      setEmployees(res.data);
     } catch (error) {
       console.log(error);
     }

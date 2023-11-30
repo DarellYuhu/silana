@@ -5,6 +5,7 @@ import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
 import axios from "axios";
 import moment from "moment";
+import axiosClient from "../../helpers/axiosClient";
 
 const SuratTugas = () => {
   const [page, setPage] = useState(0);
@@ -30,11 +31,11 @@ const SuratTugas = () => {
   };
 
   const getData = () => {
-    axios
-      .get("http://localhost:2000/letters")
+    axiosClient
+      .get("letters")
       .then((res) => {
         console.log(res);
-        setData(res);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -152,8 +153,8 @@ const SuratTugas = () => {
                               rowsPerPage={rowsPerPage}
                               handlePrintNoSurat={handlePrintNoSurat}
                               handleDeleteSurat={(id) => {
-                                axios
-                                  .delete(`http://localhost:2000/letters/${id}`)
+                                axiosClient
+                                  .delete(`letters/${id}`)
                                   .then((_) => {
                                     getData();
                                   })

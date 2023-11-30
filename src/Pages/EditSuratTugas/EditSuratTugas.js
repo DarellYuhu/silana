@@ -22,6 +22,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axiosClient from "../../helpers/axiosClient";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -51,8 +52,9 @@ const EditSuratTugas = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:2000/employees");
-      const options = res.map((item) => ({
+      const res = await axiosClient.get("employees");
+      console.log(res.data);
+      const options = res.data.map((item) => ({
         value: item.id,
         id: item.id,
         label: item.name,
@@ -113,10 +115,7 @@ const EditSuratTugas = () => {
             const payload = { ...values };
             delete payload.dateOftravel;
             try {
-              const res = await axios.patch(
-                `http://localhost:2000/letters/${id}`,
-                payload
-              );
+              const res = await axiosClient.patch(`letters/${id}`, payload);
               navigate("/surat-tugas");
             } catch (error) {
               console.log(error);
@@ -518,12 +517,12 @@ const EditSuratTugas = () => {
                               <Select
                                 defaultValue={{
                                   value: item,
-                                  label: employees.find(
+                                  label: employees?.find(
                                     (option) => option.label === item
                                   )?.label,
                                 }}
                                 options={employees}
-                                value={employees.find(
+                                value={employees?.find(
                                   (option) => option.value === item
                                 )}
                                 onChange={(item) => {
@@ -583,7 +582,7 @@ const EditSuratTugas = () => {
                       <h5 className="my-0">Pemberi Tugas</h5>
                     </CardHeader>
 
-                    {/* <CardTitle>Kepada</CardTitle> */}
+                    <CardTitle>Kepada</CardTitle>
                     <CardBody>
                       <CardBody className="pt-0 d-grid gap-3">
                         <Row>
@@ -619,7 +618,7 @@ const EditSuratTugas = () => {
                               defaultValue={{
                                 value: state.assignorId,
                                 id: state.assignorId,
-                                label: employees.find(
+                                label: employees?.find(
                                   (option) => option.id === state.assignorId
                                 )?.label,
                               }}
@@ -713,7 +712,7 @@ const warnaOptions = [
   { label: "Merah", value: "red" },
   { label: "Hijau", value: "green" },
   { label: "Biru", value: "blue" },
-  { label: "Kuning", value: "yellow" },
+  { label: "Ungu", value: "purple" },
 ];
 
 const jabatanOptions = [

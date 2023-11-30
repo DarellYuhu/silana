@@ -2,6 +2,7 @@ import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axios from "axios";
+import axiosClient from "../../../helpers/axiosClient";
 
 const TambahKaryawanModal = ({ modal }) => {
   return (
@@ -35,7 +36,7 @@ const TambahKaryawanModal = ({ modal }) => {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await axios.post("http://localhost:2000/employees", {
+              await axiosClient.post("employees", {
                 ...values,
               });
               modal.value = false;

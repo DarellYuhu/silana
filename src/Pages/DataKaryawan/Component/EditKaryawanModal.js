@@ -2,6 +2,7 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
+import axiosClient from "../../../helpers/axiosClient";
 
 const EditKaryawanModal = ({ modal, data }) => {
   console.log(data.value);
@@ -28,12 +29,9 @@ const EditKaryawanModal = ({ modal, data }) => {
           initialValues={data.value}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await axios.patch(
-                `http://localhost:2000/employees/${values.id}`,
-                {
-                  ...values,
-                }
-              );
+              await axiosClient.patch(`employees/${values.id}`, {
+                ...values,
+              });
               modal.value = false;
             } catch (error) {
               console.log(error);
