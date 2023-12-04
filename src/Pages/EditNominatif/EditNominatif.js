@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
+import axios from "axios";
 
 const NominativeSchema = Yup.object().shape({
   tranportType: Yup.string().required("Required"),
@@ -62,12 +63,12 @@ const EditNominatif = () => {
           />
           <Formik
             initialValues={{
-              tranportType: dataExample.nominative.tranportType ?? "",
+              tranportType: dataExample.nominative?.tranportType ?? "",
               dateOfLetter:
-                dataExample.nominative.dateOfLetter ?? moment().toISOString(),
-              letterId: dataExample.nominative.letterId ?? dataExample.id,
+                dataExample.nominative?.dateOfLetter ?? moment().toISOString(),
+              letterId: dataExample.nominative?.letterId ?? dataExample.id,
               data:
-                dataExample.nominative.helpers ??
+                dataExample.nominative?.helpers ??
                 dataExample.dictum.map((item) => ({
                   name: item,
                   transportDeparture: null,
@@ -78,13 +79,13 @@ const EditNominatif = () => {
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) ?? null,
+                    ) + 1 ?? null,
                   lumpsumAmount: null,
                   lodgingDuration:
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) - 1 ?? null,
+                    ) ?? null,
                   lodgingAmount: null,
                 })),
             }}

@@ -50,7 +50,7 @@ const BuatSuratTugas = () => {
     axiosClient
       .get("employees")
       .then((res) => {
-        const options = res.map((item) => {
+        const options = res.data.map((item) => {
           return {
             value: item.name,
             id: item.id,

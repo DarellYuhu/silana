@@ -26,12 +26,12 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
       return;
     }
     try {
-      const res = await axiosClient.patch(`letters/${item.id}`, {
-        letterNumber: surat.value,
+      const res = await axiosClient.post(`references/${item.id}`, {
+        code: surat.value,
       });
       console.log(res);
       navigate(`/surat-tugas/${item.id}/print`, {
-        state: { letterNumber: res.letterNumber, isPrintNoOnly: true },
+        state: { letterNumber: res.data[0].code, isPrintNoOnly: true },
       });
     } catch (error) {
       console.log(error);

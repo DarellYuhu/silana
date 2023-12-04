@@ -580,8 +580,6 @@ const EditSuratTugas = () => {
                     <CardHeader className="bg-transparent">
                       <h5 className="my-0">Pemberi Tugas</h5>
                     </CardHeader>
-
-                    <CardTitle>Kepada</CardTitle>
                     <CardBody>
                       <CardBody className="pt-0 d-grid gap-3">
                         <Row>
