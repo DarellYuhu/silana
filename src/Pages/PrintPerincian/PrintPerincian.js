@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import {
   Table,
@@ -8,8 +8,28 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
+import axiosClient from "../../helpers/axiosClient";
+import { effect, signal } from "@preact/signals-react";
+import angkaTerbilangJs from "@develoka/angka-terbilang-js";
+import { capitalizeString } from "../../Utility";
+
+const nominative = signal();
+const recipient = signal();
+const treasurer = signal();
+const commitmentMaker = signal();
+
+effect(() => {
+  console.log(nominative.value);
+  console.log(recipient.value);
+  console.log(treasurer.value);
+  console.log(commitmentMaker.value);
+});
 
 const PrintPerincian = () => {
+  const [employees, setEmployees] = useState([]);
+  const { data, values } = useLocation().state;
   const printRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -19,6 +39,53 @@ const PrintPerincian = () => {
       }
     `,
   });
+
+  console.log(data);
+
+  const getEmployees = async () => {
+    try {
+      const { data } = await axiosClient("/employees");
+      setEmployees(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const total =
+    nominative.value?.lumpsumAmount * nominative.value?.lumpsumDuration +
+    nominative.value?.planeShipDearture +
+    nominative.value?.planeShipReturn +
+    nominative.value?.transportDeparture +
+    nominative.value?.transportReturn +
+    nominative.value?.lodgingAmount * nominative.value?.lodgingDuration;
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  useEffect(() => {
+    if (employees) {
+      const filteredEmployee = employees.find(
+        (item) => item.name === values.recipient
+      );
+      recipient.value = filteredEmployee;
+
+      const filteredNominative = data.nominative.helpers.find(
+        (item) => item.employeeId === filteredEmployee?.id
+      );
+      nominative.value = filteredNominative;
+
+      const filteredTreasurer = employees.find(
+        (item) => item.id === values.treasurer
+      );
+      treasurer.value = filteredTreasurer;
+
+      const filteredCommitmentMaker = employees.find(
+        (item) => item.name === data.travel.commitmentMaker
+      );
+      commitmentMaker.value = filteredCommitmentMaker;
+    }
+  }, [employees]);
   return (
     <Fragment>
       {/* <div className="page-content">Yuhu</div> */}
@@ -63,14 +130,16 @@ const PrintPerincian = () => {
                   Lampiran ST Nomor
                 </TableCell>
                 <TableCell sx={styles.cell1}>:</TableCell>
-                <TableCell sx={styles.cell1}> / RT.01 / J2 / 2023</TableCell>
+                <TableCell sx={styles.cell1}>{data.letterNumber}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={[styles.cell1, { width: "25%" }]}>
                   Tanggal
                 </TableCell>
                 <TableCell sx={styles.cell1}>:</TableCell>
-                <TableCell sx={styles.cell1}> 25 Juli 2023</TableCell>
+                <TableCell sx={styles.cell1}>
+                  {moment(data.dateOfletter).format("D MMMM YYYY")}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -120,7 +189,14 @@ const PrintPerincian = () => {
                   >
                     Rp
                   </TableCell>
-                  <TableCell sx={styles.cell1}>975.000</TableCell>
+                  <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(
+                      nominative.value?.lumpsumAmount *
+                        nominative.value?.lumpsumDuration
+                    ) ?? "-"}
+                  </TableCell>
                   <TableCell
                     rowSpan={2}
                     sx={[
@@ -134,9 +210,17 @@ const PrintPerincian = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell sx={styles.cell1} />
-                  <TableCell sx={styles.cell1}>3 Hari</TableCell>
+                  <TableCell
+                    sx={styles.cell1}
+                  >{`${nominative.value?.lumpsumDuration} Hari`}</TableCell>
                   <TableCell sx={styles.cell1}>x</TableCell>
-                  <TableCell sx={styles.cell1}>Rp 325.000</TableCell>
+                  <TableCell sx={styles.cell1}>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(nominative.value?.lumpsumAmount) ?? "-"}
+                  </TableCell>
                   <TableCell sx={styles.cell1} />
                 </TableRow>
               </>
@@ -166,7 +250,16 @@ const PrintPerincian = () => {
                   >
                     Rp
                   </TableCell>
-                  <TableCell sx={styles.cell1}>975.000</TableCell>
+                  <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(
+                      nominative.value?.planeShipDearture +
+                        nominative.value?.planeShipReturn +
+                        nominative.value?.transportDeparture +
+                        nominative.value?.transportReturn
+                    ) ?? "-"}
+                  </TableCell>
                   <TableCell
                     rowSpan={3}
                     sx={[
@@ -182,14 +275,28 @@ const PrintPerincian = () => {
                   <TableCell sx={styles.cell1}>a. Lokal</TableCell>
                   <TableCell sx={styles.cell1}>Rp</TableCell>
                   <TableCell sx={styles.cell1} />
-                  <TableCell sx={styles.cell1}>Rp 325.000</TableCell>
+                  <TableCell sx={styles.cell1}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(
+                      nominative.value?.transportDeparture +
+                        nominative.value?.transportReturn
+                    ) ?? "-"}
+                  </TableCell>
                   <TableCell sx={styles.cell1} />
                 </TableRow>
                 <TableRow>
-                  <TableCell sx={styles.cell1}>b. Pesawat</TableCell>
+                  <TableCell sx={styles.cell1}>b. Pesawat / Kapal</TableCell>
                   <TableCell sx={styles.cell1}>Rp</TableCell>
                   <TableCell sx={styles.cell1} />
-                  <TableCell sx={styles.cell1}>Rp 325.000</TableCell>
+                  <TableCell sx={styles.cell1}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(
+                      nominative.value?.planeShipDearture +
+                        nominative.value?.planeShipReturn
+                    ) ?? "-"}
+                  </TableCell>
                   <TableCell sx={styles.cell1} />
                 </TableRow>
               </>
@@ -217,7 +324,14 @@ const PrintPerincian = () => {
                   >
                     Rp
                   </TableCell>
-                  <TableCell sx={styles.cell1}>975.000</TableCell>
+                  <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(
+                      nominative.value?.lodgingAmount *
+                        nominative.value?.lodgingDuration
+                    ) ?? "-"}
+                  </TableCell>
                   <TableCell
                     rowSpan={2}
                     sx={[
@@ -231,9 +345,17 @@ const PrintPerincian = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell sx={styles.cell1} />
-                  <TableCell sx={styles.cell1}>2 Malam</TableCell>
+                  <TableCell
+                    sx={styles.cell1}
+                  >{`${nominative.value?.lodgingDuration} Malam`}</TableCell>
                   <TableCell sx={styles.cell1}>x</TableCell>
-                  <TableCell sx={styles.cell1}>Rp 325.000</TableCell>
+                  <TableCell sx={styles.cell1}>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(nominative.value?.lodgingAmount) ?? "-"}
+                  </TableCell>
                   <TableCell sx={styles.cell1} />
                 </TableRow>
               </>
@@ -270,7 +392,9 @@ const PrintPerincian = () => {
                     },
                   ]}
                 >
-                  2.475.000
+                  {new Intl.NumberFormat("id-ID", {
+                    minimumFractionDigits: 0,
+                  }).format(total) ?? "-"}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -305,7 +429,7 @@ const PrintPerincian = () => {
                   ]}
                   colSpan={5}
                 >
-                  <i>Dua Juta Empat Ratus Tujuh Pulu Lima Ribu Rupiah</i>
+                  <i>{`${capitalizeString(angkaTerbilangJs(total))} Rupiah`}</i>
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -313,20 +437,32 @@ const PrintPerincian = () => {
 
           {/* footer */}
           <div style={{ fontSize: "10pt", marginTop: 10, color: "black" }}>
-            <p style={{ textAlign: "end" }}>Manado, 8 November 2023</p>
+            <p style={{ textAlign: "end" }}>{`Manado, ${moment(
+              values.dateOfletter
+            ).format("D MMMM YYYY")}`}</p>
 
             {/* row 1 */}
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <p style={{ margin: 0 }}>Telah dibayar sejumlah</p>
                 <p style={{ margin: 0 }}>
-                  Rp<span style={{ marginLeft: 30 }}>2.475.000</span>
+                  Rp
+                  <span style={{ marginLeft: 30 }}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(values.paidNominal) ?? "-"}
+                  </span>
                 </p>
               </div>
               <div>
                 <p style={{ margin: 0 }}>Telah menerima jumlah uang sebesar</p>
                 <p style={{ margin: 0 }}>
-                  Rp<span style={{ marginLeft: 30 }}>2.475.000</span>
+                  Rp
+                  <span style={{ marginLeft: 30 }}>
+                    {new Intl.NumberFormat("id-ID", {
+                      minimumFractionDigits: 0,
+                    }).format(values.paidNominal) ?? "-"}
+                  </span>
                 </p>
               </div>
             </div>
@@ -354,9 +490,11 @@ const PrintPerincian = () => {
                     borderBottom: "1px solid black",
                   }}
                 >
-                  Livia C. Manoppo, SE
+                  {treasurer.value?.name ?? "-"}
                 </h2>
-                <p style={{ margin: 0 }}>NIP. 198605182014021004</p>
+                <p style={{ margin: 0 }}>{`NIP. ${
+                  treasurer.value?.id ?? "-"
+                }`}</p>
               </div>
               <div>
                 <p>Yang menerima,</p>
@@ -370,9 +508,11 @@ const PrintPerincian = () => {
                     borderBottom: "1px solid black",
                   }}
                 >
-                  Livia C. Manoppo, SE
+                  {recipient.value?.name ?? "-"}
                 </h2>
-                <p style={{ margin: 0 }}>NIP. 198605182014021004</p>
+                <p style={{ margin: 0 }}>{`NIP. ${
+                  recipient.value?.id ?? "-"
+                }`}</p>
               </div>
             </div>
 
@@ -396,19 +536,33 @@ const PrintPerincian = () => {
                         Ditetapkan sejumlah
                       </TableCell>
                       <TableCell sx={styles.cell1}>Rp</TableCell>
-                      <TableCell sx={styles.cell1}>2.475.000</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell sx={styles.cell1}>Yang tentang</TableCell>
-                      <TableCell sx={styles.cell1}>Rp</TableCell>
-                      <TableCell sx={styles.cell1}>2.475.000</TableCell>
+                      <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                        {new Intl.NumberFormat("id-ID", {
+                          minimumFractionDigits: 0,
+                        }).format(total) ?? "-"}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell sx={styles.cell1}>
-                        Ditetapkan sejumlah
+                        Yang telah dibayar semula
                       </TableCell>
                       <TableCell sx={styles.cell1}>Rp</TableCell>
-                      <TableCell sx={styles.cell1}>2.475.000</TableCell>
+                      <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                        {new Intl.NumberFormat("id-ID", {
+                          minimumFractionDigits: 0,
+                        }).format(values.paidNominal) ?? "-"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={styles.cell1}>
+                        Sisa kurang / lebih
+                      </TableCell>
+                      <TableCell sx={styles.cell1}>Rp</TableCell>
+                      <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
+                        {new Intl.NumberFormat("id-ID", {
+                          minimumFractionDigits: 0,
+                        }).format(values.paidNominal - total) ?? "-"}
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -426,7 +580,7 @@ const PrintPerincian = () => {
               }}
             >
               <div>
-                <p>Bendahara Pengeluaran,</p>
+                <p>Pejabat Pembuat Komitmen,</p>
                 <div style={{ height: 60 }} />
                 <h2
                   style={{
@@ -437,9 +591,11 @@ const PrintPerincian = () => {
                     borderBottom: "1px solid black",
                   }}
                 >
-                  Livia C. Manoppo, SE
+                  {commitmentMaker.value?.name ?? "-"}
                 </h2>
-                <p style={{ margin: 0 }}>NIP. 198605182014021004</p>
+                <p style={{ margin: 0 }}>{`NIP. ${
+                  commitmentMaker.value?.id ?? "-"
+                }`}</p>
               </div>
             </div>
           </div>

@@ -1,16 +1,23 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
-
-const data = [...Array(17).keys()].map((item) => ({
-  ketuaTim: "Mary Cousar",
-  noSurat: "089/RT.01/J2/2023",
-  tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-  tugas:
-    "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-}));
+import axiosClient from "../../helpers/axiosClient";
 
 const Perincian = () => {
+  const [data, setData] = useState([]);
+
+  const getData = async () => {
+    try {
+      const { data } = await axiosClient.get("nominative");
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <Fragment>
       <div className="page-content">
@@ -55,21 +62,6 @@ const Perincian = () => {
                         </Card>
                       </Col>
                     </Row>
-
-                    {/* <div className="d-flex justify-content-end">
-                    <div className="pagination-wrap hstack gap-2">
-                      <Link
-                        className="page-item pagination-prev disabled"
-                        to="#"
-                      >
-                        Previous
-                      </Link>
-                      <ul className="pagination listjs-pagination mb-0"></ul>
-                      <Link className="page-item pagination-next" to="#">
-                        Next
-                      </Link>
-                    </div>
-                  </div> */}
                   </div>
                 </CardBody>
               </Card>
