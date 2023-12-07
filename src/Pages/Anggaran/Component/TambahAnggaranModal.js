@@ -1,8 +1,22 @@
 import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
+import * as Yup from "yup";
+import { ErrorText } from "../../../components/Custom";
 
-const TambaAnggaranModal = ({ modal }) => {
+const AnggaranSchema = Yup.object().shape({
+  id: Yup.string().required("Kode Anggaran harus diisi!"),
+  description: Yup.string().required("Deskripsi harus diisi!"),
+  amount: Yup.number()
+    .required("Jumlah Anggaran harus diisi!")
+    .positive("Jumlah Anggaran harus positif!"),
+});
+
+const TambaAnggaranModal = ({
+  modal,
+  onSuccess = () => {},
+  onError = () => {},
+}) => {
   return (
     <Modal
       centered
@@ -30,14 +44,19 @@ const TambaAnggaranModal = ({ modal }) => {
               ...values,
             });
             modal.value = false;
+            onSuccess();
           } catch (error) {
+            if (error.response.status === 409) {
+              onError(error.response.data.message);
+            }
             console.log(error);
           } finally {
             setSubmitting(false);
           }
         }}
+        validationSchema={AnggaranSchema}
       >
-        {({ handleChange, isSubmitting, handleSubmit }) => (
+        {({ handleChange, isSubmitting, handleSubmit, errors, touched }) => (
           <Form onSubmit={handleSubmit}>
             <div className="modal-body">
               <div>
@@ -56,6 +75,8 @@ const TambaAnggaranModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText errors={errors.id} touched={touched.id} />
+
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Deskripsi
@@ -69,6 +90,11 @@ const TambaAnggaranModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.description}
+                    touched={touched.description}
+                  />
+
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Jumlah Anggaran
@@ -82,6 +108,7 @@ const TambaAnggaranModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText errors={errors.amount} touched={touched.amount} />
                 </div>
               </div>
               <div className="modal-footer">

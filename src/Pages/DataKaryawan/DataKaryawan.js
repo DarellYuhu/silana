@@ -7,23 +7,28 @@ import {
 } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert } from "../../components/Custom";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
 const editData = signal({});
+const success = signal(null);
+const error = signal(null);
 
 const DataKaryawan = () => {
   const [data, setData] = useState([]);
+
+  const getEmployees = async () => {
+    try {
+      const { data } = await axiosClient.get("employees");
+      setData(data);
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
+    }
+  };
   useEffect(() => {
-    axiosClient
-      .get("employees")
-      .then((res) => {
-        console.log(res);
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getEmployees();
   }, []);
   return (
     <Fragment>
@@ -85,7 +90,8 @@ const DataKaryawan = () => {
                                 axiosClient
                                   .delete(`employees/${user.id}`)
                                   .then((res) => {
-                                    console.log("Delete Success");
+                                    success.value = "Karyawan berhasil dihapus";
+                                    getEmployees();
                                   })
                                   .catch((err) => {
                                     console.log(err);
@@ -117,8 +123,37 @@ const DataKaryawan = () => {
             </Col>
           </Row>
         </Container>
-        <TambahKaryawanModal modal={tambahModal} />
-        <EditKaryawanModal modal={editModal} data={editData} />
+        <TambahKaryawanModal
+          modal={tambahModal}
+          onSuccess={() => {
+            success.value = "Karyawan berhasil ditambahkan";
+            getEmployees();
+          }}
+          onError={(err) => {
+            error.value = err;
+          }}
+        />
+        <EditKaryawanModal
+          modal={editModal}
+          data={editData}
+          onSuccess={(message) => {
+            success.value = message;
+            getEmployees();
+          }}
+          onError={(message) => (error.value = message)}
+        />
+        <AxiosAlert
+          message={success.value}
+          open={success.value}
+          severity={"success"}
+          setOpen={(value) => (success.value = value)}
+        />
+        <AxiosAlert
+          message={error.value}
+          open={error.value}
+          severity={"error"}
+          setOpen={(value) => (error.value = value)}
+        />
       </div>
     </Fragment>
   );

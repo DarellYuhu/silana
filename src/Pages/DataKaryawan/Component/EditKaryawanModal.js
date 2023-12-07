@@ -2,9 +2,20 @@ import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
+import * as Yup from "yup";
+import { ErrorText } from "../../../components/Custom";
 
-const EditKaryawanModal = ({ modal, data }) => {
-  console.log(data.value);
+const EditSchema = Yup.object().shape({
+  classRank: Yup.string().required("Required"),
+  jobTitle: Yup.string().required("Required"),
+});
+
+const EditKaryawanModal = ({
+  modal,
+  data,
+  onSuccess = () => {},
+  onError = () => {},
+}) => {
   const handleClose = () => {
     modal.value = false;
     data.value = {};
@@ -32,14 +43,17 @@ const EditKaryawanModal = ({ modal, data }) => {
                 ...values,
               });
               modal.value = false;
+              onSuccess("Data karyawan berhasil diubah");
             } catch (error) {
               console.log(error);
+              onError(error.message);
             } finally {
               setSubmitting(false);
             }
           }}
+          validationSchema={EditSchema}
         >
-          {({ handleChange, isSubmitting }) => (
+          {({ handleChange, isSubmitting, errors, touched }) => (
             <Form>
               <div>
                 <i>Silahkan isi data karyawan di bawah ini.</i>
@@ -73,6 +87,10 @@ const EditKaryawanModal = ({ modal, data }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.classRank}
+                    touched={touched.classRank}
+                  />
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Jabatan
@@ -85,6 +103,10 @@ const EditKaryawanModal = ({ modal, data }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.jobTitle}
+                    touched={touched.jobTitle}
+                  />
                 </div>
               </div>
               <div className="modal-footer">

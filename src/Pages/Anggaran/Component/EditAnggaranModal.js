@@ -1,8 +1,22 @@
 import { Form, Formik } from "formik";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
+import * as Yup from "yup";
+import { ErrorText } from "../../../components/Custom";
 
-const EditAnggaranModal = ({ modal, data }) => {
+const AnggaranSchema = Yup.object().shape({
+  description: Yup.string().required("Deskripsi harus diisi!"),
+  amount: Yup.number()
+    .required("Jumlah Anggaran harus diisi!")
+    .positive("Jumlah Anggaran harus positif!"),
+});
+
+const EditAnggaranModal = ({
+  modal,
+  data,
+  onSuccess = () => {},
+  onError = () => {},
+}) => {
   const handleClose = () => {
     modal.value = false;
     data.value = {};
@@ -29,14 +43,17 @@ const EditAnggaranModal = ({ modal, data }) => {
               ...values,
             });
             modal.value = false;
+            onSuccess("Anggaran berhasil diubah!");
           } catch (error) {
             console.log(error);
+            onError(error.response.data.message);
           } finally {
             setSubmitting(false);
           }
         }}
+        validationSchema={AnggaranSchema}
       >
-        {({ handleChange, handleSubmit, isSubmitting }) => (
+        {({ handleChange, handleSubmit, isSubmitting, errors, touched }) => (
           <Form onSubmit={handleSubmit}>
             <div className="modal-body">
               <div>
@@ -65,6 +82,10 @@ const EditAnggaranModal = ({ modal, data }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.description}
+                    touched={errors.description}
+                  />
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Jumlah Anggaran
@@ -79,6 +100,7 @@ const EditAnggaranModal = ({ modal, data }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText errors={errors.amount} touched={errors.amount} />
                 </div>
               </div>
               <div className="modal-footer">

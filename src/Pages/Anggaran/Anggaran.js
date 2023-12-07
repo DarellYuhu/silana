@@ -3,22 +3,29 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert } from "../../components/Custom";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
 const editData = signal({});
+const success = signal(null);
+const error = signal(null);
 
 const Anggaran = () => {
   const [data, setData] = useState([]);
+
+  const getAnggaran = async () => {
+    try {
+      const { data } = await axiosClient.get("budgets");
+      setData(data);
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
+    }
+  };
+
   useEffect(() => {
-    axiosClient
-      .get("budgets")
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getAnggaran();
   }, []);
   return (
     <Fragment>
@@ -79,10 +86,13 @@ const Anggaran = () => {
                                 await axiosClient
                                   .delete(`budgets/${item.id}`)
                                   .then((res) => {
-                                    console.log("Delete Success");
+                                    success.value =
+                                      "Berhasil menghapus anggaran";
+                                    getAnggaran();
                                   })
                                   .catch((err) => {
                                     console.log(err);
+                                    error.value = err.message;
                                   });
                               }}
                             />
@@ -96,9 +106,38 @@ const Anggaran = () => {
             </Col>
           </Row>
         </Container>
-        <TambaAnggaranModal modal={tambahModal} />
-        <EditAnggaranModal modal={editModal} data={editData} />
+        <TambaAnggaranModal
+          modal={tambahModal}
+          onSuccess={() => {
+            getAnggaran();
+            success.value = "Berhasil membuat anggaran";
+          }}
+          onError={(err) => {
+            error.value = err;
+          }}
+        />
+        <EditAnggaranModal
+          modal={editModal}
+          data={editData}
+          onError={(item) => (error.value = item)}
+          onSuccess={(item) => {
+            success.value = item;
+            getAnggaran();
+          }}
+        />
       </div>
+      <AxiosAlert
+        message={success.value}
+        open={success.value}
+        severity={"success"}
+        setOpen={(value) => (success.value = value)}
+      />
+      <AxiosAlert
+        message={error.value}
+        open={error.value}
+        severity={"error"}
+        setOpen={(value) => (error.value = value)}
+      />
     </Fragment>
   );
 };

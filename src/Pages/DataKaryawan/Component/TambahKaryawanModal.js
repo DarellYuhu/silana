@@ -2,8 +2,21 @@ import { Form, Formik } from "formik";
 import React from "react";
 import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
+import * as Yup from "yup";
+import { ErrorText } from "../../../components/Custom";
 
-const TambahKaryawanModal = ({ modal }) => {
+const UserSchema = Yup.object().shape({
+  id: Yup.string().required("Required"),
+  name: Yup.string().required("Required"),
+  jobTitle: Yup.string().required("Required"),
+  classRank: Yup.string().required("Required"),
+});
+
+const TambahKaryawanModal = ({
+  modal,
+  onSuccess = () => {},
+  onError = () => {},
+}) => {
   return (
     <Modal
       centered
@@ -39,14 +52,21 @@ const TambahKaryawanModal = ({ modal }) => {
                 ...values,
               });
               modal.value = false;
+              onSuccess();
             } catch (error) {
               console.log(error);
+              if (error.response.status === 409) {
+                onError("NIP sudah terdaftar");
+              } else {
+                onError(error.message);
+              }
             } finally {
               setSubmitting(false);
             }
           }}
+          validationSchema={UserSchema}
         >
-          {({ isSubmitting, handleChange }) => (
+          {({ isSubmitting, handleChange, errors, touched }) => (
             <Form>
               <div>
                 <i>Silahkan isi data karyawan di bawah ini.</i>
@@ -64,6 +84,7 @@ const TambahKaryawanModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText errors={errors.name} touched={touched.name} />
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       NIP
@@ -76,6 +97,7 @@ const TambahKaryawanModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText errors={errors.id} touched={touched.id} />
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Golongan
@@ -88,6 +110,11 @@ const TambahKaryawanModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.classRank}
+                    touched={touched.classRank}
+                  />
+
                   <Row md={2}>
                     <Col md={3} className="d-flex align-items-center">
                       Jabatan
@@ -100,6 +127,10 @@ const TambahKaryawanModal = ({ modal }) => {
                       />
                     </Col>
                   </Row>
+                  <ErrorText
+                    errors={errors.jobTitle}
+                    touched={touched.jobTitle}
+                  />
                 </div>
               </div>
               <div className="modal-footer">
