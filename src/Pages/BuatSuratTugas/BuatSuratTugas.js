@@ -21,6 +21,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -39,9 +40,12 @@ const CreateLetterSchema = Yup.object().shape({
 });
 
 const BuatSuratTugas = () => {
-  const [open, setOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
   const dateRangePickerRef = useRef(null);
   const datePickerRef = useRef(null);
   const navigate = useNavigate();
@@ -61,9 +65,16 @@ const BuatSuratTugas = () => {
       })
       .catch((err) => {
         console.log(err);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">
@@ -91,9 +102,11 @@ const BuatSuratTugas = () => {
             delete payload.dateOftravel;
             try {
               await axiosClient.post("letters", payload);
+              setSuccess("Surat berhasil dibuat");
               navigate("/surat-tugas");
             } catch (error) {
               console.log(error);
+              setError(error.message);
             } finally {
               setSubmitting(false);
             }
@@ -231,6 +244,7 @@ const BuatSuratTugas = () => {
                                 <button
                                   type="button"
                                   className="btn btn-outline-secondary docs-datepicker-trigger"
+                                  style={{ zIndex: 0 }}
                                   onClick={() =>
                                     datePickerRef.current.flatpickr.toggle()
                                   }
@@ -269,7 +283,7 @@ const BuatSuratTugas = () => {
                                   altFormat: "F j, Y",
                                 }}
                                 onChange={(date) => {
-                                  const newRangeDate = `${date[0].toISOString()} - ${date[1].toISOString()}`;
+                                  const newRangeDate = `${date[0].toISOString()} - ${date[1]?.toISOString()}`;
                                   setFieldValue("dateOftravel", newRangeDate);
                                   setFieldValue(
                                     "startDateOftravel",
@@ -277,7 +291,7 @@ const BuatSuratTugas = () => {
                                   );
                                   setFieldValue(
                                     "endDateOftravel",
-                                    date[1].toISOString()
+                                    date[1]?.toISOString()
                                   );
                                 }}
                               />
@@ -617,6 +631,19 @@ const BuatSuratTugas = () => {
           }}
         </Formik>
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
+      <AxiosAlert
+        message={success}
+        open={success}
+        severity={"success"}
+        setOpen={setSuccess}
+      />
     </Fragment>
   );
 };

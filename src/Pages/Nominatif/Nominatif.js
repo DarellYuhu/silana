@@ -2,16 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
-
-// const data = [...Array(17).keys()].map((item) => ({
-//   ketuaTim: "Mary Cousar",
-//   noSurat: "089/RT.01/J2/2023",
-//   tanggal: "6 Agustus 2023 s/d 8 Agustus 2023",
-//   tugas:
-//     "Melaksanakan perjalanan dinas Pemberdayaan Kelompok Masyarakat di Kampung KB dalam rangka Percepatan  Penurunan Stunting di Kabupaten Kepulauan Sangihe",
-// }));
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 
 const Nominatif = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const getLetters = async () => {
     try {
@@ -19,12 +14,19 @@ const Nominatif = () => {
       setData(res.data);
     } catch (error) {
       console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getLetters();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">
@@ -49,7 +51,6 @@ const Nominatif = () => {
                       <Col className="col-sm">
                         <div className="d-flex justify-content-sm-end gap-2">
                           <div className="search-box ms-2">
-                            {/* <i className="ri-search-line search-icon"></i> */}
                             <input
                               type="text"
                               className="form-control search"
@@ -69,21 +70,6 @@ const Nominatif = () => {
                         </Card>
                       </Col>
                     </Row>
-
-                    {/* <div className="d-flex justify-content-end">
-                      <div className="pagination-wrap hstack gap-2">
-                        <Link
-                          className="page-item pagination-prev disabled"
-                          to="#"
-                        >
-                          Previous
-                        </Link>
-                        <ul className="pagination listjs-pagination mb-0"></ul>
-                        <Link className="page-item pagination-next" to="#">
-                          Next
-                        </Link>
-                      </div>
-                    </div> */}
                   </div>
                 </CardBody>
               </Card>
@@ -91,6 +77,13 @@ const Nominatif = () => {
           </Row>
         </Container>
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
     </Fragment>
   );
 };

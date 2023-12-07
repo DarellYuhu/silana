@@ -1,18 +1,21 @@
 import { TablePagination } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 
 const SuratTugas = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [letterNumber, setLetterNumber] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -25,25 +28,32 @@ const SuratTugas = () => {
   };
 
   const handlePrintNoSurat = (item) => {
-    setOpen(!open);
     setLetterNumber(item);
+    setOpen(true);
   };
 
   const getData = () => {
     axiosClient
       .get("letters")
       .then((res) => {
-        console.log(res);
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">
@@ -76,30 +86,12 @@ const SuratTugas = () => {
                     <Col className="col-sm">
                       <div className="d-flex justify-content-sm-end gap-2">
                         <div className="search-box ms-2">
-                          {/* <i className="ri-search-line search-icon"></i> */}
                           <input
                             type="text"
                             className="form-control search"
                             placeholder="Search..."
                           />
                         </div>
-                        {/* <div className="btn-group" role="group">
-                          <ButtonDropdown
-                            isOpen={isDropdownOpen}
-                            toggle={() => {
-                              setIsDropdownOpen(!isDropdownOpen);
-                            }}
-                          >
-                            <DropdownToggle outline color="primary">
-                              <i className="mdi mdi-sort-ascending"></i> Sort by{" "}
-                              <i className="mdi mdi-chevron-down"></i>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem>Dropdown link</DropdownItem>
-                              <DropdownItem>Dropdown link</DropdownItem>
-                            </DropdownMenu>
-                          </ButtonDropdown>
-                        </div> */}
                       </div>
                     </Col>
                   </Row>
@@ -156,9 +148,11 @@ const SuratTugas = () => {
                                   .delete(`letters/${id}`)
                                   .then((_) => {
                                     getData();
+                                    setSuccess("Berhasil menghapus surat");
                                   })
                                   .catch((err) => {
                                     console.log(err);
+                                    setError(err.message);
                                   });
                               }}
                             />
@@ -190,21 +184,6 @@ const SuratTugas = () => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
-
-                  {/* <div className="d-flex justify-content-end">
-                    <div className="pagination-wrap hstack gap-2">
-                      <Link
-                        className="page-item pagination-prev disabled"
-                        to="#"
-                      >
-                        Previous
-                      </Link>
-                      <ul className="pagination listjs-pagination mb-0"></ul>
-                      <Link className="page-item pagination-next" to="#">
-                        Next
-                      </Link>
-                    </div>
-                  </div> */}
                 </div>
               </CardBody>
             </Card>
@@ -217,6 +196,19 @@ const SuratTugas = () => {
           setItem={setLetterNumber}
         />
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
+      <AxiosAlert
+        message={success}
+        open={success}
+        severity={"success"}
+        setOpen={setSuccess}
+      />
     </Fragment>
   );
 };
@@ -229,13 +221,12 @@ const TableItem = ({
   handlePrintNoSurat = () => {},
   handleDeleteSurat = () => {},
 }) => {
-  const navigate = useNavigate();
   return (
     <tr>
       <td className="no">{index + 1 + rowsPerPage * page}</td>
       <td className="author">{item.dictum[0]}</td>
-      <td className="noSurat">
-        {item.letterNumber ? item.letterNumber : "Belum dicetak"}
+      <td className="noSurat" style={{ color: !item?.letterNumber && "red" }}>
+        {item?.letterNumber ? item?.letterNumber : "Belum dicetak"}
       </td>
       <td className="tanggal">
         {`${moment(item.startDateOftravel).format("DD MMMM YYYY")} s/d ${moment(

@@ -2,8 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 
 const Perincian = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [data, setData] = useState([]);
 
   const getData = async () => {
@@ -12,12 +15,19 @@ const Perincian = () => {
       setData(data);
     } catch (error) {
       console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">
@@ -69,6 +79,13 @@ const Perincian = () => {
           </Row>
         </Container>
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
     </Fragment>
   );
 };
