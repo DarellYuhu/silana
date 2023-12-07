@@ -22,6 +22,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { set } from "lodash";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -40,9 +42,13 @@ const CreateLetterSchema = Yup.object().shape({
 });
 
 const EditSuratTugas = () => {
-  const [open, setOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const datePickerRef = useRef(null);
   const dateRangePickerRef = useRef(null);
   const navigate = useNavigate();
@@ -52,7 +58,6 @@ const EditSuratTugas = () => {
   const fetchEmployees = async () => {
     try {
       const res = await axiosClient.get("employees");
-      console.log(res.data);
       const options = res.data.map((item) => ({
         value: item.id,
         id: item.id,
@@ -61,6 +66,9 @@ const EditSuratTugas = () => {
       setEmployees(options);
     } catch (error) {
       console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,14 +86,8 @@ const EditSuratTugas = () => {
     );
   }
 
-  if (!employees) {
-    return (
-      <Fragment>
-        <div className="page-content">
-          <h1>Loading...</h1>
-        </div>
-      </Fragment>
-    );
+  if (loading) {
+    return <TableSkeleton />;
   }
 
   return (
@@ -114,10 +116,14 @@ const EditSuratTugas = () => {
             const payload = { ...values };
             delete payload.dateOftravel;
             try {
-              const res = await axiosClient.patch(`letters/${id}`, payload);
-              navigate("/surat-tugas");
+              await axiosClient.patch(`letters/${id}`, payload);
+              setSuccess("Surat berhasil diubah");
+              setTimeout(() => {
+                navigate("/surat-tugas");
+              }, 2000);
             } catch (error) {
               console.log(error);
+              setError(error.message);
             } finally {
               setSubmitting(false);
             }
@@ -547,16 +553,6 @@ const EditSuratTugas = () => {
                             </div>
                           </Row>
                         ))}
-                        {/* <Select
-                          isMulti
-                          name="dictum"
-                          options={employees}
-                          onChange={(newValue) => {
-                            const value = newValue.map((item) => item.value);
-                            setFieldValue("dictum", value);
-                          }}
-                          classNamePrefix="select2-selection"
-                        /> */}
                       </CardBody>
                     </CardBody>
                     <CardFooter className="bg-transparent">
@@ -678,6 +674,19 @@ const EditSuratTugas = () => {
           }}
         </Formik>
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
+      <AxiosAlert
+        message={success}
+        open={success}
+        severity={"success"}
+        setOpen={setSuccess}
+      />
     </Fragment>
   );
 };

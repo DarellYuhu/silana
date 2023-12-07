@@ -2,27 +2,38 @@ import { Fragment, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, PrintDepanModal } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 
 const SuratPerjalananDinas = () => {
-  const [open, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
   const getData = () => {
     axiosClient
       .get("travels")
       .then((res) => {
-        console.log(res);
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
+
   return (
     <Fragment>
       <div className="page-content">
@@ -82,6 +93,13 @@ const SuratPerjalananDinas = () => {
         </Container>
         <PrintDepanModal open={open} setOpen={setOpen} data={selectedData} />
       </div>
+
+      <AxiosAlert
+        message={error}
+        open={error}
+        severity={"error"}
+        setOpen={setError}
+      />
     </Fragment>
   );
 };
