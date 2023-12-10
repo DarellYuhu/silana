@@ -23,7 +23,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
-import { set } from "lodash";
+import { signal } from "@preact/signals-react";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -41,12 +41,13 @@ const CreateLetterSchema = Yup.object().shape({
   assignorTitle: Yup.string().required("Required"),
 });
 
+const success = signal(null);
+const error = signal(null);
+
 const EditSuratTugas = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(null);
-  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
 
   const datePickerRef = useRef(null);
@@ -59,14 +60,14 @@ const EditSuratTugas = () => {
     try {
       const res = await axiosClient.get("employees");
       const options = res.data.map((item) => ({
-        value: item.id,
+        value: item.name,
         id: item.id,
         label: item.name,
       }));
       setEmployees(options);
-    } catch (error) {
-      console.log(error);
-      setError(error.message);
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
     } finally {
       setLoading(false);
     }
@@ -117,13 +118,13 @@ const EditSuratTugas = () => {
             delete payload.dateOftravel;
             try {
               await axiosClient.patch(`letters/${id}`, payload);
-              setSuccess("Surat berhasil diubah");
+              success.value = "Surat berhasil diubah";
               setTimeout(() => {
                 navigate("/surat-tugas");
               }, 2000);
-            } catch (error) {
-              console.log(error);
-              setError(error.message);
+            } catch (err) {
+              console.log(err);
+              error.value = err.message;
             } finally {
               setSubmitting(false);
             }
@@ -143,7 +144,7 @@ const EditSuratTugas = () => {
                 <Container fluid={true}>
                   <Breadcrumbs
                     title="Surat Tugas"
-                    breadcrumbItem="Buat Surat"
+                    breadcrumbItem="Edit Surat"
                   />
                   <Card>
                     <CardBody>
@@ -531,6 +532,7 @@ const EditSuratTugas = () => {
                                   (option) => option.value === item
                                 )}
                                 onChange={(item) => {
+                                  console.log(item);
                                   const newDictum = [...values.dictum];
                                   newDictum[index] = item.value;
                                   setFieldValue("dictum", newDictum);
@@ -617,7 +619,7 @@ const EditSuratTugas = () => {
                               }}
                               name="assignorId"
                               onChange={(newValue) => {
-                                setFieldValue("assignorId", newValue.value);
+                                setFieldValue("assignorId", newValue.id);
                               }}
                               options={employees}
                               classNamePrefix="select2-selection"
@@ -676,16 +678,16 @@ const EditSuratTugas = () => {
       </div>
 
       <AxiosAlert
-        message={error}
-        open={error}
+        message={error.value}
+        open={error.value && true}
         severity={"error"}
-        setOpen={setError}
+        setOpen={(val) => (error.value = val)}
       />
       <AxiosAlert
-        message={success}
-        open={success}
+        message={success.value}
+        open={success.value && true}
         severity={"success"}
-        setOpen={setSuccess}
+        setOpen={(val) => (success.value = val)}
       />
     </Fragment>
   );

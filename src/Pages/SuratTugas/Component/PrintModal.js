@@ -2,26 +2,49 @@ import { Col, Input, Modal, Row } from "reactstrap";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../helpers/axiosClient";
-import { Form, Formik } from "formik";
-import { useRef, useState } from "react";
+import { Form, Formik, useFormikContext } from "formik";
+import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { AxiosAlert, ErrorText } from "../../../components/Custom";
+import { effect, signal } from "@preact/signals-react";
 
 const KodeSuratSchema = Yup.object().shape({
-  noSurat: Yup.string().required("Nomor Surat harus diisi"),
+  noSurat: Yup.number().positive().required("Nomor Surat harus diisi"),
   kodeSurat: Yup.string().required("Kode Surat harus diisi"),
   kompSurat: Yup.string().required("Komp Surat harus diisi"),
   tahunSurat: Yup.string().required("Tahun Surat harus diisi"),
 });
 
-const PrintModal = ({ open, setOpen, item, setItem }) => {
-  const [error, setError] = useState(null);
+const availableNum = signal(null);
+
+const PrintModal = ({ open, setOpen, item, setItem, onError = () => {} }) => {
   const navigate = useNavigate();
   const formik = useRef();
 
   const handleClose = () => {
     setOpen(!open);
     setItem(null);
+  };
+
+  const getLatestNumber = async () => {
+    try {
+      const { data } = await axiosClient.get("references/last");
+      formik.current.setFieldValue("noSurat", data.id + 1 ?? 0);
+    } catch (err) {
+      onError(err.message);
+      console.log(err);
+    }
+  };
+
+  const getAvailableNum = async () => {
+    try {
+      const { data } = await axiosClient.get("references/available");
+      const norm = data.map((item) => item.id);
+      availableNum.value = norm;
+    } catch (err) {
+      onError(err.message);
+      console.log(err);
+    }
   };
 
   return (
@@ -37,6 +60,9 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
           formik.current.setFieldValue("kodeSurat", split[1]);
           formik.current.setFieldValue("kompSurat", split[2]);
           formik.current.setFieldValue("tahunSurat", split[3]);
+        } else {
+          getLatestNumber();
+          getAvailableNum();
         }
       }}
     >
@@ -56,7 +82,7 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
         <Formik
           innerRef={formik}
           initialValues={{
-            noSurat: "",
+            noSurat: 0,
             kodeSurat: "",
             kompSurat: "",
             tahunSurat: "",
@@ -72,19 +98,31 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
               return;
             }
             try {
-              await axiosClient.post(`references/${item.id}`, {
-                code: noSurat,
-              });
+              if (availableNum.value.includes(values.noSurat)) {
+                await axiosClient.patch(`references/${item.id}`, {
+                  code: noSurat,
+                  id: values.noSurat,
+                });
+              } else {
+                await axiosClient.post(`references/${item.id}`, {
+                  code: noSurat,
+                  id: values.noSurat,
+                });
+              }
               navigate(`/surat-tugas/${item.id}/print`, {
                 state: { letterNumber: noSurat, isPrintNoOnly: true },
               });
-            } catch (error) {
-              console.log(error);
-              if (error.response.status === 409) {
-                setError(error.response.data.message);
+            } catch (err) {
+              console.log(err);
+              console.log("huhi");
+              if (err.response.status === 409) {
+                console.log("error ");
+                onError(err.response.data.message);
               } else {
-                setError(error.message);
+                onError(err.message);
               }
+            } finally {
+              setSubmitting(false);
             }
           }}
           validationSchema={KodeSuratSchema}
@@ -121,6 +159,7 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
                   <Col md={8}>
                     <Input
                       name="noSurat"
+                      type="number"
                       onChange={handleChange}
                       value={values.noSurat}
                     />
@@ -222,17 +261,19 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
                   touched={touched.tahunSurat}
                 />
 
-                {/* <div className="py-3">
-            <h6>
-              Berikut ini daftar nomor yang anda bisa gunakan, selain nomor
-              diatas :
-            </h6>
-            <ul>
-              <li>83</li>
-              <li>85</li>
-              <li>87</li>
-            </ul>
-          </div> */}
+                {!item?.letterNumber && Array.isArray(availableNum.value) && (
+                  <div className="py-3">
+                    <h6>
+                      Berikut ini daftar nomor yang anda bisa gunakan, selain
+                      nomor diatas :
+                    </h6>
+                    <ul>
+                      {availableNum.value?.map((num, index) => (
+                        <li key={index}>{num}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div className="modal-footer">
                 <button
@@ -254,12 +295,6 @@ const PrintModal = ({ open, setOpen, item, setItem }) => {
           )}
         </Formik>
       </div>
-      <AxiosAlert
-        message={error}
-        open={error}
-        severity={"error"}
-        setOpen={setError}
-      />
     </Modal>
   );
 };

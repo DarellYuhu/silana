@@ -6,13 +6,15 @@ import { PrintModal } from "./Component";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { signal } from "@preact/signals-react";
+
+const error = signal(null);
+const success = signal(null);
 
 const SuratTugas = () => {
   const [letterNumber, setLetterNumber] = useState(null);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
@@ -40,7 +42,7 @@ const SuratTugas = () => {
       })
       .catch((err) => {
         console.log(err.message);
-        setError(err.message);
+        error.value = err.message;
       })
       .finally(() => {
         setLoading(false);
@@ -148,11 +150,11 @@ const SuratTugas = () => {
                                   .delete(`letters/${id}`)
                                   .then((_) => {
                                     getData();
-                                    setSuccess("Berhasil menghapus surat");
+                                    success.value = "Berhasil menghapus surat";
                                   })
                                   .catch((err) => {
                                     console.log(err);
-                                    setError(err.message);
+                                    error.value = err.message;
                                   });
                               }}
                             />
@@ -194,20 +196,21 @@ const SuratTugas = () => {
           setOpen={setOpen}
           item={letterNumber}
           setItem={setLetterNumber}
+          onError={(item) => (error.value = item)}
         />
       </div>
 
       <AxiosAlert
-        message={error}
-        open={error}
+        message={error.value}
+        open={error.value && true}
         severity={"error"}
-        setOpen={setError}
+        setOpen={(val) => (error.value = val)}
       />
       <AxiosAlert
-        message={success}
-        open={success}
+        message={success.value}
+        open={success.value && true}
         severity={"success"}
-        setOpen={setSuccess}
+        setOpen={(val) => (success.value = val)}
       />
     </Fragment>
   );

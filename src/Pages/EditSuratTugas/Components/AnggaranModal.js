@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
+import axiosClient from "../../../helpers/axiosClient";
 
-const data = [...Array(17).keys()].map((item) => ({
-  kodeAnggaran: "3331.FBA.002.248.A.524111",
-  deskripsi: "Penguatan Tata kelola Rumah Data Kependudukan",
-  anggaranTersedia: "Rp.31,120,000",
-}));
-
-const AnggaranModal = ({ open, setOpen = () => {} }) => {
+const AnggaranModal = ({
+  open,
+  setOpen = () => {},
+  handleRowClick = () => {},
+}) => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axiosClient.get("budgets");
+      setData(res.data);
+    };
+    fetchData();
+  }, []);
   return (
     <Modal
       isOpen={open}
@@ -30,7 +37,7 @@ const AnggaranModal = ({ open, setOpen = () => {} }) => {
       </div>
       <div className="modal-body">
         <DataTable
-          onRowClicked={(row) => console.log(row)}
+          onRowClicked={handleRowClick}
           pointerOnHover
           highlightOnHover
           columns={columns}
@@ -61,23 +68,28 @@ const AnggaranModal = ({ open, setOpen = () => {} }) => {
 const columns = [
   {
     name: <span className="font-weight-bold fs-13">No.</span>,
-    selector: (row, index) => index + 1,
+    selector: (_, index) => index + 1,
     sortable: true,
     width: "50px",
   },
   {
     name: <span className="font-weight-bold fs-13">Kode Anggaran</span>,
-    selector: (row) => row.kodeAnggaran,
+    selector: (row) => row.id,
     sortable: true,
   },
   {
     name: <span className="font-weight-bold fs-13">Deskripsi</span>,
-    selector: (row) => row.deskripsi,
+    selector: (row) => row.description,
     sortable: true,
   },
   {
     name: <span className="font-weight-bold fs-13">Anggaran Tersedia</span>,
-    selector: (row) => row.anggaranTersedia,
+    selector: (row) =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(row.amount),
     sortable: true,
   },
 ];

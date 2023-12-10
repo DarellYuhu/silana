@@ -22,6 +22,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { signal } from "@preact/signals-react";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -39,13 +40,14 @@ const CreateLetterSchema = Yup.object().shape({
   assignorTitle: Yup.string().required("Required"),
 });
 
+const open = signal(false);
+
 const BuatSuratTugas = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false);
   const dateRangePickerRef = useRef(null);
   const datePickerRef = useRef(null);
   const navigate = useNavigate();
@@ -191,7 +193,7 @@ const BuatSuratTugas = () => {
                               className="colorpicker-default"
                               placeholder="cth.. 3331.UBA.002.256.A.524111"
                               readOnly
-                              onClick={() => setOpen(!open)}
+                              onClick={() => (open.value = true)}
                             />
                             {errors.budgetId && touched.budgetId ? (
                               <p className="text-danger">{`* ${errors.budgetId}`}</p>
@@ -619,11 +621,11 @@ const BuatSuratTugas = () => {
                   </Card>
                 </Container>
                 <AnggaranModal
-                  open={open}
-                  setOpen={setOpen}
+                  open={open.value}
+                  setOpen={(value) => (open.value = value)}
                   handleRowClick={(row) => {
                     setFieldValue("budgetId", row.id);
-                    setOpen(!open);
+                    open.value = false;
                   }}
                 />
               </Form>
