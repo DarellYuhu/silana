@@ -17,6 +17,8 @@ import { capitalizeString } from "../../Utility";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
+import { signal } from "@preact/signals-react";
+import { AxiosAlert } from "../../components/Custom";
 
 const validationSchema = Yup.object().shape({
   commitmentMaker: Yup.string().required("PPB harus dipilih"),
@@ -25,16 +27,16 @@ const validationSchema = Yup.object().shape({
   dateOfLetter: Yup.string().required("Tanggal surat harus diisi"),
 });
 
+const error = signal(null);
+
 const EditSuratPerjalananDinas = () => {
   const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [checked, setChecked] = useState(false);
-  const datePickerRef = useRef(null);
-  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const travel = useLocation().state;
+  const datePickerRef = useRef(null);
   const navigate = useNavigate();
-
-  console.log(travel);
+  const { id } = useParams();
 
   const filteredDistricts = Object.keys(DISTRICT)
     .filter((key) => key.startsWith("71"))
@@ -51,8 +53,9 @@ const EditSuratPerjalananDinas = () => {
         label: item.name,
       }));
       setEmployees(data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
     } finally {
       setLoading(false);
     }
@@ -101,8 +104,9 @@ const EditSuratPerjalananDinas = () => {
                 }
                 console.log(res);
                 navigate(`/surat-perjalanan-dinas`);
-              } catch (error) {
-                console.log(error);
+              } catch (err) {
+                console.log(err);
+                error.value = err.message;
               } finally {
                 setSubmitting(false);
               }
@@ -251,6 +255,12 @@ const EditSuratPerjalananDinas = () => {
           </Formik>
         </Container>
       </div>
+      <AxiosAlert
+        message={error.value}
+        open={error.value && true}
+        severity={"error"}
+        setOpen={(val) => (error.value = val)}
+      />
     </Fragment>
   );
 };
