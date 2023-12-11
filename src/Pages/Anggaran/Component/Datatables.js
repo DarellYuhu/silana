@@ -86,6 +86,11 @@ const Datatables = ({
       data={item}
       pagination
       customStyles={{
+        table: {
+          style: {
+            minHeight: "400px",
+          },
+        },
         cells: {
           style: {
             width: 100,
