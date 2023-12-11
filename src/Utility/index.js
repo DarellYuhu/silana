@@ -1,3 +1,4 @@
 import capitalizeString from "./capitalizeString";
+import extractGrade from "./extractGrade";
 
-export { capitalizeString };
+export { capitalizeString, extractGrade };

@@ -144,13 +144,13 @@ const DataKaryawan = () => {
         />
         <AxiosAlert
           message={success.value}
-          open={success.value}
+          open={success.value && true}
           severity={"success"}
           setOpen={(value) => (success.value = value)}
         />
         <AxiosAlert
           message={error.value}
-          open={error.value}
+          open={error.value && true}
           severity={"error"}
           setOpen={(value) => (error.value = value)}
         />

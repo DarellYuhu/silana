@@ -20,6 +20,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import axios from "axios";
+import { AxiosAlert } from "../../components/Custom";
+import { signal, useSignalEffect } from "@preact/signals-react";
+import { extractGrade } from "../../Utility";
 
 const NominativeSchema = Yup.object().shape({
   tranportType: Yup.string().required("Required"),
@@ -33,26 +36,70 @@ const NominativeSchema = Yup.object().shape({
   ),
 });
 
+const allowances = signal(null);
+const employees = signal(null);
+const error = signal(null);
+
 const EditNominatif = () => {
-  const [type, setType] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const [employees, setEmployees] = useState([]);
+  const [type, setType] = useState("");
   const datePickerRef = useRef(null);
   const dataExample = useLocation().state;
   const navigate = useNavigate();
+  const formik = useRef();
 
   const getEmployees = async () => {
     try {
-      const res = await axiosClient.get("employees");
-      setEmployees(res.data);
-    } catch (error) {
-      console.log(error);
+      const { data } = await axiosClient.get("employees");
+      employees.value = data;
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
+    }
+  };
+
+  const getAllowance = async () => {
+    try {
+      const { data } = await axiosClient.get("allowances");
+      allowances.value = data;
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
     }
   };
 
   useEffect(() => {
     getEmployees();
+    getAllowance();
   }, []);
+
+  useSignalEffect(() => {
+    if (
+      allowances.value &&
+      employees.value &&
+      !dataExample.nominative?.helpers
+    ) {
+      dataExample.dictum.map((name, index) => {
+        const rank = employees?.value.find(
+          (item) => item.name === name
+        )?.classRank;
+        const employeeGrade = extractGrade(rank);
+        console.log(employeeGrade);
+        const allowance = allowances.value.find(
+          (item) => item.class === employeeGrade
+        );
+        console.log(allowance);
+        formik.current.setFieldValue(
+          `data[${index}].lumpsumAmount`,
+          allowance.lumpsum
+        );
+        formik.current.setFieldValue(
+          `data[${index}].lodgingAmount`,
+          allowance.lodging
+        );
+      });
+    }
+  });
   return (
     <Fragment>
       <div className="page-content">
@@ -62,6 +109,7 @@ const EditNominatif = () => {
             breadcrumbItem="Nominatif (Rincian Transport)"
           />
           <Formik
+            innerRef={formik}
             initialValues={{
               tranportType: dataExample.nominative?.tranportType ?? "",
               dateOfLetter:
@@ -71,22 +119,22 @@ const EditNominatif = () => {
                 dataExample.nominative?.helpers ??
                 dataExample.dictum.map((item) => ({
                   name: item,
-                  transportDeparture: null,
-                  transportReturn: null,
-                  planeShipDearture: null,
-                  planeShipReturn: null,
+                  transportDeparture: "",
+                  transportReturn: "",
+                  planeShipDearture: "",
+                  planeShipReturn: "",
                   lumpsumDuration:
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) + 1 ?? null,
-                  lumpsumAmount: null,
+                    ) + 1 ?? "",
+                  lumpsumAmount: "",
                   lodgingDuration:
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) ?? null,
-                  lodgingAmount: null,
+                    ) ?? "",
+                  lodgingAmount: "",
                 })),
             }}
             onSubmit={async (values, { setSubmitting }) => {
@@ -118,16 +166,34 @@ const EditNominatif = () => {
                 const helperPayload = values.data.map((item) => ({
                   ...item,
                   nominativeId: res.data.id,
-                  employeeId: employees.find(
+                  employeeId: employees.value.find(
                     (employee) => employee.name === item.name
                   ).id,
                 }));
                 helperPayload.map((item) => delete item.name);
                 await axiosClient.post("helpers", helperPayload);
+
+                const amount = helperPayload?.reduce((acc, curr) => {
+                  const personalTransport =
+                    curr.transportDeparture + curr.transportReturn;
+                  const lumpsum = curr.lumpsumDuration * curr.lumpsumAmount;
+                  const lodging = curr.lodgingDuration * curr.lodgingAmount;
+                  const total = personalTransport + lumpsum + lodging;
+                  return acc + total;
+                }, 0);
+
+                await axiosClient.patch(
+                  `budgets/${dataExample.budgetId}/budget`,
+                  { amount }
+                );
+
+                console.log(amount);
+                console.log(helperPayload);
                 console.log("success");
                 navigate("/nominatif");
-              } catch (error) {
-                console.log(error);
+              } catch (err) {
+                console.log(err);
+                error.value = err.message;
               } finally {
                 setSubmitting(false);
               }
@@ -397,6 +463,12 @@ const EditNominatif = () => {
           </Formik>
         </Container>
       </div>
+      <AxiosAlert
+        message={error.value}
+        open={error.value && true}
+        severity={"error"}
+        setOpen={(value) => (error.value = value)}
+      />
     </Fragment>
   );
 };
