@@ -1,6 +1,7 @@
 import React from "react";
 
 import logosm from "../../assets/images/logo-sm.png";
+import logoBkkbnSm from "../../assets/images/logo-bkkbn-sm.png";
 import logodark from "../../assets/images/logo-dark.png";
 import logolight from "../../assets/images/logo-light.png";
 
@@ -22,7 +23,7 @@ const TopBar = () => {
             <div className="navbar-brand-box text-center">
               <a href="#" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logosm} alt="logo-sm-dark" height="22" />
+                  <img src={logoBkkbnSm} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
                   <img src={logodark} alt="logo-dark" height="24" />
@@ -31,7 +32,7 @@ const TopBar = () => {
 
               <a href="#" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logosm} alt="logo-sm-light" height="22" />
+                  <img src={logoBkkbnSm} alt="logo-sm-light" height="22" />
                 </span>
                 <span className="logo-lg">
                   <img src={logolight} alt="logo-light" height="24" />

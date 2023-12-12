@@ -5,7 +5,7 @@ import { Container } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 const Dashboard = () => {
-  document.title = "Dashboard | Upzet - React Admin & Dashboard Template";
+  document.title = "Dashboard | Silana - BKKBN";
   return (
     <React.Fragment>
       <div className="page-content">

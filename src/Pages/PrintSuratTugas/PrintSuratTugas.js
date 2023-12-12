@@ -114,7 +114,8 @@ const PrintSuratTugas = () => {
                     :
                   </TableCell>
                   <TableCell sx={styles.item}>
-                    {formatLetterNumber(state.letterNumber)}
+                    {state?.letterNumber &&
+                      formatLetterNumber(state?.letterNumber)}
                   </TableCell>
                 </TableRow>
                 <TableRow
