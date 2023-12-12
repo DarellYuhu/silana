@@ -1,6 +1,17 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label, Form } from "reactstrap";
+import {
+  Row,
+  Col,
+  Alert,
+  Card,
+  CardBody,
+  Container,
+  FormFeedback,
+  Input,
+  Label,
+  Form,
+} from "reactstrap";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -18,34 +29,34 @@ import { userForgetPassword } from "../../store/actions";
 // import images
 import profile from "../../assets/images/bg.png";
 import logo from "../../assets/images/logo-sm.png";
+import logoBkkbnSm from "../../assets/images/logo-bkkbn-sm.png";
 
-const ForgetPasswordPage = props => {
+const ForgetPasswordPage = (props) => {
   const dispatch = useDispatch();
-  document.title = "Forget Password | Upzet - React Admin & Dashboard Template";
+  document.title = "Forget Password | Silana - BKKBN";
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: '',
+      email: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
       dispatch(userForgetPassword(values, props.router.navigate));
-    }
+    },
   });
 
-  const { forgetError, forgetSuccessMsg } = useSelector(state => ({
+  const { forgetError, forgetSuccessMsg } = useSelector((state) => ({
     // forgetError: state.ForgetPassword.forgetError,
     forgetSuccessMsg: state.forgetPassword.forgetSuccessMsg,
   }));
 
   return (
     <React.Fragment>
-      
       <div className="account-pages my-5 pt-sm-5">
         <Container>
           <Row className="justify-content-center">
@@ -70,7 +81,7 @@ const ForgetPasswordPage = props => {
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
                           <img
-                            src={logo}
+                            src={logoBkkbnSm}
                             alt=""
                             className="rounded-circle"
                             height="34"
@@ -110,11 +121,15 @@ const ForgetPasswordPage = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid"><div>{validation.errors.email}</div></FormFeedback>
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.email}</div>
+                          </FormFeedback>
                         ) : null}
                       </div>
                       <Row className="mb-3">
