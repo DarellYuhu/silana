@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import {
   Datatables,
@@ -8,6 +8,7 @@ import {
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert } from "../../components/Custom";
+import { debounce } from "lodash";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
@@ -16,7 +17,22 @@ const success = signal(null);
 const error = signal(null);
 
 const DataKaryawan = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
+
+  const filteredData = () => {
+    return data?.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
 
   const getEmployees = async () => {
     try {
@@ -68,8 +84,10 @@ const DataKaryawan = () => {
                             {/* <i className="ri-search-line search-icon"></i> */}
                             <input
                               type="text"
+                              onChange={handleSearch}
                               className="form-control search"
-                              placeholder="Search..."
+                              placeholder="Cari berdasarkan nama"
+                              aria-label="Search"
                             />
                           </div>
                         </div>
@@ -81,7 +99,7 @@ const DataKaryawan = () => {
                         <Card>
                           <CardBody>
                             <Datatables
-                              item={data}
+                              item={filteredData()}
                               handleEditClick={(user) => {
                                 editData.value = user;
                                 editModal.value = true;

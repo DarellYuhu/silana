@@ -1,15 +1,33 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 import { signal } from "@preact/signals-react";
+import { debounce } from "lodash";
 
 const error = signal(null);
 
 const Perincian = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
+  const filteredData = () => {
+    return data?.filter(
+      (item) =>
+        item.dictum[0].toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.letterNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
 
   const getData = async () => {
     try {
@@ -57,8 +75,10 @@ const Perincian = () => {
                             {/* <i className="ri-search-line search-icon"></i> */}
                             <input
                               type="text"
+                              onChange={handleSearch}
                               className="form-control search"
-                              placeholder="Search..."
+                              placeholder="Cari No Surat/Ketua..."
+                              aria-label="Search"
                             />
                           </div>
                         </div>
@@ -69,7 +89,7 @@ const Perincian = () => {
                       <Col lg={12}>
                         <Card>
                           <CardBody>
-                            <Datatables item={data} />
+                            <Datatables item={filteredData()} />
                           </CardBody>
                         </Card>
                       </Col>

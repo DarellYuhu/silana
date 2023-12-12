@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert } from "../../components/Custom";
+import { debounce } from "lodash";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
@@ -12,7 +13,24 @@ const success = signal(null);
 const error = signal(null);
 
 const Anggaran = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState([]);
+
+  const filteredData = () => {
+    return data?.filter(
+      (item) =>
+        item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
 
   const getAnggaran = async () => {
     try {
@@ -64,8 +82,10 @@ const Anggaran = () => {
                           <div className="search-box ms-2">
                             <input
                               type="text"
+                              onChange={handleSearch}
                               className="form-control search"
-                              placeholder="Search..."
+                              placeholder="Cari Kode/Deskripsi"
+                              aria-label="Search"
                             />
                           </div>
                         </div>
@@ -77,7 +97,7 @@ const Anggaran = () => {
                         <Card>
                           <CardBody>
                             <Datatables
-                              item={data}
+                              item={filteredData()}
                               handleEditClick={(item) => {
                                 editData.value = item;
                                 editModal.value = true;

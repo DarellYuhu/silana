@@ -7,6 +7,7 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap";
+import { formatLetterNumber } from "../../../Utility";
 
 const Datatables = ({ item }) => {
   return (
@@ -42,7 +43,7 @@ const columns = [
   },
   {
     name: <span className="font-weight-bold fs-13">Nomor Surat</span>,
-    selector: (row) => row.letterNumber,
+    selector: (row) => formatLetterNumber(row.letterNumber),
     sortable: true,
     width: "150px",
   },

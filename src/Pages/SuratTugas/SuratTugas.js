@@ -1,19 +1,22 @@
 import { TablePagination } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 import { signal } from "@preact/signals-react";
 import { formatLetterNumber } from "../../Utility";
+import { debounce } from "lodash";
 
 const error = signal(null);
 const success = signal(null);
 
 const SuratTugas = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [letterNumber, setLetterNumber] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -21,7 +24,7 @@ const SuratTugas = () => {
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -34,6 +37,22 @@ const SuratTugas = () => {
     setLetterNumber(item);
     setOpen(true);
   };
+
+  const filteredData = () => {
+    return data?.filter(
+      (item) =>
+        item.dictum[0].toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.letterNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
 
   const getData = () => {
     axiosClient
@@ -91,8 +110,10 @@ const SuratTugas = () => {
                         <div className="search-box ms-2">
                           <input
                             type="text"
+                            onChange={handleSearch}
                             className="form-control search"
-                            placeholder="Search..."
+                            placeholder="Cari No Surat/Ketua..."
+                            aria-label="Search"
                           />
                         </div>
                       </div>
@@ -133,13 +154,14 @@ const SuratTugas = () => {
                         </tr>
                       </thead>
                       <tbody className="list form-check-all">
-                        {data
+                        {filteredData()
                           ?.slice(
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
                           .map((item, index) => (
                             <TableItem
+                              isSubmitting={isSubmitting}
                               item={item}
                               index={index}
                               key={index}
@@ -147,6 +169,7 @@ const SuratTugas = () => {
                               rowsPerPage={rowsPerPage}
                               handlePrintNoSurat={handlePrintNoSurat}
                               handleDeleteSurat={(id) => {
+                                setIsSubmitting(true);
                                 axiosClient
                                   .delete(`letters/${id}`)
                                   .then((_) => {
@@ -156,6 +179,9 @@ const SuratTugas = () => {
                                   .catch((err) => {
                                     console.log(err);
                                     error.value = err.message;
+                                  })
+                                  .finally(() => {
+                                    setIsSubmitting(false);
                                   });
                               }}
                             />
@@ -222,6 +248,7 @@ const TableItem = ({
   index,
   page,
   rowsPerPage,
+  isSubmitting,
   handlePrintNoSurat = () => {},
   handleDeleteSurat = () => {},
 }) => {
@@ -268,6 +295,7 @@ const TableItem = ({
               data-bs-toggle="modal"
               data-bs-target="#deleteRecordModal"
               onClick={() => handleDeleteSurat(item.id)}
+              disabled={isSubmitting}
             >
               <i className="mdi mdi-delete-outline fs-5"></i>
             </button>
