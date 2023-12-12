@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
+import { formatLetterNumber } from "../../Utility";
 
 const PrintSuratTugas = () => {
   const [employees, setEmployees] = useState([]);
@@ -112,7 +113,9 @@ const PrintSuratTugas = () => {
                   >
                     :
                   </TableCell>
-                  <TableCell sx={styles.item}>{state.letterNumber}</TableCell>
+                  <TableCell sx={styles.item}>
+                    {formatLetterNumber(state.letterNumber)}
+                  </TableCell>
                 </TableRow>
                 <TableRow
                   sx={{

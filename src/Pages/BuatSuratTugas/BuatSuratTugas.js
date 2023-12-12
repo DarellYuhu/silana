@@ -40,14 +40,14 @@ const CreateLetterSchema = Yup.object().shape({
   assignorTitle: Yup.string().required("Required"),
 });
 
+const success = signal(null);
 const open = signal(false);
+const error = signal(null);
 
 const BuatSuratTugas = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(null);
-  const [error, setError] = useState(null);
   const dateRangePickerRef = useRef(null);
   const datePickerRef = useRef(null);
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const BuatSuratTugas = () => {
       })
       .catch((err) => {
         console.log(err);
-        setError(err.message);
+        error.value = err.message;
       })
       .finally(() => {
         setLoading(false);
@@ -104,11 +104,11 @@ const BuatSuratTugas = () => {
             delete payload.dateOftravel;
             try {
               await axiosClient.post("letters", payload);
-              setSuccess("Surat berhasil dibuat");
+              success.value = "Surat berhasil dibuat";
               navigate("/surat-tugas");
-            } catch (error) {
-              console.log(error);
-              setError(error.message);
+            } catch (err) {
+              console.log(err);
+              error.value = err.message;
             } finally {
               setSubmitting(false);
             }
@@ -635,16 +635,16 @@ const BuatSuratTugas = () => {
       </div>
 
       <AxiosAlert
-        message={error}
-        open={error}
+        message={error.value}
+        open={error.value && true}
         severity={"error"}
-        setOpen={setError}
+        setOpen={(val) => (error.value = val)}
       />
       <AxiosAlert
-        message={success}
-        open={success}
+        message={success.value}
+        open={success.value && true}
         severity={"success"}
-        setOpen={setSuccess}
+        setOpen={(val) => (success.value = val)}
       />
     </Fragment>
   );

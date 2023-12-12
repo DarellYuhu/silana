@@ -7,6 +7,7 @@ import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 import { signal } from "@preact/signals-react";
+import { formatLetterNumber } from "../../Utility";
 
 const error = signal(null);
 const success = signal(null);
@@ -229,7 +230,9 @@ const TableItem = ({
       <td className="no">{index + 1 + rowsPerPage * page}</td>
       <td className="author">{item.dictum[0]}</td>
       <td className="noSurat" style={{ color: !item?.letterNumber && "red" }}>
-        {item?.letterNumber ? item?.letterNumber : "Belum dicetak"}
+        {item?.letterNumber
+          ? formatLetterNumber(item?.letterNumber)
+          : "Belum dicetak"}
       </td>
       <td className="tanggal">
         {`${moment(item.startDateOftravel).format("DD MMMM YYYY")} s/d ${moment(

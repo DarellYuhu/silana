@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
+import { formatLetterNumber } from "../../Utility";
 
 const PrintNominatif = () => {
   const [employees, setEmployees] = useState([]);
@@ -73,9 +74,9 @@ const PrintNominatif = () => {
               <h2 style={{ fontSize: "9pt", margin: 0, fontWeight: "bold" }}>
                 {`${data?.assignedTo}`}
                 <br />
-                {`sesuai ST No: ${data?.letterNumber} tanggal ${moment(
-                  data?.dateOfletter
-                ).format("D MMMM YYYY")}`}
+                {`sesuai ST No: ${formatLetterNumber(
+                  data?.letterNumber
+                )} tanggal ${moment(data?.dateOfletter).format("D MMMM YYYY")}`}
                 <br />
                 {`Tanggal: ${moment(data?.startDateOftravel).format(
                   "D MMMM"

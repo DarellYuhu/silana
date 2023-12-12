@@ -3,11 +3,13 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, PrintDepanModal } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { signal } from "@preact/signals-react";
+
+const error = signal(null);
 
 const SuratPerjalananDinas = () => {
   const [selectedData, setSelectedData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -19,7 +21,7 @@ const SuratPerjalananDinas = () => {
       })
       .catch((err) => {
         console.log(err.message);
-        setError(err.message);
+        error.value = err.message;
       })
       .finally(() => {
         setLoading(false);
@@ -95,10 +97,10 @@ const SuratPerjalananDinas = () => {
       </div>
 
       <AxiosAlert
-        message={error}
-        open={error}
+        message={error.value}
+        open={error.value && true}
         severity={"error"}
-        setOpen={setError}
+        setOpen={(val) => (error.val = val)}
       />
     </Fragment>
   );

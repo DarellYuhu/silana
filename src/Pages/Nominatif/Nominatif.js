@@ -3,18 +3,20 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
 import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { signal } from "@preact/signals-react";
+
+const error = signal(null);
 
 const Nominatif = () => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const getLetters = async () => {
     try {
       const res = await axiosClient.get("/nominative");
       setData(res.data);
-    } catch (error) {
-      console.log(error);
-      setError(error.message);
+    } catch (err) {
+      console.log(err);
+      error.value = err.message;
     } finally {
       setLoading(false);
     }
@@ -79,10 +81,10 @@ const Nominatif = () => {
       </div>
 
       <AxiosAlert
-        message={error}
-        open={error}
+        message={error.value}
+        open={error.value && true}
         severity={"error"}
-        setOpen={setError}
+        setOpen={(val) => (error.value = val)}
       />
     </Fragment>
   );

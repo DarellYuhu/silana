@@ -9,6 +9,7 @@ import { effect, signal } from "@preact/signals-react";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 import capitalizeString from "../../Utility/capitalizeString";
 import { Container, Row } from "reactstrap";
+import { formatLetterNumber } from "../../Utility";
 
 const recipient = signal();
 const nominative = signal();
@@ -154,9 +155,11 @@ const PrintKwitansi = () => {
                   {`Biaya perjalanan dalam rangka ${
                     data?.data.assignedTo
                   } sesuai ST/SPD
-                  Nomor: ${data?.data?.letterNumber} tanggal ${moment(
-                    data?.data?.dateOfletter
-                  ).format("D MMMM YYYY")} selama ${
+                  Nomor: ${formatLetterNumber(
+                    data?.data?.letterNumber
+                  )} tanggal ${moment(data?.data?.dateOfletter).format(
+                    "D MMMM YYYY"
+                  )} selama ${
                     moment(data?.data?.endDateOftravel).diff(
                       data?.data?.startDateOftravel,
                       "days"

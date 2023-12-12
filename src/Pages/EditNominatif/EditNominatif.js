@@ -119,22 +119,22 @@ const EditNominatif = () => {
                 dataExample.nominative?.helpers ??
                 dataExample.dictum.map((item) => ({
                   name: item,
-                  transportDeparture: "",
-                  transportReturn: "",
-                  planeShipDearture: "",
-                  planeShipReturn: "",
+                  transportDeparture: null,
+                  transportReturn: null,
+                  planeShipDearture: null,
+                  planeShipReturn: null,
                   lumpsumDuration:
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) + 1 ?? "",
-                  lumpsumAmount: "",
+                    ) + 1 ?? null,
+                  lumpsumAmount: null,
                   lodgingDuration:
                     moment(dataExample.endDateOftravel).diff(
                       dataExample.startDateOftravel,
                       "days"
-                    ) ?? "",
-                  lodgingAmount: "",
+                    ) ?? null,
+                  lodgingAmount: null,
                 })),
             }}
             onSubmit={async (values, { setSubmitting }) => {
@@ -272,7 +272,7 @@ const EditNominatif = () => {
                                   className="colorpicker-default"
                                   name={`data[${index}].transportDeparture`}
                                   onChange={handleChange}
-                                  value={values.data[index].transportDeparture}
+                                  value={values.data[index]?.transportDeparture}
                                 />
                               </Col>
                               <Col md={6}>
@@ -282,7 +282,7 @@ const EditNominatif = () => {
                                   className="colorpicker-default"
                                   name={`data[${index}].transportReturn`}
                                   onChange={handleChange}
-                                  value={values.data[index].transportReturn}
+                                  value={values.data[index]?.transportReturn}
                                 />
                               </Col>
                             </Row>
@@ -300,7 +300,7 @@ const EditNominatif = () => {
                                   className="colorpicker-default"
                                   name={`data[${index}].planeShipDearture`}
                                   onChange={handleChange}
-                                  value={values.data[index].planeShipDearture}
+                                  value={values.data[index]?.planeShipDearture}
                                 />
                               </Col>
                               <Col md={6}>
@@ -310,7 +310,7 @@ const EditNominatif = () => {
                                   className="colorpicker-default"
                                   name={`data[${index}].planeShipReturn`}
                                   onChange={handleChange}
-                                  value={values.data[index].planeShipReturn}
+                                  value={values.data[index]?.planeShipReturn}
                                 />
                               </Col>
                             </Row>
@@ -327,7 +327,7 @@ const EditNominatif = () => {
                                 type="number"
                                 className="colorpicker-default"
                                 name={`data[${index}].lumpsumDuration`}
-                                value={values.data[index].lumpsumDuration}
+                                value={values.data[index]?.lumpsumDuration}
                                 onChange={handleChange}
                                 invalid={
                                   errors?.data?.[index]?.lumpsumDuration &&
@@ -346,7 +346,7 @@ const EditNominatif = () => {
                                   errors?.data?.[index]?.lumpsumAmount &&
                                   touched?.data?.[index]?.lumpsumAmount
                                 }
-                                value={values.data[index].lumpsumAmount}
+                                value={values.data[index]?.lumpsumAmount}
                               />
                             </Col>
                           </Row>
@@ -362,7 +362,7 @@ const EditNominatif = () => {
                                 type="number"
                                 className="colorpicker-default"
                                 name={`data[${index}].lodgingDuration`}
-                                value={values.data[index].lodgingDuration}
+                                value={values.data[index]?.lodgingDuration}
                                 onChange={handleChange}
                                 invalid={
                                   errors?.data?.[index]?.lodgingDuration &&
@@ -381,7 +381,7 @@ const EditNominatif = () => {
                                   errors?.data?.[index]?.lodgingAmount &&
                                   touched?.data?.[index]?.lodgingAmount
                                 }
-                                value={values.data[index].lodgingAmount}
+                                value={values.data[index]?.lodgingAmount}
                               />
                             </Col>
                           </Row>

@@ -13,7 +13,7 @@ import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { effect, signal } from "@preact/signals-react";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
-import { capitalizeString } from "../../Utility";
+import { capitalizeString, formatLetterNumber } from "../../Utility";
 
 const nominative = signal();
 const recipient = signal();
@@ -130,7 +130,9 @@ const PrintPerincian = () => {
                   Lampiran ST Nomor
                 </TableCell>
                 <TableCell sx={styles.cell1}>:</TableCell>
-                <TableCell sx={styles.cell1}>{data.letterNumber}</TableCell>
+                <TableCell sx={styles.cell1}>
+                  {formatLetterNumber(data.letterNumber)}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={[styles.cell1, { width: "25%" }]}>
