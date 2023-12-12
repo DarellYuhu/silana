@@ -132,7 +132,10 @@ const PrintNominatif = () => {
                   "days"
                 );
                 const personalTransport =
-                  item.transportDeparture + item.transportReturn;
+                  item.transportDeparture +
+                  item.transportReturn +
+                  item.planeShipDearture +
+                  item.planeShipReturn;
                 const lumpsum = item.lumpsumDuration * item.lumpsumAmount;
                 const lodging = item.lodgingDuration * item.lodgingAmount;
                 const total = personalTransport + lumpsum + lodging;
@@ -232,7 +235,10 @@ const PrintNominatif = () => {
                   }).format(
                     data?.nominative?.helpers?.reduce((acc, curr) => {
                       const personalTransport =
-                        curr.transportDeparture + curr.transportReturn;
+                        curr.transportDeparture +
+                        curr.transportReturn +
+                        curr.planeShipDearture +
+                        curr.planeShipReturn;
                       const lumpsum = curr.lumpsumDuration * curr.lumpsumAmount;
                       const lodging = curr.lodgingDuration * curr.lodgingAmount;
                       const total = personalTransport + lumpsum + lodging;
