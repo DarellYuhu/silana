@@ -21,8 +21,12 @@ const DataKaryawan = () => {
   const [data, setData] = useState([]);
 
   const filteredData = () => {
-    return data?.filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    return data?.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.classRank.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.id.toLowerCase().includes(searchQuery.toLowerCase())
     );
   };
 
@@ -86,7 +90,7 @@ const DataKaryawan = () => {
                               type="text"
                               onChange={handleSearch}
                               className="form-control search"
-                              placeholder="Cari berdasarkan nama"
+                              placeholder="Search..."
                               aria-label="Search"
                             />
                           </div>
