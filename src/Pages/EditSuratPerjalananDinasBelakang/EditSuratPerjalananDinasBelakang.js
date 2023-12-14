@@ -1,17 +1,25 @@
-import { CardContent, Grid } from "@mui/material";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik } from "formik";
 import moment from "moment";
-import { Fragment, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Card, CardBody, CardHeader, Col, Input, Row } from "reactstrap";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Input,
+  Row,
+  InputGroup,
+} from "reactstrap";
 import axiosClient from "../../helpers/axiosClient";
+import Flatpickr from "react-flatpickr";
 
 const EditSuratPerjalananDinasBelakang = () => {
   const [employees, setEmployees] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  const { id } = useParams();
+  const datePickerRef = useRef(null);
   const data = useLocation().state;
-  const navigate = useNavigate();
+  const { id } = useParams();
 
   const getEmployees = async () => {
     try {
@@ -41,67 +49,55 @@ const EditSuratPerjalananDinasBelakang = () => {
         <Formik
           initialValues={[
             {
+              berangkat: {
+                ke: "",
+              },
+            },
+            {
               tiba: {
+                di: "",
                 tanggal: "",
                 jabatan: "",
                 nama: "",
                 nipNik: "",
               },
               berangkat: {
+                dari: "",
                 ke: "",
                 tanggal: "",
-                jabatan: "",
-                nama: "",
-                nipNik: "",
               },
             },
             {
               tiba: {
+                di: "",
                 tanggal: "",
                 jabatan: "",
                 nama: "",
                 nipNik: "",
               },
               berangkat: {
+                dari: "",
                 ke: "",
                 tanggal: "",
-                jabatan: "",
-                nama: "",
-                nipNik: "",
               },
             },
             {
               tiba: {
+                di: "",
                 tanggal: "",
                 jabatan: "",
                 nama: "",
                 nipNik: "",
               },
               berangkat: {
+                dari: "",
                 ke: "",
                 tanggal: "",
-                jabatan: "",
-                nama: "",
-                nipNik: "",
-              },
-            },
-            {
-              berangkat: {
-                ke: "",
-                tanggal: "",
-                jabatan: "",
-                nama: "",
-                nipNik: "",
-              },
-              tiba: {
-                tanggal: "",
-                jabatan: "",
-                nama: "",
-                nipNik: "",
               },
             },
             {
               tiba: {
+                di: "",
                 tanggal: "",
                 jabatan: "",
                 nama: "",
@@ -121,12 +117,12 @@ const EditSuratPerjalananDinasBelakang = () => {
             setSubmitting(false);
           }}
         >
-          {({ values, handleChange, isSubmitting }) => {
+          {({ values, handleChange, isSubmitting, setFieldValue }) => {
             return (
               <Form>
                 <Card>
                   <CardHeader style={styles.headerBackground}>
-                    <h5 style={styles.header}>KOLOM I</h5>
+                    <h5 style={styles.header}>KOLOM 1</h5>
                   </CardHeader>
                   <CardBody>
                     <Row>
@@ -136,76 +132,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                         className="d-grid gap-2"
                         style={{ visibility: "hidden" }}
                       >
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Tiba di
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              name="[0].tiba.tibaDi"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[0].tiba.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[0].tiba.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[0].tiba.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[0].tiba.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
+                        hidden
                       </Col>
                       <Col xs={12} md={6} className="d-grid gap-2">
                         <Row>
@@ -220,7 +147,20 @@ const EditSuratPerjalananDinasBelakang = () => {
                             Ke
                           </Col>
                           <Col xs={1}>:</Col>
-                          <Col xs={7}>{data?.travel?.destination[0]}</Col>
+                          <Col xs={7}>
+                            <Input
+                              type="text"
+                              placeholder="Masukan Lokasi"
+                              name="[0].berangkat.ke"
+                              onChange={(e) => {
+                                setFieldValue(
+                                  "[0].berangkat.ke",
+                                  e.target.value
+                                );
+                                setFieldValue("[1].tiba.di", e.target.value);
+                              }}
+                            />
+                          </Col>
                         </Row>
                         <Row>
                           <Col xs={4} style={styles.label}>
@@ -265,674 +205,227 @@ const EditSuratPerjalananDinasBelakang = () => {
                     </Row>
                   </CardBody>
                 </Card>
-                <Card>
-                  <CardHeader style={styles.headerBackground}>
-                    <h5 style={styles.header}>KOLOM II</h5>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Tiba di
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={data?.travel?.destination[0]}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[0].tiba.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[0].tiba.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[0].tiba.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[0].tiba.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Berangkat dari
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={data?.travel?.destination[0]}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Ke
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              name="[0].berangkat.ke"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[0].berangkat.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[0].berangkat.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[0].berangkat.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[0].berangkat.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardHeader style={styles.headerBackground}>
-                    <h5 style={styles.header}>KOLOM III</h5>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Tiba di
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[0].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[1].tiba.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[1].tiba.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[1].tiba.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[1].tiba.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Berangkat dari
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[0].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Ke
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              name="[1].berangkat.ke"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[1].berangkat.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[1].berangkat.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[1].berangkat.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[1].berangkat.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardHeader style={styles.headerBackground}>
-                    <h5 style={styles.header}>KOLOM IV</h5>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Tiba di
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[1].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[2].tiba.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[2].tiba.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[2].tiba.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[2].tiba.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Berangkat dari
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[1].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Ke
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              name="[2].berangkat.ke"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[2].berangkat.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[2].berangkat.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[2].berangkat.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[2].berangkat.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardHeader style={styles.headerBackground}>
-                    <h5 style={styles.header}>KOLOM V</h5>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Tiba di
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[2].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[3].tiba.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[3].tiba.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[3].tiba.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[3].tiba.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={12} md={6} className="d-grid gap-2">
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Berangkat dari
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              readOnly
-                              value={values[2].berangkat.ke}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Ke
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Lokasi"
-                              name="[3].berangkat.ke"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Pada Tanggal
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Tanggal"
-                              name="[3].berangkat.tanggal"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Jabatan
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Jabatan"
-                              name="[3].berangkat.jabatan"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            Nama
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan Nama"
-                              name="[3].berangkat.nama"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col xs={4} style={styles.label}>
-                            NIP/NIK
-                          </Col>
-                          <Col xs={1}>:</Col>
-                          <Col xs={7}>
-                            <Input
-                              type="text"
-                              placeholder="Masukan NIP/NIK"
-                              name="[3].berangkat.nipNik"
-                              onChange={handleChange}
-                            />
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
+
+                {Array.from(Array(4).keys()).map((_, index) => (
+                  <Card key={index}>
+                    <CardHeader style={styles.headerBackground}>
+                      <h5 style={styles.header}>{`KOLOM ${index + 2}`}</h5>
+                    </CardHeader>
+                    <CardBody>
+                      <Row>
+                        <Col xs={12} md={6} className="d-grid gap-2">
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Tiba di
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan Lokasi"
+                                name={`[${index + 1}].tiba.di`}
+                                value={values[index + 1].tiba.di}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Pada Tanggal
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <InputGroup>
+                                <Flatpickr
+                                  ref={datePickerRef}
+                                  className="form-control d-block"
+                                  placeholder="dd M yyyy"
+                                  options={{
+                                    altInput: true,
+                                    altFormat: "j F Y",
+                                  }}
+                                  onChange={(date) => {
+                                    setFieldValue(
+                                      `[${index + 1}].tiba.tanggal`,
+                                      date[0].toISOString()
+                                    );
+                                  }}
+                                />
+                                <div className="input-group-append">
+                                  <button
+                                    type="button"
+                                    className="btn btn-outline-secondary docs-datepicker-trigger"
+                                    style={{ zIndex: 0 }}
+                                    onClick={() =>
+                                      datePickerRef.current.flatpickr.toggle()
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-calendar"
+                                      aria-hidden="true"
+                                    />
+                                  </button>
+                                </div>
+                              </InputGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Jabatan
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan Jabatan"
+                                name={`[${index + 1}].tiba.jabatan`}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Nama
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan Nama"
+                                name={`[${index + 1}].tiba.nama`}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              NIP/NIK
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan NIP/NIK"
+                                name={`[${index + 1}].tiba.nipNik`}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col xs={12} md={6} className="d-grid gap-2">
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Berangkat dari
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan Lokasi"
+                                name={`[${index + 1}].berangkat.dari`}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Ke
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                placeholder="Masukan Lokasi"
+                                name={`[${index + 1}].berangkat.ke`}
+                                onChange={handleChange}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Pada Tanggal
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <InputGroup>
+                                <Flatpickr
+                                  ref={datePickerRef}
+                                  className="form-control d-block"
+                                  placeholder="dd M yyyy"
+                                  options={{
+                                    altInput: true,
+                                    altFormat: "j F Y",
+                                  }}
+                                  onChange={(date) => {
+                                    setFieldValue(
+                                      `[${index + 1}].berangkat.tanggal`,
+                                      date[0].toISOString()
+                                    );
+                                  }}
+                                />
+                                <div className="input-group-append">
+                                  <button
+                                    type="button"
+                                    className="btn btn-outline-secondary docs-datepicker-trigger"
+                                    style={{ zIndex: 0 }}
+                                    onClick={() =>
+                                      datePickerRef.current.flatpickr.toggle()
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-calendar"
+                                      aria-hidden="true"
+                                    />
+                                  </button>
+                                </div>
+                              </InputGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Jabatan
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                readOnly
+                                value={values[index + 1].tiba.jabatan}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              Nama
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                readOnly
+                                value={values[index + 1].tiba.nama}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={4} style={styles.label}>
+                              NIP/NIK
+                            </Col>
+                            <Col xs={1}>:</Col>
+                            <Col xs={7}>
+                              <Input
+                                type="text"
+                                readOnly
+                                value={values[index + 1].tiba.nipNik}
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </CardBody>
+                  </Card>
+                ))}
+
                 <Card>
                   <CardBody>
                     <div className="form-check mb-3">

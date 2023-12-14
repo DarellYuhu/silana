@@ -22,6 +22,8 @@ const PrintSpdBelakang = () => {
     `,
   });
 
+  console.log(state?.values);
+
   const getEmployees = async () => {
     try {
       const res = await axiosClient.get("employees");
@@ -138,7 +140,7 @@ const PrintSpdBelakang = () => {
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
                     <TableCell sx={styles.cell1}>
-                      {state?.data?.travel?.destination[0]}
+                      {state?.isPrintOnly && state?.values[0]?.berangkat?.ke}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -178,599 +180,174 @@ const PrintSpdBelakang = () => {
               </TableRow>
 
               {/* second row */}
-              <TableRow>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    {
-                      verticalAlign: "top",
-                      borderColor: state?.isPrintOnly ? "white" : "black",
-                    },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>II.</TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Tiba di
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.data?.travel?.destination[0] &&
-                      state?.isPrintOnly ? (
-                        state?.data?.travel?.destination[0]
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}></TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.tiba?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow sx={{ visibility: "hidden" }}>
-                    <TableCell sx={styles.cell1}>:</TableCell>
-                  </TableRow>
-                  <div
-                    style={{
-                      visibility: state?.values[0]?.tiba?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
+              {Array.from(Array(4)).map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell
+                    sx={[
+                      styles.cellContainer,
+                      {
+                        verticalAlign: "top",
+                        borderColor: state?.isPrintOnly ? "white" : "black",
+                      },
+                    ]}
                   >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[0]?.tiba?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[0]?.tiba?.nama ?? <>&nbsp;</>}
-                      </h3>
+                    <TableRow>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>
+                        II.
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>
+                        Tiba di
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
+                      <TableCell sx={styles.cell1}>
+                        {state?.values[index + 1]?.tiba?.di ?? <>&nbsp;</>}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}></TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>
+                        Pada Tanggal
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
+                      <TableCell sx={styles.cell1}>
+                        {state?.values[index + 1]?.tiba?.tanggal &&
+                        state?.isPrintOnly ? (
+                          moment(
+                            state?.values[index + 1]?.tiba?.tanggal
+                          ).format("D MMMM YYYY")
+                        ) : (
+                          <>&nbsp;</>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow sx={{ visibility: "hidden" }}>
+                      <TableCell sx={styles.cell1}>:</TableCell>
+                    </TableRow>
+                    <div
+                      style={{
+                        visibility: state?.values[index + 1]?.tiba?.nama
+                          ? "visible"
+                          : "hidden",
+                      }}
+                    >
+                      <div style={styles.signContainer}>
+                        <h3 style={styles.text1}>
+                          {state?.values[index + 1]?.tiba?.jabatan ?? (
+                            <>&nbsp;</>
+                          )}
+                        </h3>
+                        <div style={styles.signHeight} />
+                        <h3 style={styles.text1}>
+                          {state?.values[index + 1]?.tiba?.nama ?? <>&nbsp;</>}
+                        </h3>
 
-                      <p style={styles.signId}>
-                        NIP. {state?.values[0]?.tiba?.nipNik ?? <>&nbsp;</>}
-                      </p>
+                        <p style={styles.signId}>
+                          NIP.{" "}
+                          {state?.values[index + 1]?.tiba?.nipNik ?? (
+                            <>&nbsp;</>
+                          )}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
+                  </TableCell>
 
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    { borderColor: state?.isPrintOnly ? "white" : "black" },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                          width: 138,
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Berangkat dari
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.data?.travel?.destination[0] &&
-                      state?.isPrintOnly &&
-                      state?.values[0]?.berangkat?.ke ? (
-                        state?.data?.travel?.destination[0]
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Ke
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.ke ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[0]?.berangkat?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
+                  <TableCell
+                    sx={[
+                      styles.cellContainer,
+                      { borderColor: state?.isPrintOnly ? "white" : "black" },
+                    ]}
                   >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[0]?.berangkat?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[0]?.berangkat?.nama ?? <>&nbsp;</>}
-                      </h3>
+                    <TableRow>
+                      <TableCell
+                        sx={[
+                          styles.cell1,
+                          {
+                            whiteSpace: "nowrap",
+                            width: 138,
+                          },
+                          hiddenStyle,
+                        ]}
+                      >
+                        Berangkat dari
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
+                      <TableCell sx={styles.cell1}>
+                        {state?.values[index + 1]?.berangkat?.dari ?? (
+                          <>&nbsp;</>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={[
+                          styles.cell1,
+                          {
+                            whiteSpace: "nowrap",
+                          },
+                          hiddenStyle,
+                        ]}
+                      >
+                        Ke
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
+                      <TableCell sx={styles.cell1}>
+                        {state?.values[index + 1]?.berangkat?.ke ?? <>&nbsp;</>}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        sx={[
+                          styles.cell1,
+                          {
+                            whiteSpace: "nowrap",
+                          },
+                          hiddenStyle,
+                        ]}
+                      >
+                        Pada Tanggal
+                      </TableCell>
+                      <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
+                      <TableCell sx={styles.cell1}>
+                        {state?.values[index + 1]?.berangkat?.tanggal &&
+                        state?.isPrintOnly ? (
+                          moment(
+                            state?.values[index + 1]?.berangkat?.tanggal
+                          ).format("D MMMM YYYY")
+                        ) : (
+                          <>&nbsp;</>
+                        )}
+                      </TableCell>
+                    </TableRow>
 
-                      <p style={styles.signId}>
-                        NIP.{" "}
-                        {state?.values[0]?.berangkat?.nipNik ?? <>&nbsp;</>}
-                      </p>
+                    <div
+                      style={{
+                        visibility: state?.values[index + 1]?.tiba?.nama
+                          ? "visible"
+                          : "hidden",
+                      }}
+                    >
+                      <div style={styles.signContainer}>
+                        <h3 style={styles.text1}>
+                          {state?.values[index + 1]?.tiba?.jabatan ?? (
+                            <>&nbsp;</>
+                          )}
+                        </h3>
+                        <div style={styles.signHeight} />
+                        <h3 style={styles.text1}>
+                          {state?.values[index + 1]?.tiba?.nama ?? <>&nbsp;</>}
+                        </h3>
+
+                        <p style={styles.signId}>
+                          NIP.{" "}
+                          {state?.values[index + 1]?.tiba?.nipNik ?? (
+                            <>&nbsp;</>
+                          )}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              {/* third row */}
-              <TableRow>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    {
-                      verticalAlign: "top",
-                      borderColor: state?.isPrintOnly ? "white" : "black",
-                    },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>III.</TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Tiba di
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.ke &&
-                      state?.values[1]?.tiba?.nama ? (
-                        state?.values[0]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}></TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[1]?.tiba?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow sx={{ visibility: "hidden" }}>
-                    <TableCell sx={styles.cell1}>:</TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[1]?.tiba?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[1]?.tiba?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[1]?.tiba?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP. {state?.values[1]?.tiba?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    { borderColor: state?.isPrintOnly ? "white" : "black" },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                          width: 138,
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Berangkat dari
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[0]?.berangkat?.ke &&
-                      state?.values[1]?.berangkat?.ke ? (
-                        state?.values[0]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Ke
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[1]?.berangkat?.ke ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[1]?.berangkat?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[1]?.berangkat?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[1]?.berangkat?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[1]?.berangkat?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP.{" "}
-                        {state?.values[1]?.berangkat?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              {/* fourth row */}
-              <TableRow>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    {
-                      verticalAlign: "top",
-                      borderColor: state?.isPrintOnly ? "white" : "black",
-                    },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>IV.</TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Tiba di
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.tiba?.nama ? (
-                        state?.values[1]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}></TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.tiba?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow sx={{ visibility: "hidden" }}>
-                    <TableCell sx={styles.cell1}>:</TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[2]?.tiba?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[2]?.tiba?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[2]?.tiba?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP. {state?.values[2]?.tiba?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    { borderColor: state?.isPrintOnly ? "white" : "black" },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                          width: 138,
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Berangkat dari
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.berangkat?.ke ? (
-                        state?.values[2]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Ke
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.berangkat?.ke ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[2]?.berangkat?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[2]?.berangkat?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[2]?.berangkat?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[2]?.berangkat?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP.{" "}
-                        {state?.values[2]?.berangkat?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              {/* fifth row */}
-              <TableRow>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    {
-                      verticalAlign: "top",
-                      borderColor: state?.isPrintOnly ? "white" : "black",
-                    },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>V.</TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Tiba di
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.tiba?.nama ? (
-                        state?.values[2]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}></TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.tiba?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow sx={{ visibility: "hidden" }}>
-                    <TableCell sx={styles.cell1}>:</TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[3]?.tiba?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[3]?.tiba?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[3]?.tiba?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP. {state?.values[3]?.tiba?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell
-                  sx={[
-                    styles.cellContainer,
-                    { borderColor: state?.isPrintOnly ? "white" : "black" },
-                  ]}
-                >
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                          width: 138,
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Berangkat dari
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.berangkat?.ke ? (
-                        state?.values[2]?.berangkat?.ke
-                      ) : (
-                        <>&nbsp;</>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Ke
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.berangkat?.ke ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      sx={[
-                        styles.cell1,
-                        {
-                          whiteSpace: "nowrap",
-                        },
-                        hiddenStyle,
-                      ]}
-                    >
-                      Pada Tanggal
-                    </TableCell>
-                    <TableCell sx={[styles.cell1, hiddenStyle]}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
-                      {state?.values[3]?.berangkat?.tanggal ?? <>&nbsp;</>}
-                    </TableCell>
-                  </TableRow>
-
-                  <div
-                    style={{
-                      visibility: state?.values[3]?.berangkat?.nama
-                        ? "visible"
-                        : "hidden",
-                    }}
-                  >
-                    <div style={styles.signContainer}>
-                      <h3 style={styles.text1}>
-                        {state?.values[3]?.berangkat?.jabatan ?? <>&nbsp;</>}
-                      </h3>
-                      <div style={styles.signHeight} />
-                      <h3 style={styles.text1}>
-                        {state?.values[3]?.berangkat?.nama ?? <>&nbsp;</>}
-                      </h3>
-                      <p style={styles.signId}>
-                        NIP.{" "}
-                        {state?.values[3]?.berangkat?.nipNik ?? <>&nbsp;</>}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
+                  </TableCell>
+                </TableRow>
+              ))}
 
               {/* sixth row */}
               <TableRow>
