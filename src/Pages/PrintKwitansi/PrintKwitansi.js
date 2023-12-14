@@ -17,9 +17,13 @@ const treasurer = signal();
 const treasurerAssistant = signal();
 const commitmentMaker = signal();
 
+window.onunload = () => {
+  localStorage.removeItem("printKwitansi");
+};
+
 const PrintKwitansi = () => {
   const [employees, setEmployees] = useState();
-  const data = useLocation().state;
+  const data = JSON.parse(localStorage.getItem("printKwitansi"));
   const printRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -155,9 +159,10 @@ const PrintKwitansi = () => {
                   {`Biaya perjalanan dalam rangka ${
                     data?.data.assignedTo
                   } sesuai ST/SPD
-                  Nomor: ${formatLetterNumber(
-                    data?.data?.letterNumber
-                  )} tanggal ${moment(data?.data?.dateOfletter).format(
+                  Nomor: ${
+                    data?.data?.letterNumber &&
+                    formatLetterNumber(data?.data?.letterNumber)
+                  } tanggal ${moment(data?.data?.dateOfletter).format(
                     "D MMMM YYYY"
                   )} selama ${
                     moment(data?.data?.endDateOftravel).diff(

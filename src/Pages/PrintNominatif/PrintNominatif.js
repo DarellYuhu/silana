@@ -14,10 +14,15 @@ import axiosClient from "../../helpers/axiosClient";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 import { formatLetterNumber } from "../../Utility";
 
+window.onunload = function () {
+  localStorage.removeItem("printNominative");
+};
+
 const PrintNominatif = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
-  const data = useLocation().state;
+  // const data = useLocation().state;
+  const data = JSON.parse(localStorage.getItem("printNominative"));
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `

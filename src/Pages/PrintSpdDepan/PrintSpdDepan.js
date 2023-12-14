@@ -8,15 +8,18 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import moment from "moment";
 import angkaTerbilang from "@develoka/angka-terbilang-js";
 import axiosClient from "../../helpers/axiosClient";
 
+window.onunload = function () {
+  localStorage.removeItem("printSpdDepan");
+};
+
 const PrintSpdDepan = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
-  const data = useLocation().state;
+  const data = JSON.parse(localStorage.getItem("printSpdDepan"));
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -26,12 +29,9 @@ const PrintSpdDepan = () => {
     `,
   });
 
-  console.log(data);
-
   const getEmployees = async () => {
     try {
       const res = await axiosClient.get("employees");
-      console.log(res);
       setEmployees(res.data);
     } catch (error) {
       console.log(error);

@@ -12,12 +12,10 @@ const EditSuratPerjalananDinasBelakang = () => {
   const { id } = useParams();
   const data = useLocation().state;
   const navigate = useNavigate();
-  console.log(data);
 
   const getEmployees = async () => {
     try {
       const res = await axiosClient.get("employees");
-      console.log(res);
       setEmployees(res.data);
     } catch (error) {
       console.log(error);
@@ -112,13 +110,15 @@ const EditSuratPerjalananDinasBelakang = () => {
             },
           ]}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              console.log(values);
-              setSubmitting(false);
-            }, 400);
-            navigate(`/surat-perjalanan-dinas/${id}/print-belakang`, {
-              state: { data, values, isPrintOnly: true },
-            });
+            localStorage.setItem(
+              "printSpdBelakang",
+              JSON.stringify({ data, values, isPrintOnly: true })
+            );
+            window.open(
+              `/surat-perjalanan-dinas/${id}/print-belakang`,
+              "_blank"
+            );
+            setSubmitting(false);
           }}
         >
           {({ values, handleChange, isSubmitting }) => {

@@ -17,7 +17,14 @@ const KodeSuratSchema = Yup.object().shape({
 
 const availableNum = signal(null);
 
-const PrintModal = ({ open, setOpen, item, setItem, onError = () => {} }) => {
+const PrintModal = ({
+  open,
+  setOpen,
+  item,
+  setItem,
+  onError = () => {},
+  onSuccess = () => {},
+}) => {
   const navigate = useNavigate();
   const formik = useRef();
 
@@ -91,10 +98,14 @@ const PrintModal = ({ open, setOpen, item, setItem, onError = () => {} }) => {
             const noSurat = `${values.noSurat}/${values.kodeSurat}/${values.kompSurat}/${values.tahunSurat}`;
 
             if (item.letterNumber) {
-              navigate(`/surat-tugas/${item.id}/print`, {
-                state: { letterNumber: item.letterNumber, isPrintNoOnly: true },
-              });
-              console.log(item);
+              localStorage.setItem(
+                "suratTugas",
+                JSON.stringify({
+                  letterNumber: item.letterNumber,
+                  isPrintNoOnly: true,
+                })
+              );
+              window.open(`/surat-tugas/${item.id}/print`, "_blank");
               return;
             }
             try {
@@ -109,9 +120,16 @@ const PrintModal = ({ open, setOpen, item, setItem, onError = () => {} }) => {
                   id: values.noSurat,
                 });
               }
-              navigate(`/surat-tugas/${item.id}/print`, {
-                state: { letterNumber: noSurat, isPrintNoOnly: true },
-              });
+              localStorage.setItem(
+                "suratTugas",
+                JSON.stringify({
+                  letterNumber: noSurat,
+                  isPrintNoOnly: true,
+                })
+              );
+              window.open(`/surat-tugas/${item.id}/print`, "_blank");
+              onSuccess("Berhasil membuat no surat");
+              handleClose();
             } catch (err) {
               console.log(err);
               console.log("huhi");

@@ -66,9 +66,11 @@ const EditKwitansi = () => {
             }}
             validationSchema={KwitansiSchema}
             onSubmit={(values, { setSubmitting }) => {
-              navigate(`/kwitansi/${data.id}/print`, {
-                state: { data, values },
-              });
+              localStorage.setItem(
+                "printKwitansi",
+                JSON.stringify({ data, values })
+              );
+              window.open(`/kwitansi/${data.id}/print`, "_blank");
               setSubmitting(false);
             }}
           >

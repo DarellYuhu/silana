@@ -2,15 +2,17 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import logoMkri from "../../assets/images/logo-mkri.png";
-import { useLocation } from "react-router-dom";
 import moment from "moment";
-import { effect, signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
+
+window.onunload = function () {
+  localStorage.removeItem("printSpdBelakang");
+};
 
 const PrintSpdBelakang = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
-  const { state } = useLocation();
+  const state = JSON.parse(localStorage.getItem("printSpdBelakang"));
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -20,14 +22,9 @@ const PrintSpdBelakang = () => {
     `,
   });
 
-  console.log(state?.data);
-  console.log(state?.values);
-  console.log(state?.isPrintOnly);
-
   const getEmployees = async () => {
     try {
       const res = await axiosClient.get("employees");
-      console.log(res);
       setEmployees(res.data);
     } catch (error) {
       console.log(error);
@@ -38,7 +35,6 @@ const PrintSpdBelakang = () => {
   }, []);
 
   const hiddenStyle = { visibility: state?.isPrintOnly ? "hidden" : "visible" };
-  // const hideLocationStyle = { visibility: state?.value ? "hidden" : "visible" };
 
   return (
     <Fragment>

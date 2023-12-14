@@ -74,7 +74,17 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
               </DropdownItem>
               <Link
                 to={`/surat-perjalanan-dinas/${row.id}/print-belakang`}
-                state={{ data: row, isPrintOnly: false, values: [] }}
+                target="_blank"
+                onClick={() =>
+                  localStorage.setItem(
+                    "printSpdBelakang",
+                    JSON.stringify({
+                      data: row,
+                      isPrintOnly: false,
+                      values: [],
+                    })
+                  )
+                }
               >
                 <DropdownItem className="remove-item-btn">
                   {" "}

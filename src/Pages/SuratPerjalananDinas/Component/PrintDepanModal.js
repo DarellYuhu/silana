@@ -46,8 +46,14 @@ const PrintDepanModal = ({ open, setOpen, data }) => {
           {data?.dictum?.map((item, index) => (
             <Link
               key={index}
+              target="_blank"
               to={`/surat-perjalanan-dinas/${data.id}/print-depan`}
-              state={{ data, selectedPerson: item }}
+              onClick={() =>
+                localStorage.setItem(
+                  "printSpdDepan",
+                  JSON.stringify({ data, selectedPerson: item })
+                )
+              }
               className="m-2 btn btn-rounded btn-primary"
             >
               {item}

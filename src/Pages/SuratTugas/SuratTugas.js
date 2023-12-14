@@ -1,6 +1,6 @@
 import { TablePagination } from "@mui/material";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
 import moment from "moment";
@@ -224,6 +224,10 @@ const SuratTugas = () => {
           item={letterNumber}
           setItem={setLetterNumber}
           onError={(item) => (error.value = item)}
+          onSuccess={(item) => {
+            success.value = item;
+            getData();
+          }}
         />
       </div>
 
@@ -303,7 +307,13 @@ const TableItem = ({
         </div>
       </td>
       <td>
-        <Link to={`/surat-tugas/${item.id}/print`} state={item}>
+        <Link
+          to={`/surat-tugas/${item.id}/print`}
+          onClick={() => {
+            localStorage.setItem("suratTugas", JSON.stringify(item));
+          }}
+          target="_blank"
+        >
           <button
             className="btn btn-sm btn-outline-primary print-item-btn"
             data-bs-toggle="modal"

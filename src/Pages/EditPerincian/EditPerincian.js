@@ -49,7 +49,6 @@ const EditPerincian = () => {
           label: employee.name,
         };
       });
-      console.log(normalized);
       setEmployees(normalized);
     } catch (error) {
       console.log(error);
@@ -72,9 +71,11 @@ const EditPerincian = () => {
               dateOfLetter: new Date().toISOString(),
             }}
             onSubmit={(values, { setSubmitting }) => {
-              navigate(`/perincian/${id}/print`, {
-                state: { values, data },
-              });
+              localStorage.setItem(
+                "printPerincian",
+                JSON.stringify({ values, data })
+              );
+              window.open(`/perincian/${id}/print`, "_blank");
               setSubmitting(false);
             }}
             validationSchema={ValidationSchema}

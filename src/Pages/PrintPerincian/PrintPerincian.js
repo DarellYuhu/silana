@@ -20,9 +20,13 @@ const recipient = signal();
 const treasurer = signal();
 const commitmentMaker = signal();
 
+window.onunload = () => {
+  localStorage.removeItem("printPerincian");
+};
+
 const PrintPerincian = () => {
   const [employees, setEmployees] = useState([]);
-  const { data, values } = useLocation().state;
+  const state = JSON.parse(localStorage.getItem("printPerincian"));
   const printRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -32,6 +36,8 @@ const PrintPerincian = () => {
       }
     `,
   });
+
+  console.log(state);
 
   const getEmployees = async () => {
     try {
@@ -57,22 +63,22 @@ const PrintPerincian = () => {
   useEffect(() => {
     if (employees) {
       const filteredEmployee = employees.find(
-        (item) => item.name === values.recipient
+        (item) => item.name === state?.values.recipient
       );
       recipient.value = filteredEmployee;
 
-      const filteredNominative = data.nominative.helpers.find(
+      const filteredNominative = state?.data.nominative.helpers.find(
         (item) => item.employeeId === filteredEmployee?.id
       );
       nominative.value = filteredNominative;
 
       const filteredTreasurer = employees.find(
-        (item) => item.id === values.treasurer
+        (item) => item.id === state?.values.treasurer
       );
       treasurer.value = filteredTreasurer;
 
       const filteredCommitmentMaker = employees.find(
-        (item) => item.name === data.travel.commitmentMaker
+        (item) => item.name === state?.data.travel.commitmentMaker
       );
       commitmentMaker.value = filteredCommitmentMaker;
     }
@@ -122,7 +128,8 @@ const PrintPerincian = () => {
                 </TableCell>
                 <TableCell sx={styles.cell1}>:</TableCell>
                 <TableCell sx={styles.cell1}>
-                  {formatLetterNumber(data.letterNumber)}
+                  {state?.data.letterNumber &&
+                    formatLetterNumber(state?.data.letterNumber)}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -131,7 +138,7 @@ const PrintPerincian = () => {
                 </TableCell>
                 <TableCell sx={styles.cell1}>:</TableCell>
                 <TableCell sx={styles.cell1}>
-                  {moment(data.dateOfletter).format("D MMMM YYYY")}
+                  {moment(state?.data.dateOfletter).format("D MMMM YYYY")}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -431,7 +438,7 @@ const PrintPerincian = () => {
           {/* footer */}
           <div style={{ fontSize: "10pt", marginTop: 10, color: "black" }}>
             <p style={{ textAlign: "end" }}>{`Manado, ${moment(
-              values.dateOfletter
+              state?.values.dateOfletter
             ).format("D MMMM YYYY")}`}</p>
 
             {/* row 1 */}
@@ -443,7 +450,7 @@ const PrintPerincian = () => {
                   <span style={{ marginLeft: 30 }}>
                     {new Intl.NumberFormat("id-ID", {
                       minimumFractionDigits: 0,
-                    }).format(values.paidNominal) ?? "-"}
+                    }).format(state?.values.paidNominal) ?? "-"}
                   </span>
                 </p>
               </div>
@@ -454,7 +461,7 @@ const PrintPerincian = () => {
                   <span style={{ marginLeft: 30 }}>
                     {new Intl.NumberFormat("id-ID", {
                       minimumFractionDigits: 0,
-                    }).format(values.paidNominal) ?? "-"}
+                    }).format(state?.values.paidNominal) ?? "-"}
                   </span>
                 </p>
               </div>
@@ -543,7 +550,7 @@ const PrintPerincian = () => {
                       <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
                         {new Intl.NumberFormat("id-ID", {
                           minimumFractionDigits: 0,
-                        }).format(values.paidNominal) ?? "-"}
+                        }).format(state?.values.paidNominal) ?? "-"}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -554,7 +561,7 @@ const PrintPerincian = () => {
                       <TableCell sx={[styles.cell1, { textAlign: "right" }]}>
                         {new Intl.NumberFormat("id-ID", {
                           minimumFractionDigits: 0,
-                        }).format(values.paidNominal - total) ?? "-"}
+                        }).format(state?.values.paidNominal - total) ?? "-"}
                       </TableCell>
                     </TableRow>
                   </TableBody>

@@ -84,7 +84,13 @@ const columns = [
             <i className="ri-more-fill align-middle"></i>
           </DropdownToggle>
           <DropdownMenu className="dropdown-menu-end">
-            <Link to={`/nominatif/${row.id}/print`} state={row}>
+            <Link
+              to={`/nominatif/${row.id}/print`}
+              target="_blank"
+              onClick={() =>
+                localStorage.setItem("printNominative", JSON.stringify(row))
+              }
+            >
               <DropdownItem>
                 <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
                 Cetak
