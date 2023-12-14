@@ -46,14 +46,14 @@ const Login = (props) => {
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
+    // enableReinitialize: true,
 
     initialValues: {
-      email: "admin@Themesdesign.com" || "",
-      password: "123456" || "",
+      nik: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      nik: Yup.string().required("Please Enter Your Username"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
@@ -70,38 +70,38 @@ const Login = (props) => {
   //   dispatch(loginUser(values, props.router.navigate));
   // };
 
-  const signIn = (res, type) => {
-    if (type === "google" && res) {
-      const postData = {
-        name: res.profileObj.name,
-        email: res.profileObj.email,
-        token: res.tokenObj.access_token,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
-    } else if (type === "facebook" && res) {
-      const postData = {
-        name: res.name,
-        email: res.email,
-        token: res.accessToken,
-        idToken: res.tokenId,
-      };
-      dispatch(socialLogin(postData, props.router.navigate, type));
-    }
-  };
+  // const signIn = (res, type) => {
+  //   if (type === "google" && res) {
+  //     const postData = {
+  //       name: res.profileObj.name,
+  //       email: res.profileObj.email,
+  //       token: res.tokenObj.access_token,
+  //       idToken: res.tokenId,
+  //     };
+  //     dispatch(socialLogin(postData, props.router.navigate, type));
+  //   } else if (type === "facebook" && res) {
+  //     const postData = {
+  //       name: res.name,
+  //       email: res.email,
+  //       token: res.accessToken,
+  //       idToken: res.tokenId,
+  //     };
+  //     dispatch(socialLogin(postData, props.router.navigate, type));
+  //   }
+  // };
 
   //handleGoogleLoginResponse
-  const googleResponse = (response) => {
-    signIn(response, "google");
-  };
+  // const googleResponse = (response) => {
+  //   signIn(response, "google");
+  // };
 
   //handleTwitterLoginResponse
   // const twitterResponse = e => {}
 
   //handleFacebookLoginResponse
-  const facebookResponse = (response) => {
-    signIn(response, "facebook");
-  };
+  // const facebookResponse = (response) => {
+  //   signIn(response, "facebook");
+  // };
 
   useEffect(() => {
     document.body.className = "bg-pattern";
@@ -159,26 +159,24 @@ const Login = (props) => {
                       <Row>
                         <Col md={12}>
                           <div className="mb-4">
-                            <Label className="form-label">Email</Label>
+                            <Label className="form-label">Username</Label>
                             <Input
-                              name="email"
+                              name="nik"
                               className="form-control"
-                              placeholder="Enter email"
-                              type="email"
+                              placeholder="Masukan NIK"
+                              type="string"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
-                              value={validation.values.email || ""}
+                              value={validation.values.nik}
                               invalid={
-                                validation.touched.email &&
-                                validation.errors.email
+                                validation.touched.nik && validation.errors.nik
                                   ? true
                                   : false
                               }
                             />
-                            {validation.touched.email &&
-                            validation.errors.email ? (
+                            {validation.touched.nik && validation.errors.nik ? (
                               <FormFeedback type="invalid">
-                                <div>{validation.errors.email}</div>
+                                <div>{validation.errors.nik}</div>
                               </FormFeedback>
                             ) : null}
                           </div>
@@ -186,9 +184,9 @@ const Login = (props) => {
                             <Label className="form-label">Password</Label>
                             <Input
                               name="password"
-                              value={validation.values.password || ""}
+                              value={validation.values.password}
                               type="password"
-                              placeholder="Enter Password"
+                              placeholder="Masukan Password"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
