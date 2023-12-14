@@ -346,9 +346,14 @@ const PrintKwitansi = () => {
                       marginBottom: 0,
                     }}
                   >
-                    {recipient.value?.name}
+                    {data?.data?.travel?.commitmentMaker}
                   </h1>
-                  <p style={{ margin: 0 }}>{`NIP. ${recipient.value?.id}`}</p>
+                  <p style={{ margin: 0 }}>{`NIP. ${
+                    employees?.find(
+                      (item) =>
+                        item.name === data?.data?.travel?.commitmentMaker
+                    )?.id
+                  }`}</p>
                 </div>
               </div>
             </div>

@@ -67,26 +67,18 @@ const columns = [
     },
   },
   {
-    name: <span className="font-weight-bold fs-13">Action</span>,
+    name: <span className="font-weight-bold fs-13">Cetak</span>,
     sortable: false,
     cell: (row, index) => {
       return (
-        <UncontrolledDropdown className="dropdown d-inline-block">
-          <DropdownToggle
-            className="btn btn-soft-secondary btn-sm"
-            tag="button"
+        <Link to={`/kwitansi/${row.id}`} state={row}>
+          <button
+            type="button"
+            className="btn btn-outline-info waves-effect waves-light"
           >
-            <i className="ri-more-fill align-middle"></i>
-          </DropdownToggle>
-          <DropdownMenu className="dropdown-menu-end">
-            <Link to={`/kwitansi/${row.id}`} state={row}>
-              <DropdownItem>
-                <i className="mdi mdi-printer align-bottom me-2 text-muted"></i>
-                Cetak
-              </DropdownItem>
-            </Link>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+            <i className="mdi mdi-printer align-bottom"></i>
+          </button>
+        </Link>
       );
     },
   },

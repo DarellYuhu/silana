@@ -20,13 +20,6 @@ const recipient = signal();
 const treasurer = signal();
 const commitmentMaker = signal();
 
-effect(() => {
-  console.log(nominative.value);
-  console.log(recipient.value);
-  console.log(treasurer.value);
-  console.log(commitmentMaker.value);
-});
-
 const PrintPerincian = () => {
   const [employees, setEmployees] = useState([]);
   const { data, values } = useLocation().state;
@@ -39,8 +32,6 @@ const PrintPerincian = () => {
       }
     `,
   });
-
-  console.log(data);
 
   const getEmployees = async () => {
     try {
@@ -118,7 +109,7 @@ const PrintPerincian = () => {
             }}
           >
             <h1 style={{ fontSize: "13pt", fontWeight: "bold" }}>
-              SURAT PERJALANAN DINAS (SPD)
+              PERINCIAN BIAYA PERJALANAN DINAS
             </h1>
           </div>
 

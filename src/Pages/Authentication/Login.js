@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import logolight from "../../assets/images/logo-light.png";
 import logodark from "../../assets/images/logo-dark.png";
+import logobkkbndark from "../../assets/images/logo-bkkbn-dark.png";
+import logobkkbnlight from "../../assets/images/logo-bkkbn-light.png";
 
 import {
   Row,
@@ -122,13 +124,13 @@ const Login = (props) => {
                     <div className="text-center">
                       <Link to="/">
                         <img
-                          src={logodark}
+                          src={logobkkbndark}
                           alt=""
-                          height="24"
+                          height="50"
                           className="auth-logo logo-dark mx-auto"
                         />
                         <img
-                          src={logolight}
+                          src={logobkkbnlight}
                           alt=""
                           height="24"
                           className="auth-logo logo-light mx-auto"
@@ -139,7 +141,7 @@ const Login = (props) => {
                       Welcome Back !
                     </h4>
                     <p className="mb-5 text-center">
-                      Sign in to continue to Upzet.
+                      Sign in to continue to Silana.
                     </p>
                     <Form
                       className="form-horizontal"
@@ -204,7 +206,7 @@ const Login = (props) => {
                             ) : null}
                           </div>
 
-                          <Row>
+                          {/* <Row>
                             <Col>
                               <div className="form-check">
                                 <input
@@ -231,7 +233,7 @@ const Login = (props) => {
                                 </Link>
                               </div>
                             </Col>
-                          </Row>
+                          </Row> */}
                           <div className="d-grid mt-4">
                             <button
                               className="btn btn-primary waves-effect waves-light"
@@ -240,7 +242,7 @@ const Login = (props) => {
                               Log In
                             </button>
                           </div>
-                          <div className="mt-4 text-center">
+                          {/* <div className="mt-4 text-center">
                             <h5 className="font-size-14 mb-3">Sign in with</h5>
 
                             <ul className="list-inline">
@@ -278,14 +280,14 @@ const Login = (props) => {
                                 />
                               </li>
                             </ul>
-                          </div>
+                          </div> */}
                         </Col>
                       </Row>
                     </Form>
                   </div>
                 </CardBody>
               </Card>
-              <div className="mt-5 text-center">
+              {/* <div className="mt-5 text-center">
                 <p className="text-white-50">
                   Don't have an account ?{" "}
                   <Link to="/register" className="fw-medium text-primary">
@@ -297,7 +299,7 @@ const Login = (props) => {
                   © {new Date().getFullYear()} Upzet. Crafted with{" "}
                   <i className="mdi mdi-heart text-danger"></i> by Themesdesign
                 </p>
-              </div>
+              </div> */}
             </Col>
           </Row>
         </Container>

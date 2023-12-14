@@ -86,139 +86,172 @@ const EditPerincian = () => {
               errors,
               isSubmitting,
               handleSubmit,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <Card>
-                  <CardBody>
-                    <CardTitle>Yang Telah Dibayar Semula</CardTitle>
-                    <CardBody className="p-0 px-1">
-                      <div className="mb-3 d-flex">
-                        <Input
-                          type="number"
-                          className="colorpicker-default"
-                          placeholder="cth.. 50000"
-                          name="paidNominal"
-                          onChange={handleChange}
-                        />
-                        <Button disabled>Rupiah</Button>
-                      </div>
-                      <CustomeError
-                        error={errors.paidNominal}
-                        touched={touched.paidNominal}
-                      />
-                    </CardBody>
-                  </CardBody>
-                  <CardBody className="pt-0">
-                    <CardBody className="pt-0 d-grid gap-3">
-                      <Row>
-                        <Col md={2} className="d-flex align-items-center">
-                          Bendahara
-                        </Col>
-                        <Col md={10}>
-                          <Select
-                            classNamePrefix="select2-selection"
-                            options={employees}
-                            onChange={(newValue) => {
-                              setFieldValue("treasurer", newValue.value);
-                            }}
+              values,
+            }) => {
+              let total;
+              if (values.recipient) {
+                const id = employees.find(
+                  (item) => item.label === values.recipient
+                ).value;
+                const nominative = data.nominative.helpers.find(
+                  (item) => item.employeeId === id
+                );
+                total =
+                  nominative &&
+                  nominative?.lumpsumAmount * nominative?.lumpsumDuration +
+                    nominative?.planeShipDearture +
+                    nominative?.planeShipReturn +
+                    nominative?.transportDeparture +
+                    nominative?.transportReturn +
+                    nominative?.lodgingAmount * nominative?.lodgingDuration;
+                console.log(values.recipient, id, nominative, total);
+              }
+              return (
+                <Form onSubmit={handleSubmit}>
+                  <Card>
+                    <CardBody>
+                      <CardTitle>Yang Telah Dibayar Semula</CardTitle>
+                      <CardBody className="p-0 px-1">
+                        <div className="mb-3 d-flex">
+                          <Input
+                            type="number"
+                            className="colorpicker-default"
+                            placeholder="cth.. 50000"
+                            name="paidNominal"
+                            onChange={handleChange}
                           />
-                          <CustomeError
-                            error={errors.treasurer}
-                            touched={touched.treasurer}
-                          />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={2} className="d-flex align-items-center">
-                          Penerima
-                        </Col>
-                        <Col md={10}>
-                          <Select
-                            options={recipientOption}
-                            classNamePrefix="select2-selection"
-                            onChange={(newValue) => {
-                              setFieldValue("recipient", newValue.value);
-                            }}
-                          />
-                          <CustomeError
-                            error={errors.recipient}
-                            touched={touched.recipient}
-                          />
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardBody>
-                    <CardTitle>TANGGAL SURAT</CardTitle>
-                    <CardBody className="p-0 px-4">
-                      <InputGroup>
-                        <Flatpickr
-                          ref={datePickerRef}
-                          defaultValue="today"
-                          className="form-control d-block"
-                          placeholder="dd M, yyyy"
-                          options={{
-                            altInput: true,
-                            altFormat: "F j, Y",
-                            dateFormat: "Y-m-d",
-                          }}
-                          onChange={(date) => {
-                            setFieldValue(
-                              "dateOfLetter",
-                              date[0].toISOString()
-                            );
-                          }}
-                        />
-                        <div className="input-group-append">
-                          <button
-                            type="button"
-                            className="btn btn-outline-secondary docs-datepicker-trigger"
-                            onClick={() =>
-                              datePickerRef.current.flatpickr.toggle()
-                            }
-                          >
-                            <i className="fa fa-calendar" aria-hidden="true" />
-                          </button>
+                          <Button disabled>Rupiah</Button>
                         </div>
-                      </InputGroup>
-                      <CustomeError
-                        error={errors.dateOfLetter}
-                        touched={touched.dateOfLetter}
-                      />
+                        <CustomeError
+                          error={errors.paidNominal}
+                          touched={touched.paidNominal}
+                        />
+                      </CardBody>
                     </CardBody>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardBody>
-                    <div className="form-check mb-3">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        defaultValue=""
-                        id="defaultCheck1"
-                        onChange={(e) => setChecked(e.target.checked)}
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="defaultCheck1"
+                    <CardBody className="pt-0">
+                      <CardBody className="pt-0 d-grid gap-3">
+                        <Row>
+                          <Col md={2} className="d-flex align-items-center">
+                            Bendahara
+                          </Col>
+                          <Col md={10}>
+                            <Select
+                              classNamePrefix="select2-selection"
+                              options={employees}
+                              onChange={(newValue) => {
+                                setFieldValue("treasurer", newValue.value);
+                              }}
+                            />
+                            <CustomeError
+                              error={errors.treasurer}
+                              touched={touched.treasurer}
+                            />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md={2} className="d-flex align-items-center">
+                            Penerima
+                          </Col>
+                          <Col md={10}>
+                            <Select
+                              options={recipientOption}
+                              classNamePrefix="select2-selection"
+                              onChange={(newValue) => {
+                                setFieldValue("recipient", newValue.value);
+                              }}
+                            />
+                            <CustomeError
+                              error={errors.recipient}
+                              touched={touched.recipient}
+                            />
+                          </Col>
+                        </Row>
+                        {total && (
+                          <div>{`Total Anggaran Pelaksana: ${
+                            new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                            }).format(total) ?? "-"
+                          }`}</div>
+                        )}
+                      </CardBody>
+                    </CardBody>
+                  </Card>
+                  <Card>
+                    <CardBody>
+                      <CardTitle>TANGGAL SURAT</CardTitle>
+                      <CardBody className="p-0 px-4">
+                        <InputGroup>
+                          <Flatpickr
+                            ref={datePickerRef}
+                            defaultValue="today"
+                            className="form-control d-block"
+                            placeholder="dd M, yyyy"
+                            options={{
+                              altInput: true,
+                              altFormat: "F j, Y",
+                              dateFormat: "Y-m-d",
+                            }}
+                            onChange={(date) => {
+                              setFieldValue(
+                                "dateOfLetter",
+                                date[0].toISOString()
+                              );
+                            }}
+                          />
+                          <div className="input-group-append">
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary docs-datepicker-trigger"
+                              onClick={() =>
+                                datePickerRef.current.flatpickr.toggle()
+                              }
+                            >
+                              <i
+                                className="fa fa-calendar"
+                                aria-hidden="true"
+                              />
+                            </button>
+                          </div>
+                        </InputGroup>
+                        <CustomeError
+                          error={errors.dateOfLetter}
+                          touched={touched.dateOfLetter}
+                        />
+                      </CardBody>
+                    </CardBody>
+                  </Card>
+                  <Card>
+                    <CardBody>
+                      <div className="form-check mb-3">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          defaultValue=""
+                          id="defaultCheck1"
+                          onChange={(e) => setChecked(e.target.checked)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="defaultCheck1"
+                        >
+                          Pastikan data yang anda masukan sudah benar{" "}
+                          <span className="mdi mdi-information-outline"></span>
+                        </label>
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn btn-info btn-rounded btn-lg waves-effect waves-light"
+                        disabled={!checked || isSubmitting}
                       >
-                        Pastikan data yang anda masukan sudah benar{" "}
-                        <span className="mdi mdi-information-outline"></span>
-                      </label>
-                    </div>
-                    <button
-                      type="submit"
-                      className="btn btn-info btn-rounded btn-lg waves-effect waves-light"
-                      disabled={!checked || isSubmitting}
-                    >
-                      SUBMIT
-                    </button>
-                  </CardBody>
-                </Card>
-              </Form>
-            )}
+                        SUBMIT
+                      </button>
+                    </CardBody>
+                  </Card>
+                </Form>
+              );
+            }}
           </Formik>
         </Container>
       </div>

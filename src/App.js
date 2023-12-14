@@ -1,5 +1,6 @@
 import React from "react";
 import Routes from "./Routes/index";
+import localization from "moment/locale/id";
 
 // Import Scss
 import "./assets/scss/theme.scss";

@@ -3,7 +3,7 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert } from "../../components/Custom";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 import { debounce } from "lodash";
 
 const tambahModal = signal(false);
@@ -14,6 +14,7 @@ const error = signal(null);
 
 const Anggaran = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   const filteredData = () => {
@@ -39,12 +40,18 @@ const Anggaran = () => {
     } catch (err) {
       console.log(err);
       error.value = err.message;
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getAnggaran();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">

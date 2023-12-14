@@ -7,7 +7,7 @@ import {
 } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert } from "../../components/Custom";
+import { AxiosAlert, TableSkeleton } from "../../components/Custom";
 import { debounce } from "lodash";
 
 const tambahModal = signal(false);
@@ -18,6 +18,7 @@ const error = signal(null);
 
 const DataKaryawan = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   const filteredData = () => {
@@ -45,11 +46,17 @@ const DataKaryawan = () => {
     } catch (err) {
       console.log(err);
       error.value = err.message;
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     getEmployees();
   }, []);
+
+  if (loading) {
+    return <TableSkeleton />;
+  }
   return (
     <Fragment>
       <div className="page-content">

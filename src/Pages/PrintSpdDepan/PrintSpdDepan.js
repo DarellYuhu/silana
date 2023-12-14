@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
-import localization from "moment/locale/id";
 import angkaTerbilang from "@develoka/angka-terbilang-js";
 import axiosClient from "../../helpers/axiosClient";
 
@@ -282,14 +281,16 @@ const PrintSpdDepan = () => {
                     <TableCell
                       sx={[styles.cell1, { whiteSpace: "break-spaces" }]}
                     >
-                      {`a. ${moment(data?.data?.endDateOftravel).diff(
-                        data?.data?.startDateOftravel,
-                        "days"
-                      )} (${angkaTerbilang(
+                      {`a. ${
                         moment(data?.data?.endDateOftravel).diff(
                           data?.data?.startDateOftravel,
                           "days"
-                        )
+                        ) + 1
+                      } (${angkaTerbilang(
+                        moment(data?.data?.endDateOftravel).diff(
+                          data?.data?.startDateOftravel,
+                          "days"
+                        ) + 1
                       )}) hari \nb. ${moment(
                         data?.data?.startDateOftravel
                       ).format("D MMMM")} \nc. ${moment(
@@ -541,7 +542,10 @@ const PrintSpdDepan = () => {
                       b. Mata Anggaran
                     </TableCell>
                     <TableCell
-                      sx={[styles.cell1, { whiteSpace: "break-spaces" }]}
+                      sx={[
+                        styles.cell1,
+                        { whiteSpace: "break-spaces", fontWeight: "bold" },
+                      ]}
                     >
                       {`\na. ${data?.data?.burden} \nb. ${data?.data?.budgetId}`}
                     </TableCell>

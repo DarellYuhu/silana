@@ -118,7 +118,7 @@ const PrintNominatif = () => {
                 <TableCell sx={styles.headCell}>
                   TRANSPORT
                   <br />
-                  PERORANGAN
+                  {data?.nominative?.tranportType?.toUpperCase()}
                 </TableCell>
                 <TableCell sx={styles.headCell}>LUMPSUM</TableCell>
                 <TableCell sx={styles.headCell}>PENGINAPAN</TableCell>
@@ -127,10 +127,11 @@ const PrintNominatif = () => {
             </TableHead>
             <TableBody>
               {data?.nominative?.helpers.map((item, index) => {
-                const tripDuration = moment(data.endDateOftravel).diff(
-                  data.startDateOftravel,
-                  "days"
-                );
+                const tripDuration =
+                  moment(data.endDateOftravel).diff(
+                    data.startDateOftravel,
+                    "days"
+                  ) + 1;
                 const personalTransport =
                   item.transportDeparture +
                   item.transportReturn +
