@@ -101,7 +101,7 @@ const Header = (props) => {
               <i className="ri-menu-2-line align-middle"></i>
             </button>
 
-            <form className="app-search d-none d-lg-block">
+            {/* <form className="app-search d-none d-lg-block">
               <div className="position-relative">
                 <input
                   type="text"
@@ -110,7 +110,7 @@ const Header = (props) => {
                 />
                 <span className="ri-search-line"></span>
               </div>
-            </form>
+            </form> */}
           </div>
 
           <div className="d-flex">

@@ -16,6 +16,7 @@ import withRouter from "../withRouter";
 
 // users
 import user1 from "../../../assets/images/users/avatar-1.jpg";
+import defaultAvatar from "../../../assets/images/users/default-avatar.png";
 
 const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
@@ -52,7 +53,7 @@ const ProfileMenu = (props) => {
         >
           <img
             className="rounded-circle header-profile-user"
-            src={user1}
+            src={defaultAvatar}
             alt="Header Avatar"
           />
           <span className="d-none d-xl-inline-block ms-2 me-2">{username}</span>
