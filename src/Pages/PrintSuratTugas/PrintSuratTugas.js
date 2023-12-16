@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { formatLetterNumber } from "../../Utility";

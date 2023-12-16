@@ -42,9 +42,8 @@ const error = signal(null);
 
 const EditNominatif = () => {
   const [isChecked, setIsChecked] = useState(false);
-  const [type, setType] = useState("");
-  const datePickerRef = useRef(null);
   const dataExample = useLocation().state;
+  const datePickerRef = useRef(null);
   const navigate = useNavigate();
   const formik = useRef();
 
@@ -155,6 +154,41 @@ const EditNominatif = () => {
                       axiosClient.patch(`helpers/${item.nominativeId}`, item)
                     )
                   );
+
+                  const oldAmount = dataExample.nominative?.helpers?.reduce(
+                    (acc, curr) => {
+                      const personalTransport =
+                        curr.transportDeparture +
+                        curr.transportReturn +
+                        curr.planeShipDearture +
+                        curr.planeShipReturn;
+                      const lumpsum = curr.lumpsumDuration * curr.lumpsumAmount;
+                      const lodging = curr.lodgingDuration * curr.lodgingAmount;
+                      const total = personalTransport + lumpsum + lodging;
+                      return acc + total;
+                    },
+                    0
+                  );
+
+                  const newAmount = values?.data?.reduce((acc, curr) => {
+                    const personalTransport =
+                      curr.transportDeparture +
+                      curr.transportReturn +
+                      curr.planeShipDearture +
+                      curr.planeShipReturn;
+                    const lumpsum = curr.lumpsumDuration * curr.lumpsumAmount;
+                    const lodging = curr.lodgingDuration * curr.lodgingAmount;
+                    const total = personalTransport + lumpsum + lodging;
+                    return acc + total;
+                  }, 0);
+
+                  const amount = newAmount - oldAmount;
+
+                  await axiosClient.patch(
+                    `budgets/${dataExample.budgetId}/budget`,
+                    { amount }
+                  );
+
                   console.log("success");
                   navigate("/nominatif");
                   return;
@@ -223,7 +257,6 @@ const EditNominatif = () => {
                           <Label>Transport</Label>
                           <Select
                             onChange={(newValue) => {
-                              setType(newValue.value);
                               setFieldValue("tranportType", newValue.value);
                               if (newValue.value === "Tim") {
                                 values.data.map((item, index) => {

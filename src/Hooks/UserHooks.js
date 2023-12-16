@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getLoggedinUser } from "../helpers/api_helper";
 import axiosClient from "../helpers/axiosClient";
 
@@ -9,11 +9,13 @@ const useProfile = () => {
     userProfileSession ? userProfileSession : null
   );
 
-  if (userProfile) {
-    axiosClient.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${userProfile.access_token}`;
-  }
+  useEffect(() => {
+    if (userProfile && userProfile.access_token) {
+      axiosClient.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${userProfile.access_token}`;
+    }
+  }, [userProfile]);
 
   return { userProfile, loading };
 };

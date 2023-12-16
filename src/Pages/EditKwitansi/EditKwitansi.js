@@ -13,7 +13,7 @@ import {
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import axiosClient from "../../helpers/axiosClient";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
@@ -32,7 +32,6 @@ const EditKwitansi = () => {
   const [checked, setChecked] = useState(false);
   const datePickerRef = useRef(null);
   const data = useLocation().state;
-  const navigate = useNavigate();
 
   const getEmployees = async () => {
     try {

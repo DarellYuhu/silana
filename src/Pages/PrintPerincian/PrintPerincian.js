@@ -4,14 +4,12 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
-import { effect, signal } from "@preact/signals-react";
+import { signal } from "@preact/signals-react";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 import { capitalizeString, formatLetterNumber } from "../../Utility";
 

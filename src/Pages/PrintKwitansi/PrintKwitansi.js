@@ -1,14 +1,12 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
-import { Table, TableBody, TableCell, TableRow } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { TableBody, TableCell, TableRow } from "@mui/material";
 import axiosClient from "../../helpers/axiosClient";
 import moment from "moment";
-import { effect, signal } from "@preact/signals-react";
+import { signal } from "@preact/signals-react";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 import capitalizeString from "../../Utility/capitalizeString";
-import { Container, Row } from "reactstrap";
+import { Row } from "reactstrap";
 import { formatLetterNumber } from "../../Utility";
 
 const recipient = signal();

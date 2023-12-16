@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
 import {
   Table,
   TableBody,
@@ -8,7 +7,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";

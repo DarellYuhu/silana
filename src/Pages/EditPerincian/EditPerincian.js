@@ -13,7 +13,7 @@ import {
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Form, Formik } from "formik";
 import axiosClient from "../../helpers/axiosClient";
 import * as Yup from "yup";
@@ -30,7 +30,6 @@ const EditPerincian = () => {
   const [checked, setChecked] = useState();
   const datePickerRef = useRef(null);
   const data = useLocation().state;
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const recipientOption = data.dictum.map((item) => {

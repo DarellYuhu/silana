@@ -1,12 +1,11 @@
 import { Col, Input, Modal, Row } from "reactstrap";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../helpers/axiosClient";
-import { Form, Formik, useFormikContext } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { Form, Formik } from "formik";
+import { useRef } from "react";
 import * as Yup from "yup";
-import { AxiosAlert, ErrorText } from "../../../components/Custom";
-import { effect, signal } from "@preact/signals-react";
+import { ErrorText } from "../../../components/Custom";
+import { signal } from "@preact/signals-react";
 
 const KodeSuratSchema = Yup.object().shape({
   noSurat: Yup.number().positive().required("Nomor Surat harus diisi"),
@@ -25,7 +24,6 @@ const PrintModal = ({
   onError = () => {},
   onSuccess = () => {},
 }) => {
-  const navigate = useNavigate();
   const formik = useRef();
 
   const handleClose = () => {
