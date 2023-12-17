@@ -32,6 +32,7 @@ const SidebarData = [
     subItem: [
       { sublabel: "Data Karyawan", link: "/data-karyawan" },
       { sublabel: "Anggaran", link: "/anggaran" },
+      { sublabel: "Nomor Surat", link: "/nomor-surat" },
     ],
   },
 ];

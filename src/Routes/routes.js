@@ -27,6 +27,7 @@ import PrintKwitansi from "../Pages/PrintKwitansi";
 import PrintPerincian from "../Pages/PrintPerincian";
 import Anggaran from "../Pages/Anggaran/Anggaran";
 import EditSuratPerjalananDinasBelakang from "../Pages/EditSuratPerjalananDinasBelakang";
+import NomorSurat from "../Pages/NomorSurat";
 
 const authProtectedRoutes = [
   {
@@ -59,6 +60,7 @@ const authProtectedRoutes = [
   { path: "/aktifitas-surat", component: <AktifitasSurat /> },
   { path: "/data-karyawan", component: <DataKaryawan /> },
   { path: "/anggaran", component: <Anggaran /> },
+  { path: "/nomor-surat", component: <NomorSurat /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
