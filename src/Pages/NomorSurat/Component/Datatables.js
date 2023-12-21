@@ -28,7 +28,7 @@ const Datatables = ({ item }) => {
       sortable: true,
       selector: (row) => {
         switch (row.status) {
-          case "TERSEDIA":
+          case "KOSONG":
             return (
               <span className="badge badge-soft-danger"> {row.status} </span>
             );
