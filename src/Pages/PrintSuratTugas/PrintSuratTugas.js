@@ -12,11 +12,20 @@ const PrintSuratTugas = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
   const { id } = useParams();
+  const docTitle = document.title;
 
   console.log(id, state);
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
+    onBeforePrint: () => {
+      document.title = `${state.isPrintNoOnly ? "N-" : ""}ST an. ${
+        state.dictum[0] ?? "-"
+      }, ${moment(state.dateOfletter).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
 
   const getEmployeesData = async () => {

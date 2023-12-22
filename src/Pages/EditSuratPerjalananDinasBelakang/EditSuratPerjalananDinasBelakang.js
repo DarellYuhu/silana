@@ -17,7 +17,6 @@ import Flatpickr from "react-flatpickr";
 const EditSuratPerjalananDinasBelakang = () => {
   const [employees, setEmployees] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  const datePickerRef = useRef(null);
   const data = useLocation().state;
   const { id } = useParams();
 
@@ -158,6 +157,10 @@ const EditSuratPerjalananDinasBelakang = () => {
                                   e.target.value
                                 );
                                 setFieldValue("[1].tiba.di", e.target.value);
+                                setFieldValue(
+                                  "[1].berangkat.dari",
+                                  e.target.value
+                                );
                               }}
                             />
                           </Col>
@@ -235,38 +238,14 @@ const EditSuratPerjalananDinasBelakang = () => {
                             </Col>
                             <Col xs={1}>:</Col>
                             <Col xs={7}>
-                              <InputGroup>
-                                <Flatpickr
-                                  ref={datePickerRef}
-                                  className="form-control d-block"
-                                  placeholder="dd M yyyy"
-                                  options={{
-                                    altInput: true,
-                                    altFormat: "j F Y",
-                                  }}
-                                  onChange={(date) => {
-                                    setFieldValue(
-                                      `[${index + 1}].tiba.tanggal`,
-                                      date[0].toISOString()
-                                    );
-                                  }}
-                                />
-                                <div className="input-group-append">
-                                  <button
-                                    type="button"
-                                    className="btn btn-outline-secondary docs-datepicker-trigger"
-                                    style={{ zIndex: 0 }}
-                                    onClick={() =>
-                                      datePickerRef.current.flatpickr.toggle()
-                                    }
-                                  >
-                                    <i
-                                      className="fa fa-calendar"
-                                      aria-hidden="true"
-                                    />
-                                  </button>
-                                </div>
-                              </InputGroup>
+                              <CustomDatePicker
+                                onChange={(date) => {
+                                  setFieldValue(
+                                    `[${index + 1}].tiba.tanggal`,
+                                    date[0].toISOString()
+                                  );
+                                }}
+                              />
                             </Col>
                           </Row>
                           <Row>
@@ -322,6 +301,7 @@ const EditSuratPerjalananDinasBelakang = () => {
                               <Input
                                 type="text"
                                 placeholder="Masukan Lokasi"
+                                value={values[index + 1]?.berangkat?.dari}
                                 name={`[${index + 1}].berangkat.dari`}
                                 onChange={handleChange}
                               />
@@ -337,7 +317,17 @@ const EditSuratPerjalananDinasBelakang = () => {
                                 type="text"
                                 placeholder="Masukan Lokasi"
                                 name={`[${index + 1}].berangkat.ke`}
-                                onChange={handleChange}
+                                onChange={(event) => {
+                                  handleChange(event);
+                                  setFieldValue(
+                                    `[${index + 2}].tiba.di`,
+                                    event.target.value
+                                  );
+                                  setFieldValue(
+                                    `[${index + 2}].berangkat.dari`,
+                                    event.target.value
+                                  );
+                                }}
                               />
                             </Col>
                           </Row>
@@ -347,38 +337,14 @@ const EditSuratPerjalananDinasBelakang = () => {
                             </Col>
                             <Col xs={1}>:</Col>
                             <Col xs={7}>
-                              <InputGroup>
-                                <Flatpickr
-                                  ref={datePickerRef}
-                                  className="form-control d-block"
-                                  placeholder="dd M yyyy"
-                                  options={{
-                                    altInput: true,
-                                    altFormat: "j F Y",
-                                  }}
-                                  onChange={(date) => {
-                                    setFieldValue(
-                                      `[${index + 1}].berangkat.tanggal`,
-                                      date[0].toISOString()
-                                    );
-                                  }}
-                                />
-                                <div className="input-group-append">
-                                  <button
-                                    type="button"
-                                    className="btn btn-outline-secondary docs-datepicker-trigger"
-                                    style={{ zIndex: 0 }}
-                                    onClick={() =>
-                                      datePickerRef.current.flatpickr.toggle()
-                                    }
-                                  >
-                                    <i
-                                      className="fa fa-calendar"
-                                      aria-hidden="true"
-                                    />
-                                  </button>
-                                </div>
-                              </InputGroup>
+                              <CustomDatePicker
+                                onChange={(date) => {
+                                  setFieldValue(
+                                    `[${index + 1}].berangkat.tanggal`,
+                                    date[0].toISOString()
+                                  );
+                                }}
+                              />
                             </Col>
                           </Row>
                           <Row>
@@ -461,6 +427,34 @@ const EditSuratPerjalananDinasBelakang = () => {
         </Formik>
       </div>
     </Fragment>
+  );
+};
+
+const CustomDatePicker = ({ onChange = () => {} }) => {
+  const datePickerRef = useRef(null);
+  return (
+    <InputGroup>
+      <Flatpickr
+        ref={datePickerRef}
+        className="form-control d-block"
+        placeholder="dd M yyyy"
+        options={{
+          altInput: true,
+          altFormat: "j F Y",
+        }}
+        onChange={onChange}
+      />
+      <div className="input-group-append">
+        <button
+          type="button"
+          className="btn btn-outline-secondary docs-datepicker-trigger"
+          style={{ zIndex: 0 }}
+          onClick={() => datePickerRef.current.flatpickr.toggle()}
+        >
+          <i className="fa fa-calendar" aria-hidden="true" />
+        </button>
+      </div>
+    </InputGroup>
   );
 };
 

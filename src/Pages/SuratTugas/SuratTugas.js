@@ -329,7 +329,11 @@ const TableItem = ({
           data-bs-toggle="modal"
           data-bs-target="#showModal"
           onClick={() =>
-            handlePrintNoSurat({ letterNumber: item.letterNumber, id: item.id })
+            handlePrintNoSurat({
+              letterNumber: item.letterNumber,
+              id: item.id,
+              dictum: item.dictum,
+            })
           }
         >
           <i className="mdi mdi-email-check-outline fs-5"></i>

@@ -25,6 +25,7 @@ const PrintModal = ({
   onSuccess = () => {},
 }) => {
   const formik = useRef();
+  console.log(item);
 
   const handleClose = () => {
     setOpen(!open);
@@ -101,6 +102,7 @@ const PrintModal = ({
                 JSON.stringify({
                   letterNumber: item.letterNumber,
                   isPrintNoOnly: true,
+                  dictum: item.dictum,
                 })
               );
               window.open(`/surat-tugas/${item.id}/print`, "_blank");
@@ -123,6 +125,7 @@ const PrintModal = ({
                 JSON.stringify({
                   letterNumber: noSurat,
                   isPrintNoOnly: true,
+                  dictum: item.dictum,
                 })
               );
               window.open(`/surat-tugas/${item.id}/print`, "_blank");
@@ -235,6 +238,7 @@ const PrintModal = ({
                         label: values.kompSurat,
                       }}
                       options={[
+                        { value: "J", label: "J" },
                         { value: "J1", label: "J1" },
                         { value: "J2", label: "J2" },
                         { value: "J3", label: "J3" },

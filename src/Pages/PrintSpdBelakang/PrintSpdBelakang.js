@@ -13,6 +13,8 @@ const PrintSpdBelakang = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
   const state = JSON.parse(localStorage.getItem("printSpdBelakang"));
+  console.log(state);
+  const docTitle = document.title;
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -20,6 +22,14 @@ const PrintSpdBelakang = () => {
         size: A4;
       }
     `,
+    onBeforePrint: () => {
+      document.title = `${
+        state?.isPrintOnly ? "SPD-Belakang-Blank" : "SPD-Belakang"
+      } ${moment(state?.data?.dateOfletter).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
 
   console.log(state?.values);
@@ -139,7 +149,14 @@ const PrintSpdBelakang = () => {
                       Ke
                     </TableCell>
                     <TableCell sx={styles.cell1}>:</TableCell>
-                    <TableCell sx={styles.cell1}>
+                    <TableCell
+                      sx={[
+                        styles.cell1,
+                        {
+                          visibility: state?.isPrintOnly ? "visible" : "hidden",
+                        },
+                      ]}
+                    >
                       {state?.isPrintOnly && state?.values[0]?.berangkat?.ke}
                     </TableCell>
                   </TableRow>

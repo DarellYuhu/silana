@@ -19,7 +19,6 @@ window.onunload = function () {
 const PrintNominatif = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
-  // const data = useLocation().state;
   const data = JSON.parse(localStorage.getItem("printNominative"));
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -28,7 +27,16 @@ const PrintNominatif = () => {
         size: landscape;
       }
     `,
+    onBeforePrint: () => {
+      document.title = `Nominatif an. ${data.dictum[0] ?? "-"}, ${moment(
+        data.dateOfletter
+      ).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
+  const docTitle = document.title;
 
   const getEmployees = async () => {
     try {

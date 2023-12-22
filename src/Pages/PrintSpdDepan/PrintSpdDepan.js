@@ -20,6 +20,8 @@ const PrintSpdDepan = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
   const data = JSON.parse(localStorage.getItem("printSpdDepan"));
+  console.log(data);
+  const docTitle = document.title;
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     pageStyle: `
@@ -27,6 +29,14 @@ const PrintSpdDepan = () => {
         size: A4;
       }
     `,
+    onBeforePrint: () => {
+      document.title = `SPD-Depan an. ${data?.selectedPerson ?? "-"}, ${moment(
+        data?.data?.dateOfletter
+      ).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
 
   const getEmployees = async () => {

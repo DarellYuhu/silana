@@ -163,7 +163,7 @@ const Login = (props) => {
                             <Input
                               name="nik"
                               className="form-control"
-                              placeholder="Masukan NIK"
+                              placeholder="Masukan NIP"
                               type="string"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}

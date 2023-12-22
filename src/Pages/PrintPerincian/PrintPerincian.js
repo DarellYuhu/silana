@@ -33,7 +33,16 @@ const PrintPerincian = () => {
         size: A4;
       }
     `,
+    onBeforePrint: () => {
+      document.title = `Perincian an. ${
+        state?.values?.recipient ?? "-"
+      }, ${moment(state?.values?.dateOfLetter).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
+  const docTitle = document.title;
 
   console.log(state);
 

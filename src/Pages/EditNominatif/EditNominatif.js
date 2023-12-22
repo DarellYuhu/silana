@@ -302,7 +302,20 @@ const EditNominatif = () => {
                             </h6>
                             <Row className="mb-3">
                               <Col md={6}>
-                                <Label>Pergi</Label>
+                                <Label>
+                                  Pergi:{" "}
+                                  <span style={{ fontWeight: "normal" }}>
+                                    {` ${
+                                      new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR",
+                                        minimumFractionDigits: 0,
+                                      }).format(
+                                        values.data[index]?.transportDeparture
+                                      ) ?? "-"
+                                    }`}
+                                  </span>
+                                </Label>
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
@@ -312,7 +325,20 @@ const EditNominatif = () => {
                                 />
                               </Col>
                               <Col md={6}>
-                                <Label>Pulang</Label>
+                                <Label>
+                                  Pulang:{" "}
+                                  <span style={{ fontWeight: "normal" }}>
+                                    {` ${
+                                      new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR",
+                                        minimumFractionDigits: 0,
+                                      }).format(
+                                        values.data[index]?.transportReturn
+                                      ) ?? "-"
+                                    }`}
+                                  </span>
+                                </Label>
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
@@ -330,7 +356,20 @@ const EditNominatif = () => {
                             </h6>
                             <Row className="mb-3">
                               <Col md={6}>
-                                <Label>Pergi</Label>
+                                <Label>
+                                  Pergi:{" "}
+                                  <span style={{ fontWeight: "normal" }}>
+                                    {` ${
+                                      new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR",
+                                        minimumFractionDigits: 0,
+                                      }).format(
+                                        values.data[index]?.planeShipDearture
+                                      ) ?? "-"
+                                    }`}
+                                  </span>
+                                </Label>
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
@@ -340,7 +379,20 @@ const EditNominatif = () => {
                                 />
                               </Col>
                               <Col md={6}>
-                                <Label>Pulang</Label>
+                                <Label>
+                                  Pulang:{" "}
+                                  <span style={{ fontWeight: "normal" }}>
+                                    {` ${
+                                      new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR",
+                                        minimumFractionDigits: 0,
+                                      }).format(
+                                        values.data[index]?.planeShipReturn
+                                      ) ?? "-"
+                                    }`}
+                                  </span>
+                                </Label>
                                 <Input
                                   type="number"
                                   className="colorpicker-default"
@@ -372,7 +424,20 @@ const EditNominatif = () => {
                               />
                             </Col>
                             <Col md={6}>
-                              <Label>Uang</Label>
+                              <Label>
+                                Uang:{" "}
+                                <span style={{ fontWeight: "normal" }}>
+                                  {` ${
+                                    new Intl.NumberFormat("id-ID", {
+                                      style: "currency",
+                                      currency: "IDR",
+                                      minimumFractionDigits: 0,
+                                    }).format(
+                                      values.data[index]?.lumpsumAmount
+                                    ) ?? "-"
+                                  }`}
+                                </span>
+                              </Label>
                               <Input
                                 type="number"
                                 className="colorpicker-default"
@@ -407,7 +472,20 @@ const EditNominatif = () => {
                               />
                             </Col>
                             <Col md={6}>
-                              <Label>Uang</Label>
+                              <Label>
+                                Uang:{" "}
+                                <span style={{ fontWeight: "normal" }}>
+                                  {` ${
+                                    new Intl.NumberFormat("id-ID", {
+                                      style: "currency",
+                                      currency: "IDR",
+                                      minimumFractionDigits: 0,
+                                    }).format(
+                                      values.data[index]?.lodgingAmount
+                                    ) ?? "-"
+                                  }`}
+                                </span>
+                              </Label>
                               <Input
                                 type="number"
                                 className="colorpicker-default"

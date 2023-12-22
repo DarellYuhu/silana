@@ -30,7 +30,16 @@ const PrintKwitansi = () => {
         size: A4;
       }
     `,
+    onBeforePrint: () => {
+      document.title = `Kwitansi an. ${
+        data?.values?.pelaksana ?? "-"
+      }, ${moment(data?.values?.dateOfLetter).format("DD-MM-YYYY")}`;
+    },
+    onAfterPrint: () => {
+      document.title = docTitle;
+    },
   });
+  const docTitle = document.title;
 
   const getEmployees = async () => {
     try {

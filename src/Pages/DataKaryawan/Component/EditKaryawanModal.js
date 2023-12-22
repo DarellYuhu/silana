@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { ErrorText } from "../../../components/Custom";
 
 const EditSchema = Yup.object().shape({
+  name: Yup.string().required("Required"),
+  id: Yup.string().required("Required"),
   classRank: Yup.string().required("Required"),
   jobTitle: Yup.string().required("Required"),
 });
@@ -20,6 +22,8 @@ const EditKaryawanModal = ({
     modal.value = false;
     data.value = {};
   };
+  const user = JSON.parse(localStorage.getItem("authUser"));
+  console.log(user);
   return (
     <Modal centered isOpen={modal.value} toggle={handleClose} scrollable={true}>
       <div className="modal-header d-flex justify-content-center bg-info">
@@ -64,7 +68,12 @@ const EditKaryawanModal = ({
                       Nama
                     </Col>
                     <Col md={9}>
-                      <Input defaultValue={data.value.name} disabled />
+                      <Input
+                        name="name"
+                        defaultValue={data.value.name}
+                        onChange={handleChange}
+                        disabled={user?.roles?.includes("admin") ? false : true}
+                      />
                     </Col>
                   </Row>
                   <Row md={2}>
@@ -72,7 +81,12 @@ const EditKaryawanModal = ({
                       NIP
                     </Col>
                     <Col md={9}>
-                      <Input defaultValue={data.value.id} disabled />
+                      <Input
+                        name="id"
+                        defaultValue={data.value.id}
+                        onChange={handleChange}
+                        disabled={user?.roles?.includes("admin") ? false : true}
+                      />
                     </Col>
                   </Row>
                   <Row md={2}>

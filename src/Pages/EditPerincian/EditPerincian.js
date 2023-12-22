@@ -110,7 +110,19 @@ const EditPerincian = () => {
                 <Form onSubmit={handleSubmit}>
                   <Card>
                     <CardBody>
-                      <CardTitle>Yang Telah Dibayar Semula</CardTitle>
+                      <CardTitle>
+                        Yang Telah Dibayar Semula:{" "}
+                        <span style={{ fontWeight: "normal" }}>
+                          {` ${
+                            new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                            }).format(values.paidNominal) ?? "-"
+                          }`}
+                        </span>
+                      </CardTitle>
+
                       <CardBody className="p-0 px-1">
                         <div className="mb-3 d-flex">
                           <Input
