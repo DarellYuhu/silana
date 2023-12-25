@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
 import { signal } from "@preact/signals-react";
-import { AxiosAlert } from "../../components/Custom";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
   commitmentMaker: Yup.string().required("PPB harus dipilih"),
@@ -26,8 +26,6 @@ const validationSchema = Yup.object().shape({
   destination: Yup.array().min(1, "Pilih minimal 1 tujuan"),
   dateOfLetter: Yup.string().required("Tanggal surat harus diisi"),
 });
-
-const error = signal(null);
 
 const EditSuratPerjalananDinas = () => {
   const [employees, setEmployees] = useState([]);
@@ -55,7 +53,11 @@ const EditSuratPerjalananDinas = () => {
       setEmployees(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -93,6 +95,15 @@ const EditSuratPerjalananDinas = () => {
                 letterId: id,
               };
               try {
+                Swal.fire({
+                  title: "Loading...",
+                  text: "Sedang memproses data",
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                  },
+                });
                 let res;
                 if (travel) {
                   res = await axiosClient.patch(
@@ -103,10 +114,19 @@ const EditSuratPerjalananDinas = () => {
                   res = await axiosClient.post("travels", normalized);
                 }
                 console.log(res);
+                await Swal.fire({
+                  title: "Success!",
+                  text: "Data berhasil disimpan",
+                  icon: "success",
+                });
                 navigate(`/surat-perjalanan-dinas`);
               } catch (err) {
                 console.log(err);
-                error.value = err.message;
+                Swal.fire({
+                  title: "Error!",
+                  text: err.message,
+                  icon: "error",
+                });
               } finally {
                 setSubmitting(false);
               }
@@ -255,12 +275,6 @@ const EditSuratPerjalananDinas = () => {
           </Formik>
         </Container>
       </div>
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
     </Fragment>
   );
 };

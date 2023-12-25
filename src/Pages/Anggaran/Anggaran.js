@@ -3,14 +3,13 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables, EditAnggaranModal, TambaAnggaranModal } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { TableSkeleton } from "../../components/Custom";
 import { debounce } from "lodash";
+import Swal from "sweetalert2";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
 const editData = signal({});
-const success = signal(null);
-const error = signal(null);
 
 const Anggaran = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,7 +38,12 @@ const Anggaran = () => {
       setData(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+        timer: 4000,
+      });
     } finally {
       setLoading(false);
     }
@@ -110,17 +114,48 @@ const Anggaran = () => {
                                 editModal.value = true;
                               }}
                               handleDeleteClick={async (item) => {
-                                await axiosClient
-                                  .delete(`budgets/${item.id}`)
-                                  .then((res) => {
-                                    success.value =
-                                      "Berhasil menghapus anggaran";
-                                    getAnggaran();
-                                  })
-                                  .catch((err) => {
-                                    console.log(err);
-                                    error.value = err.message;
-                                  });
+                                Swal.fire({
+                                  title:
+                                    "Anda yakin ingin menghapus anggaran ini?",
+                                  text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: "Yes, delete it!",
+                                }).then(async (result) => {
+                                  if (result.isConfirmed) {
+                                    Swal.showLoading();
+                                    await axiosClient
+                                      .delete(`budgets/${item.id}`)
+                                      .then((res) => {
+                                        Swal.fire({
+                                          title: "Deleted!",
+                                          text: "Your file has been deleted.",
+                                          icon: "success",
+                                          timer: 4000,
+                                        });
+                                        getAnggaran();
+                                      })
+                                      .catch((err) => {
+                                        if (err.response?.status === 409) {
+                                          Swal.fire({
+                                            title: "Error!",
+                                            text: "Anggaran tidak dapat dihapus karena sedang digunakan dalam surat!",
+                                            icon: "error",
+                                            timer: 4000,
+                                          });
+                                          return;
+                                        }
+                                        Swal.fire({
+                                          title: "Error!",
+                                          text: err.message,
+                                          icon: "error",
+                                          timer: 4000,
+                                        });
+                                      });
+                                  }
+                                });
                               }}
                             />
                           </CardBody>
@@ -135,36 +170,30 @@ const Anggaran = () => {
         </Container>
         <TambaAnggaranModal
           modal={tambahModal}
-          onSuccess={() => {
-            getAnggaran();
-            success.value = "Berhasil membuat anggaran";
-          }}
-          onError={(err) => {
-            error.value = err;
-          }}
+          onSuccess={() => getAnggaran()}
         />
         <EditAnggaranModal
           modal={editModal}
           data={editData}
-          onError={(item) => (error.value = item)}
+          onError={(item) =>
+            Swal.fire({
+              title: "Error!",
+              text: item,
+              icon: "error",
+              timer: 4000,
+            })
+          }
           onSuccess={(item) => {
-            success.value = item;
             getAnggaran();
+            Swal.fire({
+              title: "Success!",
+              text: item,
+              icon: "success",
+              timer: 4000,
+            });
           }}
         />
       </div>
-      <AxiosAlert
-        message={success.value}
-        open={success.value && true}
-        severity={"success"}
-        setOpen={(value) => (success.value = value)}
-      />
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(value) => (error.value = value)}
-      />
     </Fragment>
   );
 };

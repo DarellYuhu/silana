@@ -4,6 +4,7 @@ import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
 import * as Yup from "yup";
 import { ErrorText } from "../../../components/Custom";
+import Swal from "sweetalert2";
 
 const UserSchema = Yup.object().shape({
   id: Yup.string().required("Required"),
@@ -48,6 +49,15 @@ const TambahKaryawanModal = ({
           }}
           onSubmit={async (values, { setSubmitting }) => {
             try {
+              Swal.fire({
+                title: "Loading...",
+                text: "Sedang memproses data",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+              });
               await axiosClient.post("employees", {
                 ...values,
               });

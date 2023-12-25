@@ -1,33 +1,53 @@
-import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
-import axiosClient from "../../../helpers/axiosClient";
 
 const AnggaranModal = ({
   open,
   setOpen = () => {},
   handleRowClick = () => {},
+  data,
 }) => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await axiosClient.get("budgets");
-      setData(res.data);
-    };
-    fetchData();
-  }, []);
+  const columns = [
+    {
+      name: <span className="font-weight-bold fs-13">No.</span>,
+      selector: (_, index) => index + 1,
+      sortable: true,
+      width: "50px",
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Kode Anggaran</span>,
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Deskripsi</span>,
+      selector: (row) => row.description,
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Anggaran Tersedia</span>,
+      selector: (row) =>
+        new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(row.amount),
+      sortable: true,
+    },
+  ];
+
   return (
     <Modal
       isOpen={open}
       size="lg"
-      toggle={() => setOpen(!open)}
+      toggle={() => setOpen(false)}
       scrollable={true}
     >
       <div className="modal-header">
         <h5 className="modal-title mt-0">Tabel Anggaran Perjalanan Dinas</h5>
         <button
           type="button"
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen(false)}
           className="close"
           data-dismiss="modal"
           aria-label="Close"
@@ -55,7 +75,7 @@ const AnggaranModal = ({
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen(false)}
           >
             Close
           </button>
@@ -64,34 +84,5 @@ const AnggaranModal = ({
     </Modal>
   );
 };
-
-const columns = [
-  {
-    name: <span className="font-weight-bold fs-13">No.</span>,
-    selector: (_, index) => index + 1,
-    sortable: true,
-    width: "50px",
-  },
-  {
-    name: <span className="font-weight-bold fs-13">Kode Anggaran</span>,
-    selector: (row) => row.id,
-    sortable: true,
-  },
-  {
-    name: <span className="font-weight-bold fs-13">Deskripsi</span>,
-    selector: (row) => row.description,
-    sortable: true,
-  },
-  {
-    name: <span className="font-weight-bold fs-13">Anggaran Tersedia</span>,
-    selector: (row) =>
-      new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      }).format(row.amount),
-    sortable: true,
-  },
-];
 
 export default AnggaranModal;

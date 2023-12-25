@@ -2,11 +2,9 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
-import { signal } from "@preact/signals-react";
+import { TableSkeleton } from "../../components/Custom";
 import { debounce } from "lodash";
-
-const error = signal(null);
+import Swal from "sweetalert2";
 
 const Perincian = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,7 +33,12 @@ const Perincian = () => {
       setData(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+        timer: 4000,
+      });
     } finally {
       setLoading(false);
     }
@@ -101,13 +104,6 @@ const Perincian = () => {
           </Row>
         </Container>
       </div>
-
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
     </Fragment>
   );
 };

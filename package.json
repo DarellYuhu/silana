@@ -78,6 +78,7 @@
     "simplebar-react": "^2.3.6",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.0",
+    "sweetalert2": "^11.10.1",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.11"
   },

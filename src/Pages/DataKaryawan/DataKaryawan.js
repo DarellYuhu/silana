@@ -7,14 +7,13 @@ import {
 } from "./Component";
 import { signal } from "@preact/signals-react";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { TableSkeleton } from "../../components/Custom";
 import { debounce } from "lodash";
+import Swal from "sweetalert2";
 
 const tambahModal = signal(false);
 const editModal = signal(false);
 const editData = signal({});
-const success = signal(null);
-const error = signal(null);
 
 const DataKaryawan = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,7 +44,11 @@ const DataKaryawan = () => {
       setData(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -115,16 +118,47 @@ const DataKaryawan = () => {
                                 editData.value = user;
                                 editModal.value = true;
                               }}
-                              handleDeleteClick={(user) => {
-                                axiosClient
-                                  .delete(`employees/${user.id}`)
-                                  .then((res) => {
-                                    success.value = "Karyawan berhasil dihapus";
-                                    getEmployees();
-                                  })
-                                  .catch((err) => {
-                                    console.log(err);
+                              handleDeleteClick={async (user) => {
+                                try {
+                                  const alertRes = await Swal.fire({
+                                    title: "Apakah anda yakin ingin menghapus?",
+                                    text: "Data karyawan yang dihapus tidak dapat dikembalikan!",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ya, hapus",
+                                    cancelButtonText: "Batal",
                                   });
+                                  if (!alertRes.isConfirmed) {
+                                    return;
+                                  }
+                                  Swal.fire({
+                                    title: "Loading...",
+                                    text: "Sedang memproses data",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                      Swal.showLoading();
+                                    },
+                                  });
+                                  await axiosClient.delete(
+                                    `employees/${user.id}`
+                                  );
+                                  Swal.fire({
+                                    title: "Sukses!",
+                                    text: "Karyawan berhasil dihapus",
+                                    icon: "success",
+                                  });
+                                  getEmployees();
+                                } catch (err) {
+                                  console.log(err);
+                                  Swal.fire({
+                                    title: "Error!",
+                                    text: err.message,
+                                    icon: "error",
+                                  });
+                                }
                               }}
                             />
                           </CardBody>
@@ -155,33 +189,39 @@ const DataKaryawan = () => {
         <TambahKaryawanModal
           modal={tambahModal}
           onSuccess={() => {
-            success.value = "Karyawan berhasil ditambahkan";
+            Swal.fire({
+              title: "Sukses!",
+              text: "Karyawan berhasil ditambahkan",
+              icon: "success",
+            });
             getEmployees();
           }}
           onError={(err) => {
-            error.value = err;
+            Swal.fire({
+              title: "Error!",
+              text: err,
+              icon: "error",
+            });
           }}
         />
         <EditKaryawanModal
           modal={editModal}
           data={editData}
           onSuccess={(message) => {
-            success.value = message;
+            Swal.fire({
+              title: "Sukses!",
+              text: message,
+              icon: "success",
+            });
             getEmployees();
           }}
-          onError={(message) => (error.value = message)}
-        />
-        <AxiosAlert
-          message={success.value}
-          open={success.value && true}
-          severity={"success"}
-          setOpen={(value) => (success.value = value)}
-        />
-        <AxiosAlert
-          message={error.value}
-          open={error.value && true}
-          severity={"error"}
-          setOpen={(value) => (error.value = value)}
+          onError={(message) =>
+            Swal.fire({
+              title: "Error!",
+              text: message,
+              icon: "error",
+            })
+          }
         />
       </div>
     </Fragment>

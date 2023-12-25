@@ -21,8 +21,9 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { TableSkeleton } from "../../components/Custom";
 import { signal } from "@preact/signals-react";
+import Swal from "sweetalert2";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -40,9 +41,7 @@ const CreateLetterSchema = Yup.object().shape({
   assignorTitle: Yup.string().required("Required"),
 });
 
-const success = signal(null);
 const open = signal(false);
-const error = signal(null);
 
 const BuatSuratTugas = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -67,7 +66,12 @@ const BuatSuratTugas = () => {
       })
       .catch((err) => {
         console.log(err);
-        error.value = err.message;
+        Swal.fire({
+          title: "Error!",
+          text: err.message,
+          icon: "error",
+          timer: 4000,
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -103,12 +107,35 @@ const BuatSuratTugas = () => {
             const payload = { ...values };
             delete payload.dateOftravel;
             try {
+              Swal.fire({
+                title: "Loading...",
+                text: "Sedang membuat surat",
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+              });
               await axiosClient.post("letters", payload);
-              success.value = "Surat berhasil dibuat";
+              await Swal.fire({
+                title: "Success!",
+                text: "Surat berhasil dibuat",
+                icon: "success",
+                allowOutsideClick: false,
+                timer: 6000,
+                timerProgressBar: true,
+              }).then((response) => {
+                response.isConfirmed && navigate("/surat-tugas");
+              });
               navigate("/surat-tugas");
             } catch (err) {
               console.log(err);
-              error.value = err.message;
+              Swal.fire({
+                title: "Error!",
+                text: err.message,
+                icon: "error",
+                timer: 4000,
+              });
             } finally {
               setSubmitting(false);
             }
@@ -633,19 +660,6 @@ const BuatSuratTugas = () => {
           }}
         </Formik>
       </div>
-
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
-      <AxiosAlert
-        message={success.value}
-        open={success.value && true}
-        severity={"success"}
-        setOpen={(val) => (success.value = val)}
-      />
     </Fragment>
   );
 };

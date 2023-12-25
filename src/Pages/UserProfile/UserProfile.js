@@ -11,14 +11,10 @@ import {
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getLoggedinUser } from "../../helpers/api_helper";
 import axiosClient from "../../helpers/axiosClient";
-import AxiosAlert from "../../components/Custom/AxiosAlert";
-import { signal } from "@preact/signals-react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { ErrorText, TableSkeleton } from "../../components/Custom";
-
-const success = signal(null);
-const error = signal(null);
+import Swal from "sweetalert2";
 
 const ChangePassSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Required"),
@@ -47,7 +43,11 @@ const UserProfile = () => {
       setData(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -86,12 +86,28 @@ const UserProfile = () => {
                 validationSchema={PersonalizationSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                   try {
+                    Swal.fire({
+                      title: "Loading...",
+                      text: "Sedang mengubah personalisasi...",
+                      allowEscapeKey: false,
+                      allowOutsideClick: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                      },
+                    });
                     await axiosClient.patch(`employees/${user.uid}`, values);
-                    success.value =
-                      "Berhasil mengubah personalisasi. Tolong login ulang untuk melihat perubahan";
+                    Swal.fire({
+                      title: "Berhasil!",
+                      text: "Berhasil mengubah personalisasi. Tolong login ulang untuk melihat perubahan",
+                      icon: "success",
+                    });
                   } catch (err) {
                     console.log(err);
-                    error.value = err.message;
+                    Swal.fire({
+                      title: "Error!",
+                      text: err.message,
+                      icon: "error",
+                    });
                   } finally {
                     setSubmitting(false);
                   }
@@ -172,18 +188,39 @@ const UserProfile = () => {
                 onSubmit={async (values, { setSubmitting }) => {
                   const { confirmPassword, ...payload } = values;
                   try {
+                    Swal.fire({
+                      title: "Loading...",
+                      text: "Sedang mengubah password...",
+                      allowEscapeKey: false,
+                      allowOutsideClick: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                      },
+                    });
                     await axiosClient.patch(
                       `employees/${user.uid}/change-password`,
                       payload
                     );
-                    success.value = "Berhasil mengubah sandi";
+                    Swal.fire({
+                      title: "Berhasil!",
+                      text: "Berhasil mengubah sandi. Tolong login ulang untuk melihat perubahan",
+                      icon: "success",
+                    });
                   } catch (err) {
                     console.log(err);
                     if (err.response.status === 401) {
-                      error.value = "Sandi lama salah";
+                      Swal.fire({
+                        title: "Error!",
+                        text: "Sandi lama salah",
+                        icon: "error",
+                      });
                       return;
                     }
-                    error.value = err.message;
+                    Swal.fire({
+                      title: "Error!",
+                      text: err.message,
+                      icon: "error",
+                    });
                   } finally {
                     setSubmitting(false);
                   }
@@ -259,18 +296,6 @@ const UserProfile = () => {
           </Card>
         </Container>
       </div>
-      <AxiosAlert
-        message={success.value}
-        open={success.value && true}
-        severity={"success"}
-        setOpen={(val) => (success.value = val)}
-      />
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
     </Fragment>
   );
 };

@@ -3,6 +3,7 @@ import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
 import * as Yup from "yup";
 import { ErrorText } from "../../../components/Custom";
+import Swal from "sweetalert2";
 
 const AnggaranSchema = Yup.object().shape({
   description: Yup.string().required("Deskripsi harus diisi!"),
@@ -39,6 +40,15 @@ const EditAnggaranModal = ({
         initialValues={data.value}
         onSubmit={async (values, { setSubmitting }) => {
           try {
+            Swal.fire({
+              title: "Loading...",
+              text: "Sedang memproses data",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
             await axiosClient.patch(`budgets/${values.id}`, {
               ...values,
             });
@@ -46,14 +56,24 @@ const EditAnggaranModal = ({
             onSuccess("Anggaran berhasil diubah!");
           } catch (error) {
             console.log(error);
-            onError(error.response.data.message);
+            if (error.response?.data?.message) {
+              onError(error.response.data.message);
+            }
+            onError(error.message);
           } finally {
             setSubmitting(false);
           }
         }}
         validationSchema={AnggaranSchema}
       >
-        {({ handleChange, handleSubmit, isSubmitting, errors, touched }) => (
+        {({
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          errors,
+          touched,
+          values,
+        }) => (
           <Form onSubmit={handleSubmit}>
             <div className="modal-body">
               <div>
@@ -100,6 +120,11 @@ const EditAnggaranModal = ({
                       />
                     </Col>
                   </Row>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format(values.amount) ?? "-"}
                   <ErrorText errors={errors.amount} touched={errors.amount} />
                 </div>
               </div>

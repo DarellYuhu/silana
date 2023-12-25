@@ -22,8 +22,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
+import { TableSkeleton } from "../../components/Custom";
 import { signal } from "@preact/signals-react";
+import Swal from "sweetalert2";
 
 const CreateLetterSchema = Yup.object().shape({
   barColor: Yup.string().required("Required"),
@@ -41,15 +42,14 @@ const CreateLetterSchema = Yup.object().shape({
   assignorTitle: Yup.string().required("Required"),
 });
 
-const success = signal(null);
-const error = signal(null);
+const open = signal(false);
 
 const EditSuratTugas = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [employees, setEmployees] = useState(null);
+  const [budgets, setBudgets] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-
+  const formik = useRef(null);
   const datePickerRef = useRef(null);
   const dateRangePickerRef = useRef(null);
   const navigate = useNavigate();
@@ -57,24 +57,33 @@ const EditSuratTugas = () => {
   const { state } = useLocation();
 
   const fetchEmployees = async () => {
-    try {
-      const res = await axiosClient.get("employees");
-      const options = res.data.map((item) => ({
-        value: item.name,
-        id: item.id,
-        label: item.name,
-      }));
-      setEmployees(options);
-    } catch (err) {
-      console.log(err);
-      error.value = err.message;
-    } finally {
-      setLoading(false);
-    }
+    const res = await axiosClient.get("employees");
+    const options = res.data.map((item) => ({
+      value: item.name,
+      id: item.id,
+      label: item.name,
+    }));
+    setEmployees(options);
+  };
+
+  const fetchData = async () => {
+    const res = await axiosClient.get("budgets");
+    setBudgets(res.data);
   };
 
   useEffect(() => {
-    fetchEmployees();
+    Promise.all([fetchEmployees(), fetchData()])
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          title: "Gagal!",
+          text: err.message,
+          icon: "error",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (!state) {
@@ -95,6 +104,7 @@ const EditSuratTugas = () => {
     <Fragment>
       <div className="page-content">
         <Formik
+          innerRef={formik}
           initialValues={{
             barColor: state.barColor,
             burden: state.burden,
@@ -117,14 +127,30 @@ const EditSuratTugas = () => {
             const payload = { ...values };
             delete payload.dateOftravel;
             try {
+              Swal.fire({
+                title: "Mohon Tunggu!",
+                html: "Surat Tugas sedang disimpan",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+                showConfirmButton: false,
+              });
               await axiosClient.patch(`letters/${id}`, payload);
-              success.value = "Surat berhasil diubah";
-              setTimeout(() => {
-                navigate("/surat-tugas");
-              }, 2000);
+              await Swal.fire({
+                title: "Berhasil!",
+                text: "Surat Tugas berhasil diubah",
+                icon: "success",
+              });
+              navigate("/surat-tugas");
             } catch (err) {
               console.log(err);
-              error.value = err.message;
+              Swal.fire({
+                title: "Gagal!",
+                text: err.message,
+                icon: "error",
+              });
             } finally {
               setSubmitting(false);
             }
@@ -217,7 +243,7 @@ const EditSuratTugas = () => {
                               className="colorpicker-default"
                               placeholder="cth.. 3331.UBA.002.256.A.524111"
                               readOnly
-                              onClick={() => setOpen(!open)}
+                              onClick={() => (open.value = true)}
                             />
                             {errors.budgetId && touched.budgetId ? (
                               <p className="text-danger">{`* ${errors.budgetId}`}</p>
@@ -664,11 +690,12 @@ const EditSuratTugas = () => {
                   </Card>
                 </Container>
                 <AnggaranModal
-                  open={open}
-                  setOpen={setOpen}
+                  open={open.value}
+                  data={budgets}
+                  setOpen={(value) => (open.value = value)}
                   handleRowClick={(row) => {
                     setFieldValue("budgetId", row.id);
-                    setOpen(!open);
+                    open.value = false;
                   }}
                 />
               </Form>
@@ -676,19 +703,6 @@ const EditSuratTugas = () => {
           }}
         </Formik>
       </div>
-
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
-      <AxiosAlert
-        message={success.value}
-        open={success.value && true}
-        severity={"success"}
-        setOpen={(val) => (success.value = val)}
-      />
     </Fragment>
   );
 };
