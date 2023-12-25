@@ -1,13 +1,9 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import { AxiosAlert } from "../../components/Custom";
-import { signal } from "@preact/signals-react";
 import { Datatables } from "./Component";
 import axiosClient from "../../helpers/axiosClient";
 import { debounce } from "lodash";
-
-const error = signal(null);
-const success = signal(null);
+import Swal from "sweetalert2";
 
 const NomorSurat = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,7 +36,11 @@ const NomorSurat = () => {
       setData(data);
     } catch (err) {
       console.log(err);
-      error.value = err.message;
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: err.message,
+      });
     }
   };
 
@@ -99,18 +99,6 @@ const NomorSurat = () => {
             </Col>
           </Row>
         </Container>
-        <AxiosAlert
-          message={success.value}
-          open={success.value && true}
-          severity={"success"}
-          setOpen={(value) => (success.value = value)}
-        />
-        <AxiosAlert
-          message={error.value}
-          open={error.value && true}
-          severity={"error"}
-          setOpen={(value) => (error.value = value)}
-        />
       </div>
     </Fragment>
   );

@@ -20,9 +20,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import axios from "axios";
-import { AxiosAlert } from "../../components/Custom";
 import { signal, useSignalEffect } from "@preact/signals-react";
 import { extractGrade } from "../../Utility";
+import Swal from "sweetalert2";
 
 const NominativeSchema = Yup.object().shape({
   tranportType: Yup.string().required("Required"),
@@ -38,7 +38,6 @@ const NominativeSchema = Yup.object().shape({
 
 const allowances = signal(null);
 const employees = signal(null);
-const error = signal(null);
 
 const EditNominatif = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -48,28 +47,25 @@ const EditNominatif = () => {
   const formik = useRef();
 
   const getEmployees = async () => {
-    try {
-      const { data } = await axiosClient.get("employees");
-      employees.value = data;
-    } catch (err) {
-      console.log(err);
-      error.value = err.message;
-    }
+    const { data } = await axiosClient.get("employees");
+    employees.value = data;
   };
 
   const getAllowance = async () => {
-    try {
-      const { data } = await axiosClient.get("allowances");
-      allowances.value = data;
-    } catch (err) {
-      console.log(err);
-      error.value = err.message;
-    }
+    const { data } = await axiosClient.get("allowances");
+    allowances.value = data;
   };
 
   useEffect(() => {
-    getEmployees();
-    getAllowance();
+    Promise.all([getAllowance(), getEmployees()]).catch((err) => {
+      console.log(err);
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    });
   }, []);
 
   useSignalEffect(() => {
@@ -144,6 +140,15 @@ const EditNominatif = () => {
               };
 
               try {
+                Swal.fire({
+                  title: "Loading...",
+                  text: "Sedang memproses data",
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                  },
+                });
                 if (dataExample.nominative) {
                   await axiosClient.patch(
                     `nominative/${dataExample.nominative.id}`,
@@ -189,7 +194,11 @@ const EditNominatif = () => {
                     { amount }
                   );
 
-                  console.log("success");
+                  await Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    icon: "success",
+                  });
                   navigate("/nominatif");
                   return;
                 }
@@ -207,7 +216,7 @@ const EditNominatif = () => {
                 helperPayload.map((item) => delete item.name);
                 await axiosClient.post("helpers", helperPayload);
 
-                const amount = helperPayload?.reduce((acc, curr) => {
+                const amount = await helperPayload?.reduce((acc, curr) => {
                   const personalTransport =
                     curr.transportDeparture +
                     curr.transportReturn +
@@ -226,11 +235,19 @@ const EditNominatif = () => {
 
                 console.log(amount);
                 console.log(helperPayload);
-                console.log("success");
+                await Swal.fire({
+                  title: "Success!",
+                  text: "Data berhasil disimpan",
+                  icon: "success",
+                });
                 navigate("/nominatif");
               } catch (err) {
                 console.log(err);
-                error.value = err.message;
+                Swal.fire({
+                  title: "Error!",
+                  text: err.message,
+                  icon: "error",
+                });
               } finally {
                 setSubmitting(false);
               }
@@ -577,12 +594,6 @@ const EditNominatif = () => {
           </Formik>
         </Container>
       </div>
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(value) => (error.value = value)}
-      />
     </Fragment>
   );
 };

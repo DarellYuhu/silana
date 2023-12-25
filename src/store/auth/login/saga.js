@@ -11,11 +11,21 @@ import {
   postSocialLogin,
 } from "../../../helpers/fakebackend_helper";
 import { postJwtLogin } from "../../../helpers/backend_helper";
+import Swal from "sweetalert2";
 
 const fireBaseBackend = getFirebaseBackend();
 
 function* loginUser({ payload: { user, history } }) {
   try {
+    Swal.fire({
+      title: "Loading...",
+      text: "Mohon tunggu sebentar",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      showConfirmButton: false,
+    });
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = yield call(
         fireBaseBackend.loginUser,
@@ -40,10 +50,11 @@ function* loginUser({ payload: { user, history } }) {
     }
     history("/");
   } catch (error) {
-    console.log(error.response.status);
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       yield put(apiError("Username atau password salah"));
     } else yield put(apiError(error.message));
+  } finally {
+    Swal.close();
   }
 }
 

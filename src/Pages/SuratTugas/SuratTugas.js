@@ -5,13 +5,10 @@ import { Card, CardBody, Col, Row } from "reactstrap";
 import { PrintModal } from "./Component";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
-import { AxiosAlert, TableSkeleton } from "../../components/Custom";
-import { signal } from "@preact/signals-react";
+import { TableSkeleton } from "../../components/Custom";
 import { formatLetterNumber } from "../../Utility";
 import { debounce } from "lodash";
-
-const error = signal(null);
-const success = signal(null);
+import Swal from "sweetalert2";
 
 const SuratTugas = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +59,12 @@ const SuratTugas = () => {
       })
       .catch((err) => {
         console.log(err.message);
-        error.value = err.message;
+        Swal.fire({
+          title: "Gagal",
+          text: err.message,
+          icon: "error",
+          confirmButtonText: "Tutup",
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -170,15 +172,46 @@ const SuratTugas = () => {
                               handlePrintNoSurat={handlePrintNoSurat}
                               handleDeleteSurat={(id) => {
                                 setIsSubmitting(true);
-                                axiosClient
-                                  .delete(`letters/${id}`)
-                                  .then((_) => {
-                                    getData();
-                                    success.value = "Berhasil menghapus surat";
-                                  })
-                                  .catch((err) => {
-                                    console.log(err);
-                                    error.value = err.message;
+                                Swal.fire({
+                                  title: "Anda yakin ingin menghapus surat?",
+                                  text: "Surat yang dihapus tidak dapat dikembalikan!",
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonText: "Ya",
+                                  cancelButtonText: "Batal",
+                                })
+                                  .then((result) => {
+                                    if (result.isConfirmed) {
+                                      Swal.fire({
+                                        title: "Mohon tunggu",
+                                        text: "Sedang menghapus surat",
+                                        didOpen: () => {
+                                          Swal.showLoading();
+                                        },
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                      });
+                                      axiosClient
+                                        .delete(`letters/${id}`)
+                                        .then((_) => {
+                                          getData();
+                                          Swal.fire({
+                                            title: "Berhasil",
+                                            text: "Surat berhasil dihapus",
+                                            icon: "success",
+                                            confirmButtonText: "Tutup",
+                                          });
+                                        })
+                                        .catch((err) => {
+                                          console.log(err);
+                                          Swal.fire({
+                                            title: "Gagal",
+                                            text: "Surat gagal dihapus",
+                                            icon: "error",
+                                            confirmButtonText: "Tutup",
+                                          });
+                                        });
+                                    }
                                   })
                                   .finally(() => {
                                     setIsSubmitting(false);
@@ -223,26 +256,25 @@ const SuratTugas = () => {
           setOpen={setOpen}
           item={letterNumber}
           setItem={setLetterNumber}
-          onError={(item) => (error.value = item)}
+          onError={(item) => {
+            Swal.fire({
+              title: "Gagal",
+              text: item,
+              icon: "error",
+              confirmButtonText: "Tutup",
+            });
+          }}
           onSuccess={(item) => {
-            success.value = item;
+            Swal.fire({
+              title: "Berhasil",
+              text: item,
+              icon: "success",
+              confirmButtonText: "Tutup",
+            });
             getData();
           }}
         />
       </div>
-
-      <AxiosAlert
-        message={error.value}
-        open={error.value && true}
-        severity={"error"}
-        setOpen={(val) => (error.value = val)}
-      />
-      <AxiosAlert
-        message={success.value}
-        open={success.value && true}
-        severity={"success"}
-        setOpen={(val) => (success.value = val)}
-      />
     </Fragment>
   );
 };

@@ -3,6 +3,7 @@ import { Col, Input, Modal, Row } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
 import * as Yup from "yup";
 import { ErrorText } from "../../../components/Custom";
+import Swal from "sweetalert2";
 
 const AnggaranSchema = Yup.object().shape({
   id: Yup.string().required("Kode Anggaran harus diisi!"),
@@ -12,11 +13,7 @@ const AnggaranSchema = Yup.object().shape({
     .positive("Jumlah Anggaran harus positif!"),
 });
 
-const TambaAnggaranModal = ({
-  modal,
-  onSuccess = () => {},
-  onError = () => {},
-}) => {
+const TambaAnggaranModal = ({ modal, onSuccess = () => {} }) => {
   return (
     <Modal
       centered
@@ -40,23 +37,57 @@ const TambaAnggaranModal = ({
         initialValues={{ id: "", description: "", amount: 0 }}
         onSubmit={async (values, { setSubmitting }) => {
           try {
+            Swal.fire({
+              title: "Loading...",
+              text: "Sedang memproses data",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
             await axiosClient.post("budgets", {
               ...values,
             });
             modal.value = false;
+            Swal.fire({
+              title: "Success!",
+              text: "Data berhasil ditambahkan.",
+              icon: "success",
+              timer: 4000,
+            });
             onSuccess();
           } catch (error) {
-            if (error.response.status === 409) {
-              onError(error.response.data.message);
+            console.log(error.message);
+            if (error.response?.status === 409) {
+              Swal.fire({
+                title: "Error!",
+                text: "Kode anggaran sudah ada!",
+                icon: "error",
+                timer: 4000,
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: error.message,
+                icon: "error",
+                timer: 4000,
+              });
             }
-            console.log(error);
           } finally {
             setSubmitting(false);
           }
         }}
         validationSchema={AnggaranSchema}
       >
-        {({ handleChange, isSubmitting, handleSubmit, errors, touched }) => (
+        {({
+          handleChange,
+          isSubmitting,
+          handleSubmit,
+          errors,
+          touched,
+          values,
+        }) => (
           <Form onSubmit={handleSubmit}>
             <div className="modal-body">
               <div>
@@ -108,6 +139,11 @@ const TambaAnggaranModal = ({
                       />
                     </Col>
                   </Row>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format(values.amount) ?? "-"}
                   <ErrorText errors={errors.amount} touched={touched.amount} />
                 </div>
               </div>

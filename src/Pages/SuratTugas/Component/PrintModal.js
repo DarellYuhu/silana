@@ -6,6 +6,7 @@ import { useRef } from "react";
 import * as Yup from "yup";
 import { ErrorText } from "../../../components/Custom";
 import { signal } from "@preact/signals-react";
+import Swal from "sweetalert2";
 
 const KodeSuratSchema = Yup.object().shape({
   noSurat: Yup.number().positive().required("Nomor Surat harus diisi"),
@@ -109,6 +110,15 @@ const PrintModal = ({
               return;
             }
             try {
+              Swal.fire({
+                title: "Loading...",
+                text: "Sedang memproses data",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+              });
               if (availableNum.value.includes(values.noSurat)) {
                 await axiosClient.patch(`references/${item.id}`, {
                   code: noSurat,
