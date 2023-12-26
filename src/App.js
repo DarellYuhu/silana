@@ -37,6 +37,4 @@ function App() {
   );
 }
 
-// huhi
-
 export default App;
