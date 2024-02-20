@@ -351,11 +351,13 @@ const styles = {
     whiteSpace: "nowrap",
     borderBottom: "none",
     verticalAlign: "top",
+    width: "1%",
   },
   seperator: {
     padding: "0 0.2cm",
     borderBottom: "none",
     verticalAlign: "top",
+    width: "1%",
   },
   seperator2: {
     padding: "0 0.2cm",

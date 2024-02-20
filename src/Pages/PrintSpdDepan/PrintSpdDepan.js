@@ -595,7 +595,9 @@ const PrintSpdDepan = () => {
                     <div className="col-sm-4">Tanggal</div>
                     <div className="col-sm-1">:</div>
                     <div className="col-sm-7">
-                      {moment().locale("id").format("DD MMMM YYYY")}
+                      {moment(data?.data?.dateOfletter)
+                        .locale("id")
+                        .format("DD MMMM YYYY")}
                     </div>
                   </div>
                 </div>

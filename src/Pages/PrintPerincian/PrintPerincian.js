@@ -444,9 +444,9 @@ const PrintPerincian = () => {
 
           {/* footer */}
           <div style={{ fontSize: "10pt", marginTop: 10, color: "black" }}>
-            <p style={{ textAlign: "end" }}>{`Manado, ${moment(
-              state?.values.dateOfletter
-            ).format("D MMMM YYYY")}`}</p>
+            <p style={{ textAlign: "end" }}>
+              Manado, {moment(state?.data.dateOfletter).format("D MMMM YYYY")}
+            </p>
 
             {/* row 1 */}
             <div style={{ display: "flex", justifyContent: "space-between" }}>
