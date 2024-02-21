@@ -44,8 +44,6 @@ const PrintPerincian = () => {
   });
   const docTitle = document.title;
 
-  console.log(state);
-
   const getEmployees = async () => {
     try {
       const { data } = await axiosClient("/employees");
@@ -445,7 +443,7 @@ const PrintPerincian = () => {
           {/* footer */}
           <div style={{ fontSize: "10pt", marginTop: 10, color: "black" }}>
             <p style={{ textAlign: "end" }}>
-              Manado, {moment(state?.data.dateOfletter).format("D MMMM YYYY")}
+              Manado, {moment(state?.values.dateOfLetter).format("D MMMM YYYY")}
             </p>
 
             {/* row 1 */}

@@ -14,8 +14,6 @@ const PrintSuratTugas = () => {
   const { id } = useParams();
   const docTitle = document.title;
 
-  console.log(id, state);
-
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
     onBeforePrint: () => {
@@ -94,7 +92,7 @@ const PrintSuratTugas = () => {
               SURAT TUGAS
             </h1>
             <p style={{ fontSize: "10pt", margin: 0 }}>{`Manado, ${moment(
-              state.dateOftravel
+              state.dateOfletter
             ).format("DD MMMM YYYY")}`}</p>
           </div>
 

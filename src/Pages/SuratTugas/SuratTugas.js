@@ -289,7 +289,11 @@ const TableItem = ({
   handleDeleteSurat = () => {},
 }) => {
   return (
-    <tr>
+    <tr
+      style={{
+        borderBottom: "1px solid #e5e5e5",
+      }}
+    >
       <td className="no">{index + 1 + rowsPerPage * page}</td>
       <td className="author">{item.dictum[0]}</td>
       <td className="noSurat" style={{ color: !item?.letterNumber && "red" }}>
@@ -308,6 +312,7 @@ const TableItem = ({
           width: 500,
           whiteSpace: "break-spaces",
           display: "flex",
+          borderBottom: "none",
         }}
       >
         {item.assignedTo}

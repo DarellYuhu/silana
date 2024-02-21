@@ -275,7 +275,9 @@ const PrintNominatif = () => {
           >
             <div>
               <p>
-                {`Manado, ${moment(data.dateOfletter).format("D MMMM YYYY")}`}
+                {`Manado, ${moment(data?.nominative?.dateOfLetter).format(
+                  "D MMMM YYYY"
+                )}`}
                 <br />
                 Pejabat Pembuat Komitmen,
               </p>

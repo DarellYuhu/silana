@@ -17,7 +17,6 @@ import { capitalizeString } from "../../Utility";
 import * as Yup from "yup";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../helpers/axiosClient";
-import { signal } from "@preact/signals-react";
 import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
@@ -113,7 +112,6 @@ const EditSuratPerjalananDinas = () => {
                 } else {
                   res = await axiosClient.post("travels", normalized);
                 }
-                console.log(res);
                 await Swal.fire({
                   title: "Success!",
                   text: "Data berhasil disimpan",
@@ -217,6 +215,12 @@ const EditSuratPerjalananDinas = () => {
                               altInput: true,
                               altFormat: "F j, Y",
                               dateFormat: "Y-m-d",
+                            }}
+                            onChange={(date) => {
+                              setFieldValue(
+                                "dateOfLetter",
+                                date[0].toISOString()
+                              );
                             }}
                           />
                           <div>

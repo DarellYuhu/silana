@@ -237,7 +237,7 @@ const PrintKwitansi = () => {
               }}
             >
               {`Lunas dibayar tanggal : ${moment(
-                data?.values?.dateOfLetter
+                data?.values?.dateOfPaid
               ).format("D MMMM YYYY")}`}
             </p>
             <div

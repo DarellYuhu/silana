@@ -20,7 +20,6 @@ const PrintSpdDepan = () => {
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
   const data = JSON.parse(localStorage.getItem("printSpdDepan"));
-  console.log(data);
   const docTitle = document.title;
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -595,7 +594,7 @@ const PrintSpdDepan = () => {
                     <div className="col-sm-4">Tanggal</div>
                     <div className="col-sm-1">:</div>
                     <div className="col-sm-7">
-                      {moment(data?.data?.dateOfletter)
+                      {moment(data?.data?.travel?.dateOfLetter)
                         .locale("id")
                         .format("DD MMMM YYYY")}
                     </div>
