@@ -35,6 +35,59 @@ const UserProfile = () => {
   const user = getLoggedinUser();
   const formik = useRef();
 
+  const handleResetData = async () => {
+    try {
+      Swal.fire({
+        title: "Apakah anda yakin ingin mereset data surat?",
+        showDenyButton: true,
+        confirmButtonText: "Ya",
+        denyButtonText: `Tidak`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Masukan password anda",
+            input: "password",
+            inputAttributes: {
+              autocapitalize: "off",
+            },
+            showCancelButton: true,
+            confirmButtonText: "Reset",
+            showLoaderOnConfirm: true,
+            preConfirm: async (password) => {
+              return axiosClient
+                .delete(`letters/reset/all?password=${password}&id=${user.uid}`)
+                .then((response) => {
+                  if (response.status === 200) {
+                    return response.data;
+                  }
+                })
+                .catch((error) => {
+                  Swal.showValidationMessage(
+                    `Request failed: ${error?.response?.data?.message ?? error}`,
+                  );
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading(),
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire({
+                title: `Berhasil!`,
+                html: `Data surat berhasil direset!`,
+              });
+            }
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        title: "Error!",
+        text: err.message,
+        icon: "error",
+      });
+    }
+  };
+
   const getUser = async () => {
     setIsLoading(true);
     try {
@@ -199,7 +252,7 @@ const UserProfile = () => {
                     });
                     await axiosClient.patch(
                       `employees/${user.uid}/change-password`,
-                      payload
+                      payload,
                     );
                     Swal.fire({
                       title: "Berhasil!",
@@ -294,6 +347,21 @@ const UserProfile = () => {
               </Formik>
             </CardBody>
           </Card>
+
+          {user?.roles?.includes("admin") && (
+            <Card>
+              <CardBody>
+                <h5 className="text-danger">Danger Zone</h5>
+                <button
+                  className="btn btn-danger"
+                  // disabled={isSubmitting}
+                  onClick={handleResetData}
+                >
+                  Reset Data Surat
+                </button>
+              </CardBody>
+            </Card>
+          )}
         </Container>
       </div>
     </Fragment>
