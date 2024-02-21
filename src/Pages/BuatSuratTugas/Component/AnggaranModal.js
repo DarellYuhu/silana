@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
 import axiosClient from "../../../helpers/axiosClient";
+import { debounce } from "lodash";
 
 const AnggaranModal = ({
   open,
@@ -9,6 +10,29 @@ const AnggaranModal = ({
   handleRowClick = () => {},
 }) => {
   const [data, setData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredData = () => {
+    return data?.filter(
+      (item) =>
+        item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
+
+  const handleClose = () => {
+    setOpen(!open);
+    setSearchQuery("");
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await axiosClient.get("budgets");
@@ -17,17 +41,23 @@ const AnggaranModal = ({
     fetchData();
   }, []);
   return (
-    <Modal
-      isOpen={open}
-      size="lg"
-      toggle={() => setOpen(!open)}
-      scrollable={true}
-    >
+    <Modal isOpen={open} size="lg" toggle={handleClose} scrollable={true}>
       <div className="modal-header">
         <h5 className="modal-title mt-0">Tabel Anggaran Perjalanan Dinas</h5>
+        <div className="d-flex justify-content-sm-end gap-2 me-4">
+          <div className="search-box ms-2">
+            <input
+              type="text"
+              onChange={handleSearch}
+              className="form-control search"
+              placeholder="Cari Kode/Deskripsi"
+              aria-label="Search"
+            />
+          </div>
+        </div>
         <button
           type="button"
-          onClick={() => setOpen(!open)}
+          onClick={handleClose}
           className="close"
           data-dismiss="modal"
           aria-label="Close"
@@ -37,11 +67,14 @@ const AnggaranModal = ({
       </div>
       <div className="modal-body">
         <DataTable
-          onRowClicked={handleRowClick}
+          onRowClicked={(data) => {
+            handleRowClick(data);
+            setSearchQuery("");
+          }}
           pointerOnHover
           highlightOnHover
           columns={columns}
-          data={data}
+          data={filteredData()}
           pagination
           customStyles={{
             cells: {
@@ -55,7 +88,7 @@ const AnggaranModal = ({
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => setOpen(!open)}
+            onClick={handleClose}
           >
             Close
           </button>

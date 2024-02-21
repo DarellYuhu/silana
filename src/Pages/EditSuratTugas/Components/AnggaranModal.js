@@ -1,3 +1,5 @@
+import { debounce } from "lodash";
+import { useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal } from "reactstrap";
 
@@ -7,6 +9,29 @@ const AnggaranModal = ({
   handleRowClick = () => {},
   data,
 }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredData = () => {
+    return data?.filter(
+      (item) =>
+        item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  });
+
+  const handleClose = () => {
+    setOpen(!open);
+    setSearchQuery("");
+  };
+
   const columns = [
     {
       name: <span className="font-weight-bold fs-13">No.</span>,
@@ -37,17 +62,23 @@ const AnggaranModal = ({
   ];
 
   return (
-    <Modal
-      isOpen={open}
-      size="lg"
-      toggle={() => setOpen(false)}
-      scrollable={true}
-    >
+    <Modal isOpen={open} size="lg" toggle={handleClose} scrollable={true}>
       <div className="modal-header">
         <h5 className="modal-title mt-0">Tabel Anggaran Perjalanan Dinas</h5>
+        <div className="d-flex justify-content-sm-end gap-2 me-4">
+          <div className="search-box ms-2">
+            <input
+              type="text"
+              onChange={handleSearch}
+              className="form-control search"
+              placeholder="Cari Kode/Deskripsi"
+              aria-label="Search"
+            />
+          </div>
+        </div>
         <button
           type="button"
-          onClick={() => setOpen(false)}
+          onClick={handleClose}
           className="close"
           data-dismiss="modal"
           aria-label="Close"
@@ -57,11 +88,14 @@ const AnggaranModal = ({
       </div>
       <div className="modal-body">
         <DataTable
-          onRowClicked={handleRowClick}
+          onRowClicked={(data) => {
+            handleRowClick(data);
+            setSearchQuery("");
+          }}
           pointerOnHover
           highlightOnHover
           columns={columns}
-          data={data}
+          data={filteredData()}
           pagination
           customStyles={{
             cells: {
@@ -75,7 +109,7 @@ const AnggaranModal = ({
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
           >
             Close
           </button>
