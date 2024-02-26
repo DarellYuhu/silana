@@ -30,7 +30,7 @@ const Kwitansi = () => {
   const getData = async () => {
     try {
       const { data } = await axiosClient.get("nominative");
-      setData(data);
+      setData(data.filter((item) => item.letterNumber !== null));
     } catch (err) {
       console.log(err);
       Swal.fire({

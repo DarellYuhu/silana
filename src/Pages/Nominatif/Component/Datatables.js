@@ -1,6 +1,6 @@
 import moment from "moment";
 import DataTable from "react-data-table-component";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   DropdownItem,
   DropdownMenu,
@@ -8,6 +8,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { formatLetterNumber } from "../../../Utility";
+import { NoLetterNumber } from "../../../components/Custom";
 
 const Datatables = ({ item }) => {
   return (
@@ -48,7 +49,12 @@ const columns = [
   },
   {
     name: <span className="font-weight-bold fs-13">Nomor Surat</span>,
-    selector: (row) => formatLetterNumber(row.letterNumber),
+    selector: (row) =>
+      row.letterNumber ? (
+        formatLetterNumber(row.letterNumber)
+      ) : (
+        <NoLetterNumber />
+      ),
     sortable: true,
     width: "150px",
   },

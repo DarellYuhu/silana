@@ -1,6 +1,8 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import {
+  Checkbox,
+  FormControlLabel,
   Table,
   TableBody,
   TableCell,
@@ -11,10 +13,13 @@ import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import angkaTerbilangJs from "@develoka/angka-terbilang-js";
 import { formatLetterNumber } from "../../Utility";
+import { signal } from "@preact/signals-react";
 
 window.onunload = function () {
   localStorage.removeItem("printNominative");
 };
+
+const checked = signal(false);
 
 const PrintNominatif = () => {
   const [employees, setEmployees] = useState([]);
@@ -73,22 +78,66 @@ const PrintNominatif = () => {
         >
           {/* header */}
           <div>
-            <p style={{ fontSize: "9pt", color: "black" }}>
+            <p
+              style={{
+                fontSize: "9pt",
+                color: "black",
+                visibility: checked.value ? "hidden" : "visible",
+              }}
+            >
               DEPARTEMEN/LEMBAGA
               <br />
               SATKER: PERWAKILAN BKKBN PROVINSI SULAWESI UTARA
             </p>
             <div style={{ textAlign: "center" }}>
-              <h1 style={{ fontSize: "10pt", margin: 0, fontWeight: "bold" }}>
+              <h1
+                style={{
+                  fontSize: "10pt",
+                  margin: 0,
+                  fontWeight: "bold",
+                  visibility: checked.value ? "hidden" : "visible",
+                }}
+              >
                 DAFTAR NOMINATIF/RINCIAN PERJALANAN DINAS
               </h1>
-              <h2 style={{ fontSize: "9pt", margin: 0, fontWeight: "bold" }}>
-                {`${data?.assignedTo}`}
-                <br />
-                {`sesuai ST No: ${formatLetterNumber(
-                  data?.letterNumber
-                )} tanggal ${moment(data?.dateOfletter).format("D MMMM YYYY")}`}
-                <br />
+              <h2
+                style={{
+                  fontSize: "9pt",
+                  margin: 0,
+                  fontWeight: "bold",
+                  visibility: checked.value ? "hidden" : "visible",
+                }}
+              >{`${data?.assignedTo}`}</h2>
+              <h2
+                style={{
+                  fontSize: "9pt",
+                  margin: 0,
+                  fontWeight: "bold",
+                  visibility: checked.value ? "hidden" : "visible",
+                }}
+              >
+                sesuai ST No:{" "}
+                <span
+                  style={{
+                    width: 140,
+                    display: "inline-flex",
+                    textAlign: "end",
+                    justifyContent: "center",
+                    visibility: "visible",
+                  }}
+                >
+                  {data?.letterNumber && formatLetterNumber(data?.letterNumber)}
+                </span>{" "}
+                tanggal {moment(data?.dateOfletter).format("D MMMM YYYY")}
+              </h2>
+              <h2
+                style={{
+                  fontSize: "9pt",
+                  margin: 0,
+                  fontWeight: "bold",
+                  visibility: checked.value ? "hidden" : "visible",
+                }}
+              >
                 {`Tanggal: ${moment(data?.startDateOftravel).format(
                   "D MMMM"
                 )} s/d ${moment(data?.endDateOftravel).format("D MMMM YYYY")}`}
@@ -97,7 +146,12 @@ const PrintNominatif = () => {
           </div>
 
           {/* table */}
-          <Table sx={{ marginTop: 2 }}>
+          <Table
+            sx={{
+              marginTop: 2,
+              visibility: checked.value ? "hidden" : "visible",
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell
@@ -271,6 +325,7 @@ const PrintNominatif = () => {
               fontSize: "9pt",
               color: "black",
               marginTop: 50,
+              visibility: checked.value ? "hidden" : "visible",
             }}
           >
             <div>
@@ -307,7 +362,23 @@ const PrintNominatif = () => {
             </div>
           </div>
         </div>
-        <button onClick={handlePrint}>Print PDF</button>
+        <div>
+          <button onClick={handlePrint}>Print PDF</button>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={(event) => (checked.value = event.target.checked)}
+              />
+            }
+            label="Print nomor surat"
+            sx={{
+              marginLeft: 1,
+              border: "2px solid black",
+              paddingRight: 2,
+              borderRadius: 2,
+            }}
+          />
+        </div>
       </div>
     </Fragment>
   );

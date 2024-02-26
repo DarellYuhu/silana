@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import logoBkkbnDark from "../../assets/images/logo-bkkbn-dark.png";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
-import { useParams } from "react-router-dom";
 import moment from "moment";
 import axiosClient from "../../helpers/axiosClient";
 import { formatLetterNumber } from "../../Utility";
@@ -11,7 +10,6 @@ const PrintSuratTugas = () => {
   const state = JSON.parse(localStorage.getItem("suratTugas"));
   const [employees, setEmployees] = useState([]);
   const printRef = useRef();
-  const { id } = useParams();
   const docTitle = document.title;
 
   const handlePrint = useReactToPrint({

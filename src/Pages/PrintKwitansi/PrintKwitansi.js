@@ -244,7 +244,6 @@ const PrintKwitansi = () => {
               style={{
                 fontSize: "10pt",
                 display: "flex",
-                justifyContent: "flex-end",
                 paddingTop: 6,
                 paddingBottom: 6,
                 textAlign: "center",

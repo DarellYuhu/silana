@@ -8,6 +8,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { formatLetterNumber } from "../../../Utility";
+import { NoLetterNumber } from "../../../components/Custom";
 
 const Datatables = ({ item, handleDepanClick = () => {} }) => {
   const columns = [
@@ -25,7 +26,12 @@ const Datatables = ({ item, handleDepanClick = () => {} }) => {
     },
     {
       name: <span className="font-weight-bold fs-13">Nomor Surat</span>,
-      selector: (row) => formatLetterNumber(row.letterNumber),
+      selector: (row) =>
+        row.letterNumber ? (
+          formatLetterNumber(row.letterNumber)
+        ) : (
+          <NoLetterNumber />
+        ),
       sortable: true,
       width: "150px",
     },
