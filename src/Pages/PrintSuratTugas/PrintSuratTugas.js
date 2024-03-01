@@ -62,7 +62,7 @@ const PrintSuratTugas = () => {
           style={{
             width: "210mm",
             height: "297mm",
-            padding: "0.2cm 1.5cm",
+            padding: "1cm 1.5cm",
             display: "flex",
             flexDirection: "column",
           }}
